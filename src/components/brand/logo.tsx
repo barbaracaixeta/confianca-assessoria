@@ -30,7 +30,7 @@ export function Logo({
       height={height}
       priority={priority}
       sizes="180px"
-      className={cn("w-auto", compact ? "h-10" : "h-12", className)}
+      className={cn("w-auto", compact ? "h-[44px]" : "h-[56px]", className)}
     />
   );
 }
