@@ -90,7 +90,11 @@ Nenhum segredo é lido no navegador: `src/lib/env.server.ts` importa `server-onl
 
    Papéis: `customer`, `operator` (opera pedidos), `admin` (catálogo, cupons, conteúdo), `super_admin` (também papéis de outros usuários). Um usuário não consegue alterar o próprio papel — um trigger bloqueia.
 
-4. **Auth:** em Authentication › URL Configuration, defina *Site URL* = `NEXT_PUBLIC_APP_URL` e adicione `…/auth/confirm` em *Redirect URLs*. Nos templates de e-mail de confirmação e recuperação, use o link `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type={{ .Type }}&next={{ .RedirectTo }}`.
+4. **Auth:** em Authentication › URL Configuration, defina *Site URL* = `NEXT_PUBLIC_APP_URL` (ex.: `https://confianca-assessoria.vercel.app`) e adicione `NEXT_PUBLIC_APP_URL/auth/confirm` em *Redirect URLs* (e `http://localhost:3000/**` para desenvolvimento). Nos templates de e-mail (Authentication › Emails), aponte o link para o próprio site usando o `token_hash`, com um destino **relativo** — não use `{{ .RedirectTo }}` (ele contém a URL completa e quebra o link):
+   - Confirmação de cadastro: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type={{ .Type }}&next=/minha-conta`
+   - Recuperação de senha: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type={{ .Type }}&next=/redefinir-senha`
+
+   Se a *Site URL* estiver correta e o template usar `{{ .SiteURL }}`, o link abre direto em `/auth/confirm` no seu domínio e segue para a página certa.
 5. **SMTP:** para e-mails de autenticação com sua marca, configure o SMTP do Resend em Authentication › SMTP.
 
 ### Storage

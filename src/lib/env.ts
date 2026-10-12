@@ -6,7 +6,7 @@ import { z } from "zod";
 const publicSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
-  NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
+  NEXT_PUBLIC_APP_URL: z.string().url().optional(),
 });
 
 export const publicEnv = publicSchema.parse({
@@ -24,4 +24,18 @@ export const isSupabaseConfigured = Boolean(
   publicEnv.NEXT_PUBLIC_SUPABASE_URL && publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY,
 );
 
-export const appUrl = publicEnv.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
+/**
+ * URL pública canônica do site (links de e-mail, SEO, retorno de auth).
+ * Ordem: `NEXT_PUBLIC_APP_URL` → domínio de produção da Vercel → domínio do
+ * deploy atual → localhost. Isso evita gerar links com `localhost` em produção
+ * quando a variável não está definida no projeto da Vercel.
+ */
+function resolveAppUrl(): string {
+  const explicit = publicEnv.NEXT_PUBLIC_APP_URL;
+  if (explicit) return explicit.replace(/\/$/, "");
+  const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+  if (vercelHost) return `https://${vercelHost.replace(/\/$/, "")}`;
+  return "http://localhost:3000";
+}
+
+export const appUrl = resolveAppUrl();
