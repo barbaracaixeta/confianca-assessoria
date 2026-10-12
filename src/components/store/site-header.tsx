@@ -84,10 +84,10 @@ export function SiteHeader({ categories, institutions = [] }: { categories: Cate
       <div className="mx-auto grid h-[76px] max-w-[1280px] grid-cols-[auto_1fr_auto] items-center gap-4 px-5 md:px-8">
         <Link href="/" aria-label="Confiança Assessoria Acadêmica — página inicial" className="shrink-0">
           <span className="hidden sm:block">
-            <Logo />
+            <Logo priority />
           </span>
           <span className="sm:hidden">
-            <Logo compact />
+            <Logo compact priority />
           </span>
         </Link>
 
