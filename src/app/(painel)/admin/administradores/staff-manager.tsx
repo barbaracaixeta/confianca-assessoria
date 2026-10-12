@@ -186,24 +186,23 @@ export function StaffManager({
                           <Button size="sm" variant="ghost" disabled={busy} onClick={() => void resetPassword(r)}>Resetar senha</Button>
                         </>
                       )}
-                      {canDelete && !self && (
-                        <>
-                          {canEdit && <span className="mx-0.5 h-5 w-px bg-line" aria-hidden="true" />}
-                          <Button
-                            size="sm"
-                            variant="dangerOutline"
-                            disabled={busy}
-                            onClick={() => void remove(r)}
-                            aria-label={`Excluir o acesso de ${r.fullName || r.email}`}
-                          >
-                            <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-                              <path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
-                            </svg>
-                            Excluir
-                          </Button>
-                        </>
+                      {canEdit && !self && <span className="mx-0.5 h-5 w-px bg-line" aria-hidden="true" />}
+                      {canDelete && (
+                        <Button
+                          size="sm"
+                          variant="dangerOutline"
+                          disabled={busy || self}
+                          title={self ? "Você não pode excluir a própria conta." : undefined}
+                          onClick={() => void remove(r)}
+                          aria-label={`Excluir o acesso de ${r.fullName || r.email}`}
+                        >
+                          <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+                            <path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
+                          </svg>
+                          Excluir
+                        </Button>
                       )}
-                      {self && <span className="text-xs text-muted">Edite seus dados na loja</span>}
+                      {self && <span className="text-xs text-muted">Sua conta — peça a outro Super Admin para removê-la.</span>}
                     </div>
                   </td>
                 </tr>
