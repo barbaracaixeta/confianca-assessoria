@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ButtonLink } from "@/components/ui/button";
 import { ProductCard } from "@/components/store/product-card";
 import { FaqList } from "@/components/store/faq-list";
-import { getActiveCategories, getActiveFaqs, getActiveProducts, getActiveTestimonials } from "@/lib/catalog/queries";
+import { getActiveCategories, getActiveFaqs, getActiveInstitutions, getActiveProducts, getActiveTestimonials } from "@/lib/catalog/queries";
 import { getHomeSettings } from "@/lib/settings";
 import { quoteProduct } from "@/lib/pricing";
 import { formatMoney } from "@/lib/utils";
@@ -12,11 +12,12 @@ import type { Product } from "@/types/domain";
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [products, faqs, testimonials, categories, home] = await Promise.all([
+  const [products, faqs, testimonials, categories, institutions, home] = await Promise.all([
     getActiveProducts(),
     getActiveFaqs(),
     getActiveTestimonials(),
     getActiveCategories(),
+    getActiveInstitutions(),
     getHomeSettings(),
   ]);
 
@@ -100,6 +101,47 @@ export default async function HomePage() {
               ))}
             </ul>
           </div>
+        </section>
+      )}
+
+      {/* Instituições — filtro por instituição de ensino */}
+      {institutions.length > 0 && (
+        <section aria-labelledby="instituicoes-titulo" className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow text-green">Da sua instituição</p>
+              <h2 id="instituicoes-titulo" className="mt-3 text-[1.9rem] text-ink md:text-[2.4rem]">
+                Encontre materiais da sua instituição
+              </h2>
+            </div>
+            <Link href="/instituicoes" className="link-underline hidden text-sm font-medium text-pine sm:block">
+              Ver todas
+            </Link>
+          </div>
+          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {institutions.map((i) => (
+              <li key={i.id}>
+                <Link
+                  href={`/instituicoes/${i.slug}`}
+                  className="group flex h-full flex-col justify-between gap-5 rounded-[var(--radius-sm)] border border-line bg-sheet p-5 transition-colors hover:border-pine/40"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)] border border-line bg-paper">
+                      {i.logoUrl ? (
+                        <Image src={i.logoUrl} alt="" width={44} height={44} className="h-full w-full object-contain p-1" />
+                      ) : (
+                        <span aria-hidden="true" className="font-serif text-lg text-pine">{i.name.slice(0, 1).toUpperCase()}</span>
+                      )}
+                    </span>
+                    <span className="font-serif text-xl text-ink transition-colors group-hover:text-pine">{i.name}</span>
+                  </span>
+                  <span className="text-xs text-muted tabular">
+                    {i.productCount} {i.productCount === 1 ? "material" : "materiais"}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 
@@ -316,7 +358,9 @@ function BestSellerRow({ product, rank }: { product: Product; rank: number }) {
           )}
         </span>
         <span className="min-w-0">
-          <span className="block eyebrow text-[0.6875rem] text-muted">{product.categoryName ?? "Material"}</span>
+          <span className="block eyebrow text-[0.6875rem] text-muted">
+            {[product.categoryName, product.institutionName].filter(Boolean).join(" · ") || "Material"}
+          </span>
           <span className="mt-1 block truncate font-serif text-[1.3rem] text-ink transition-colors group-hover:text-pine">
             {product.name}
           </span>

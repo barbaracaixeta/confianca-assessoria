@@ -13,6 +13,7 @@ const EMPTY: AdminProductValue = {
   shortDescription: "",
   description: "",
   categoryId: null,
+  institutionId: null,
   basePriceCents: 9900,
   discountType: "none",
   discountValue: 0,
@@ -36,9 +37,12 @@ const EMPTY: AdminProductValue = {
 export default async function NewProductPage() {
   await requireAdminPermission("products.create");
   const admin = createSupabaseAdminClient();
-  const { data: categories } = admin
-    ? await admin.from("categories").select("id, name").order("sort_order").order("name")
-    : { data: null };
+  const [catRes, instRes] = admin
+    ? await Promise.all([
+        admin.from("categories").select("id, name").order("sort_order").order("name"),
+        admin.from("institutions").select("id, name, is_active").order("sort_order").order("name"),
+      ])
+    : [{ data: null }, { data: null }];
   return (
     <div className="max-w-[880px]">
       <Link href="/admin/produtos" className="text-sm text-muted hover:text-pine">Produtos</Link>
@@ -48,7 +52,11 @@ export default async function NewProductPage() {
         preço promocional e a ordem de exibição.
       </p>
       <div className="mt-10">
-        <ProductForm product={EMPTY} categories={(categories ?? []).map((c) => ({ id: c.id, name: c.name }))} />
+        <ProductForm
+          product={EMPTY}
+          categories={(catRes.data ?? []).map((c) => ({ id: c.id, name: c.name }))}
+          institutions={(instRes.data ?? []).map((i) => ({ id: i.id, name: i.name, isActive: i.is_active }))}
+        />
       </div>
     </div>
   );

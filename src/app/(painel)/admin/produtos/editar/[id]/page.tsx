@@ -15,9 +15,10 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
   const admin = createSupabaseAdminClient();
   if (!admin) notFound();
 
-  const [productRes, catRes] = await Promise.all([
+  const [productRes, catRes, instRes] = await Promise.all([
     admin.from("products").select("*, categories(name)").eq("id", id).maybeSingle(),
     admin.from("categories").select("id, name").order("sort_order").order("name"),
+    admin.from("institutions").select("id, name, is_active").order("sort_order").order("name"),
   ]);
   const p = productRes.data;
   if (!p) notFound();
@@ -36,6 +37,7 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
     shortDescription: p.short_description,
     description: p.description,
     categoryId: p.category_id,
+    institutionId: p.institution_id,
     basePriceCents: p.base_price_cents,
     discountType: p.discount_type,
     discountValue: p.discount_value,
@@ -73,7 +75,11 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
       <Link href={`/produto/${p.slug}`} className="mt-1 inline-block text-sm text-muted tabular hover:text-pine">/produto/{p.slug}</Link>
 
       <div className="mt-10">
-        <ProductForm product={value} categories={(catRes.data ?? []).map((c) => ({ id: c.id, name: c.name }))} />
+        <ProductForm
+          product={value}
+          categories={(catRes.data ?? []).map((c) => ({ id: c.id, name: c.name }))}
+          institutions={(instRes.data ?? []).map((i) => ({ id: i.id, name: i.name, isActive: i.is_active }))}
+        />
       </div>
 
       <div className="mt-16 border-t border-line pt-10">

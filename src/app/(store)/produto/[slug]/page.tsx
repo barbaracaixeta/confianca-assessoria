@@ -7,6 +7,7 @@ import { ProductPurchasePanel } from "@/components/store/product-purchase-panel"
 import { FaqList } from "@/components/store/faq-list";
 import { getActiveProducts, getProductBySlug } from "@/lib/catalog/queries";
 import { absoluteUrl, breadcrumbJsonLd, jsonLdScript, productJsonLd } from "@/lib/seo";
+import type { Product } from "@/types/domain";
 
 export const revalidate = 300;
 
@@ -41,6 +42,15 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
+function uniqueById(list: Product[]): Product[] {
+  const seen = new Set<string>();
+  return list.filter((p) => {
+    if (seen.has(p.id)) return false;
+    seen.add(p.id);
+    return true;
+  });
+}
+
 export default async function ProductPage({ params }: PageProps<"/produto/[slug]">) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
@@ -49,6 +59,9 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
   const crumbs = [
     { name: "Início", path: "/" },
     { name: "Loja", path: "/loja" },
+    ...(product.institutionName && product.institutionSlug
+      ? [{ name: product.institutionName, path: `/instituicoes/${product.institutionSlug}` }]
+      : []),
     ...(product.categoryName && product.categoryId
       ? [{ name: product.categoryName, path: `/loja?categoria=${product.categoryId}` }]
       : []),
@@ -57,11 +70,13 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
 
   const formats = [...new Set(product.files.map((f) => f.originalName.split(".").pop()?.toUpperCase()).filter(Boolean))];
 
-  const related = product.categoryId
-    ? (await getActiveProducts())
-        .filter((p) => p.id !== product.id && p.categoryId === product.categoryId)
-        .slice(0, 4)
+  const allProducts = await getActiveProducts();
+  const others = allProducts.filter((p) => p.id !== product.id);
+  const sameInstitution = product.institutionId
+    ? others.filter((p) => p.institutionId === product.institutionId)
     : [];
+  const sameCategory = product.categoryId ? others.filter((p) => p.categoryId === product.categoryId) : [];
+  const related = uniqueById([...sameInstitution, ...sameCategory, ...others.filter((p) => p.isFeatured)]).slice(0, 4);
 
   return (
     <>
@@ -72,6 +87,12 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
         <nav aria-label="Trilha de navegação" className="text-sm text-muted">
           <ol className="flex flex-wrap items-center gap-2">
             <li><Link href="/loja" className="hover:text-pine">Loja</Link></li>
+            {product.institutionName && product.institutionSlug && (
+              <>
+                <li aria-hidden="true">/</li>
+                <li><Link href={`/instituicoes/${product.institutionSlug}`} className="hover:text-pine">{product.institutionName}</Link></li>
+              </>
+            )}
             {product.categoryName && (
               <>
                 <li aria-hidden="true">/</li>
@@ -93,7 +114,19 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
               <ProductPurchasePanel product={product} />
             </div>
 
-            <h1 className="display mt-10 text-[2.4rem] leading-[1.05] text-pine md:text-[3.25rem]">{product.name}</h1>
+            <div className="mt-10 flex flex-wrap items-center gap-2">
+              {product.categoryName && product.categoryId && (
+                <Link href={`/loja?categoria=${product.categoryId}`} className="rounded-[var(--radius-xs)] border border-line bg-sheet px-2.5 py-1 text-xs font-medium text-ink-2 transition-colors hover:border-pine/40 hover:text-pine">
+                  {product.categoryName}
+                </Link>
+              )}
+              {product.institutionName && product.institutionSlug && (
+                <Link href={`/instituicoes/${product.institutionSlug}`} className="rounded-[var(--radius-xs)] border border-line bg-sheet px-2.5 py-1 text-xs font-medium text-ink-2 transition-colors hover:border-pine/40 hover:text-pine">
+                  {product.institutionName}
+                </Link>
+              )}
+            </div>
+            <h1 className="display mt-4 text-[2.4rem] leading-[1.05] text-pine md:text-[3.25rem]">{product.name}</h1>
             <p className="mt-5 max-w-[40rem] text-lg leading-relaxed text-ink-2">{product.shortDescription}</p>
 
             <div className="prose-academic mt-8">
@@ -162,9 +195,9 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
           <section aria-labelledby="relacionados-titulo" className="mt-24 border-t border-line pt-12">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <p className="eyebrow text-green">{product.categoryName ?? "Relacionados"}</p>
+                <p className="eyebrow text-green">{product.institutionName ?? product.categoryName ?? "Relacionados"}</p>
                 <h2 id="relacionados-titulo" className="mt-3 text-[1.75rem] text-ink md:text-[2.1rem]">
-                  Produtos relacionados
+                  {product.institutionName ? `Mais materiais para ${product.institutionName}` : "Produtos relacionados"}
                 </h2>
               </div>
               <Link href="/loja" className="link-underline hidden text-sm font-medium text-pine sm:block">

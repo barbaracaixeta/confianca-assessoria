@@ -25,6 +25,7 @@ export type ProductDraft = {
   shortDescription: string;
   description: string;
   categoryId: string | null;
+  institutionId: string | null;
   basePriceCents: number;
   discountType: "none" | "percent" | "fixed" | "sale_price";
   discountValue: number;
@@ -55,6 +56,7 @@ const draftSchema = z
     shortDescription: z.string().trim().max(240, "Resumo muito longo."),
     description: z.string().trim(),
     categoryId: z.string().uuid().nullable().or(z.literal("").transform(() => null)),
+    institutionId: z.string().uuid().nullable().or(z.literal("").transform(() => null)),
     basePriceCents: z.number().int().min(0).max(10_000_000),
     discountType: z.enum(["none", "percent", "fixed", "sale_price"]),
     discountValue: z.number().int().min(0).max(10_000_000),
@@ -90,6 +92,7 @@ function normalize(d: z.infer<typeof draftSchema>) {
     short_description: d.shortDescription,
     description: d.description,
     category_id: d.categoryId,
+    institution_id: d.institutionId,
     base_price_cents: d.basePriceCents,
     discount_type: d.discountType,
     discount_value: discountValue,
@@ -373,6 +376,7 @@ export async function createProductQuickAction(input: {
       short_description: "",
       description: "",
       category_id: null,
+      institution_id: null,
       base_price_cents: parsed.data.priceCents ?? 0,
       discount_type: "none",
       discount_value: 0,

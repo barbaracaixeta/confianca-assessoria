@@ -5,7 +5,7 @@ import { useMemo, useTransition } from "react";
 import { ProductCard } from "./product-card";
 import { quoteProduct } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import type { Category, Product } from "@/types/domain";
+import type { Category, Institution, Product } from "@/types/domain";
 
 const SORTS = [
   { value: "relevance", label: "Relevância" },
@@ -47,13 +47,26 @@ function Toggle({ active, onClick, children }: { active: boolean; onClick: () =>
   );
 }
 
-export function StoreListing({ products, categories }: { products: Product[]; categories: Category[] }) {
+export function StoreListing({
+  products,
+  categories,
+  institutions = [],
+  basePath = "/loja",
+  fixedInstitutionSlug,
+}: {
+  products: Product[];
+  categories: Category[];
+  institutions?: Institution[];
+  basePath?: string;
+  fixedInstitutionSlug?: string;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const q = searchParams.get("q")?.trim().toLowerCase() ?? "";
   const category = searchParams.get("categoria") ?? "";
+  const institution = fixedInstitutionSlug ?? searchParams.get("instituicao") ?? "";
   const sort = searchParams.get("sort") ?? "relevance";
   const priceMax = searchParams.get("max") ?? "";
   const offer = searchParams.get("ofertas") === "1";
@@ -67,17 +80,18 @@ export function StoreListing({ products, categories }: { products: Product[]; ca
       else params.set(k, v);
     }
     const qs = params.toString();
-    startTransition(() => router.push(qs ? `/loja?${qs}` : "/loja", { scroll: false }));
+    startTransition(() => router.push(qs ? `${basePath}?${qs}` : basePath, { scroll: false }));
   }
 
   const visible = useMemo(() => {
     let list = [...products];
     if (q) {
       list = list.filter((p) =>
-        [p.name, p.shortDescription, p.categoryName ?? ""].some((f) => f.toLowerCase().includes(q)),
+        [p.name, p.shortDescription, p.categoryName ?? "", p.institutionName ?? ""].some((f) => f.toLowerCase().includes(q)),
       );
     }
     if (category) list = list.filter((p) => p.categoryId === category);
+    if (institution) list = list.filter((p) => p.institutionSlug === institution);
     const priced = list.map((p) => ({ p, q: quoteProduct(p) }));
     let filtered = priced;
     if (offer) filtered = filtered.filter((x) => x.q.promoActive);
@@ -103,9 +117,9 @@ export function StoreListing({ products, categories }: { products: Product[]; ca
         filtered.sort((a, b) => a.p.sortOrder - b.p.sortOrder);
     }
     return filtered.map((x) => x.p);
-  }, [products, q, category, sort, priceMax, offer, isNew, best]);
+  }, [products, q, category, institution, sort, priceMax, offer, isNew, best]);
 
-  const activeCount = [offer, isNew, best, category, priceMax].filter(Boolean).length;
+  const activeCount = [offer, isNew, best, category, priceMax, fixedInstitutionSlug ? "" : institution].filter(Boolean).length;
 
   return (
     <div>
@@ -149,6 +163,24 @@ export function StoreListing({ products, categories }: { products: Product[]; ca
         </div>
 
         <div className="flex flex-wrap items-center gap-4 md:justify-end">
+          {!fixedInstitutionSlug && institutions.length > 0 && (
+            <label className="flex items-center gap-2 text-sm text-muted">
+              Instituição
+              <select
+                value={institution}
+                onChange={(e) => patch({ instituicao: e.target.value || null })}
+                className={SELECT_CLASS}
+                style={SELECT_ARROW}
+              >
+                <option value="">Todas</option>
+                {institutions.map((i) => (
+                  <option key={i.id} value={i.slug}>
+                    {i.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <label className="flex items-center gap-2 text-sm text-muted">
             Preço
             <select
@@ -204,7 +236,7 @@ export function StoreListing({ products, categories }: { products: Product[]; ca
           </p>
           <button
             type="button"
-            onClick={() => router.push("/loja")}
+            onClick={() => router.push(basePath)}
             className="link-underline mt-5 text-sm font-medium text-pine"
           >
             Limpar filtros

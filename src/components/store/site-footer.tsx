@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { getCompanySettings } from "@/lib/settings";
-import { getActiveCategories } from "@/lib/catalog/queries";
+import { getActiveCategories, getActiveInstitutions } from "@/lib/catalog/queries";
 
 export async function SiteFooter() {
-  const [company, categories] = await Promise.all([getCompanySettings(), getActiveCategories()]);
+  const [company, categories, institutions] = await Promise.all([
+    getCompanySettings(),
+    getActiveCategories(),
+    getActiveInstitutions(),
+  ]);
   const contacts = [
     company.email && { label: company.email, href: `mailto:${company.email}` },
     company.whatsapp && { label: `WhatsApp ${company.whatsapp}`, href: `https://wa.me/${company.whatsapp.replace(/\D/g, "")}` },
@@ -24,7 +28,7 @@ export async function SiteFooter() {
           </p>
         </div>
 
-        <nav aria-label="Categorias">
+        <nav aria-label="Catálogo">
           <h2 className="font-sans text-sm font-semibold text-paper">Categorias</h2>
           <ul className="mt-4 space-y-2.5 text-sm">
             {categories.slice(0, 7).map((c) => (
@@ -38,6 +42,23 @@ export async function SiteFooter() {
               <Link href="/loja" className="link-underline hover:text-paper">Ver tudo</Link>
             </li>
           </ul>
+          {institutions.length > 0 && (
+            <>
+              <h2 className="mt-6 font-sans text-sm font-semibold text-paper">Instituições</h2>
+              <ul className="mt-4 space-y-2.5 text-sm">
+                {institutions.slice(0, 5).map((i) => (
+                  <li key={i.id}>
+                    <Link href={`/instituicoes/${i.slug}`} className="link-underline hover:text-paper">
+                      {i.name}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link href="/instituicoes" className="link-underline hover:text-paper">Ver todas</Link>
+                </li>
+              </ul>
+            </>
+          )}
         </nav>
 
         <nav aria-label="Institucional">

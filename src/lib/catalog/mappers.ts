@@ -1,8 +1,9 @@
-import type { Category, FaqItem, Product, ProductFile, ProductType } from "@/types/domain";
+import type { Category, FaqItem, Institution, Product, ProductFile, ProductType } from "@/types/domain";
 
 export interface ProductRow {
   id: string;
   category_id: string | null;
+  institution_id: string | null;
   name: string;
   slug: string;
   short_description: string;
@@ -40,6 +41,7 @@ export interface ProductRow {
   is_best_seller: boolean;
   download_limit: number | null;
   categories?: { name: string } | null;
+  institutions?: { name: string; slug: string } | null;
   product_prices?: { min_quantity: number; unit_price_cents: number }[] | null;
   product_files?: ProductFileRow[] | null;
 }
@@ -56,7 +58,7 @@ export interface ProductFileRow {
 }
 
 export const PRODUCT_SELECT =
-  "*, categories(name), product_prices(min_quantity, unit_price_cents), product_files!product_id(id, original_name, mime_type, size_bytes, label, sort_order, created_at)";
+  "*, categories(name), institutions(name, slug), product_prices(min_quantity, unit_price_cents), product_files!product_id(id, original_name, mime_type, size_bytes, label, sort_order, created_at)";
 
 const strings = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : []);
 
@@ -77,6 +79,9 @@ export function mapProduct(row: ProductRow, imageUrl: (path: string | null) => s
     id: row.id,
     categoryId: row.category_id,
     categoryName: row.categories?.name ?? null,
+    institutionId: row.institution_id,
+    institutionName: row.institutions?.name ?? null,
+    institutionSlug: row.institutions?.slug ?? null,
     name: row.name,
     slug: row.slug,
     shortDescription: row.short_description,
@@ -144,6 +149,28 @@ export function mapCategory(row: CategoryRow): Category {
     name: row.name,
     slug: row.slug,
     description: row.description,
+    sortOrder: row.sort_order,
+    isActive: row.is_active,
+  };
+}
+
+export interface InstitutionRow {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  logo_path: string | null;
+  sort_order: number;
+  is_active: boolean;
+}
+
+export function mapInstitution(row: InstitutionRow, logoUrl: (path: string | null) => string | null): Institution {
+  return {
+    id: row.id,
+    name: row.name,
+    slug: row.slug,
+    description: row.description,
+    logoUrl: logoUrl(row.logo_path),
     sortOrder: row.sort_order,
     isActive: row.is_active,
   };

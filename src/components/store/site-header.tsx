@@ -8,9 +8,9 @@ import { ButtonLink } from "@/components/ui/button";
 import { useCart } from "./cart-provider";
 import { cn } from "@/lib/utils";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import type { Category } from "@/types/domain";
+import type { Category, Institution } from "@/types/domain";
 
-export function SiteHeader({ categories }: { categories: Category[] }) {
+export function SiteHeader({ categories, institutions = [] }: { categories: Category[]; institutions?: Institution[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const isAuthenticated = useIsAuthenticated();
@@ -102,6 +102,11 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
             {categories.length > 0 && (
               <li>
                 <DropdownCategorias categories={categories} />
+              </li>
+            )}
+            {institutions.length > 0 && (
+              <li>
+                <DropdownInstituicoes institutions={institutions} />
               </li>
             )}
             {NAV.slice(1).map((item) => (
@@ -220,6 +225,25 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
                 </ul>
               </li>
             )}
+            {institutions.length > 0 && (
+              <li className="border-b border-line">
+                <p className="pt-4 text-xs font-medium text-muted">Instituições</p>
+                <ul className="mt-1 pb-3">
+                  {institutions.map((i) => (
+                    <li key={i.id}>
+                      <Link href={`/instituicoes/${i.slug}`} className="block py-1.5 text-[0.9375rem] text-ink-2 hover:text-pine">
+                        {i.name}
+                      </Link>
+                    </li>
+                  ))}
+                  <li>
+                    <Link href="/instituicoes" className="block py-1.5 text-[0.9375rem] font-medium text-pine hover:underline">
+                      Ver todas as instituições
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+            )}
           </ul>
         </nav>
         <div className="mt-8 flex flex-col gap-3">
@@ -296,6 +320,51 @@ function DropdownCategorias({ categories }: { categories: Category[] }) {
               <li key={c.id}>
                 <Link href={`/categoria/${c.slug}`} className="block rounded-[var(--radius-xs)] px-3 py-2 text-sm text-ink-2 hover:bg-green-50 hover:text-pine">
                   {c.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DropdownInstituicoes({ institutions }: { institutions: Institution[] }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpen(false);
+      }}
+    >
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className="link-underline flex items-center gap-1 py-1 text-[0.9375rem] text-ink-2 transition-colors hover:text-pine"
+      >
+        Instituições
+        <svg viewBox="0 0 12 12" className="size-3 text-muted" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+          <path d="M2.5 4.5 6 8l3.5-3.5" />
+        </svg>
+      </button>
+      {open && (
+        <div className="absolute top-full left-0 z-50 pt-2">
+          <ul className="min-w-[230px] rounded-[var(--radius-md)] border border-line bg-sheet p-2 shadow-md">
+            <li>
+              <Link href="/instituicoes" className="block rounded-[var(--radius-xs)] px-3 py-2 text-sm font-medium text-pine hover:bg-green-50">
+                Ver todas as instituições
+              </Link>
+            </li>
+            {institutions.map((i) => (
+              <li key={i.id}>
+                <Link href={`/instituicoes/${i.slug}`} className="block rounded-[var(--radius-xs)] px-3 py-2 text-sm text-ink-2 hover:bg-green-50 hover:text-pine">
+                  {i.name}
                 </Link>
               </li>
             ))}

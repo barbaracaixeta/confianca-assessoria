@@ -1,9 +1,9 @@
 import "server-only";
 import { cache } from "react";
 import { createSupabasePublicClient, publicStorageUrl } from "@/lib/supabase/public";
-import { DEMO_CATEGORIES, DEMO_FAQS, DEMO_PRODUCTS } from "@/lib/demo/catalog-data";
-import { PRODUCT_SELECT, mapCategory, mapProduct, type CategoryRow, type ProductRow } from "./mappers";
-import type { Category, Product } from "@/types/domain";
+import { DEMO_CATEGORIES, DEMO_FAQS, DEMO_INSTITUTIONS, DEMO_PRODUCTS } from "@/lib/demo/catalog-data";
+import { PRODUCT_SELECT, mapCategory, mapInstitution, mapProduct, type CategoryRow, type InstitutionRow, type ProductRow } from "./mappers";
+import type { Category, Institution, InstitutionSummary, Product } from "@/types/domain";
 
 const imageUrl = (path: string | null) => publicStorageUrl("catalog", path);
 
@@ -53,13 +53,31 @@ export const getProductsByCategory = cache(async (categorySlug: string, limit = 
   return data.map((r) => mapProduct(r, imageUrl));
 });
 
+export const getProductsByInstitution = cache(async (institutionSlug: string, limit = 200): Promise<Product[]> => {
+  const supabase = createSupabasePublicClient();
+  if (!supabase) {
+    const inst = DEMO_INSTITUTIONS.find((i) => i.slug === institutionSlug);
+    return inst ? DEMO_PRODUCTS.filter((p) => p.institutionId === inst.id).slice(0, limit) : [];
+  }
+  const { data, error } = await supabase
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .eq("is_active", true)
+    .eq("institutions.slug", institutionSlug)
+    .order("sort_order")
+    .limit(limit)
+    .returns<ProductRow[]>();
+  if (error) throw new Error(`Falha ao carregar produtos da instituição: ${error.message}`);
+  return data.map((r) => mapProduct(r, imageUrl));
+});
+
 export const searchProducts = cache(async (query: string, limit = 24): Promise<Product[]> => {
   const q = query.trim();
   const supabase = createSupabasePublicClient();
   if (!supabase) {
     const term = q.toLowerCase();
     return DEMO_PRODUCTS.filter(
-      (p) => p.name.toLowerCase().includes(term) || p.shortDescription.toLowerCase().includes(term) || p.categoryName?.toLowerCase().includes(term),
+      (p) => p.name.toLowerCase().includes(term) || p.shortDescription.toLowerCase().includes(term) || p.categoryName?.toLowerCase().includes(term) || p.institutionName?.toLowerCase().includes(term),
     ).slice(0, limit);
   }
   if (!q) return [];
@@ -87,6 +105,41 @@ export const getActiveCategories = cache(async (): Promise<Category[]> => {
     .returns<CategoryRow[]>();
   if (error) throw new Error(`Falha ao carregar categorias: ${error.message}`);
   return data.map(mapCategory);
+});
+
+const countByInstitution = (institutionId: string | null): number =>
+  institutionId ? DEMO_PRODUCTS.filter((p) => p.isActive && p.institutionId === institutionId).length : 0;
+
+export const getActiveInstitutions = cache(async (): Promise<InstitutionSummary[]> => {
+  const supabase = createSupabasePublicClient();
+  if (!supabase) {
+    return DEMO_INSTITUTIONS.filter((i) => i.isActive).map((i) => ({ ...i, productCount: countByInstitution(i.id) }));
+  }
+
+  const [listRes, linksRes] = await Promise.all([
+    supabase.from("institutions").select("*").eq("is_active", true).order("sort_order").returns<InstitutionRow[]>(),
+    supabase.from("products").select("institution_id").eq("is_active", true).not("institution_id", "is", null),
+  ]);
+  if (listRes.error) throw new Error(`Falha ao carregar instituições: ${listRes.error.message}`);
+  const counts = new Map<string, number>();
+  for (const row of (linksRes.data ?? []) as { institution_id: string }[]) {
+    counts.set(row.institution_id, (counts.get(row.institution_id) ?? 0) + 1);
+  }
+  return listRes.data.map((r) => ({ ...mapInstitution(r, imageUrl), productCount: counts.get(r.id) ?? 0 }));
+});
+
+export const getInstitutionBySlug = cache(async (slug: string): Promise<Institution | null> => {
+  const supabase = createSupabasePublicClient();
+  if (!supabase) return DEMO_INSTITUTIONS.find((i) => i.slug === slug && i.isActive) ?? null;
+
+  const { data, error } = await supabase
+    .from("institutions")
+    .select("*")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .maybeSingle<InstitutionRow>();
+  if (error) throw new Error(`Falha ao carregar instituição: ${error.message}`);
+  return data ? mapInstitution(data, imageUrl) : null;
 });
 
 export interface PublicFaq {

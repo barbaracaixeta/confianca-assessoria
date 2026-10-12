@@ -7,6 +7,7 @@ export interface AdminProductRow {
   name: string;
   slug: string;
   category: string | null;
+  institution: string | null;
   basePriceCents: number;
   discountType: string;
   discountValue: number;
@@ -26,6 +27,18 @@ export interface AdminCategoryRow {
   name: string;
   slug: string;
   description: string | null;
+  sortOrder: number;
+  isActive: boolean;
+  productCount: number;
+}
+
+export interface AdminInstitutionRow {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  logoPath: string | null;
+  logoUrl: string | null;
   sortOrder: number;
   isActive: boolean;
   productCount: number;
@@ -56,7 +69,7 @@ export async function getAdminProducts(): Promise<AdminProductRow[]> {
   const { data } = await admin
     .from("products")
     .select(
-      "id, name, slug, product_type, base_price_cents, discount_type, discount_value, promo_starts_at, promo_ends_at, is_active, is_featured, is_new, is_best_seller, image_path, categories(name), product_files!product_id(id), order_items(id)",
+      "id, name, slug, product_type, base_price_cents, discount_type, discount_value, promo_starts_at, promo_ends_at, is_active, is_featured, is_new, is_best_seller, image_path, categories(name), institutions(name), product_files!product_id(id), order_items(id)",
     )
     .order("sort_order", { ascending: true, nullsFirst: false });
   return (data ?? []).map((p) => ({
@@ -64,6 +77,7 @@ export async function getAdminProducts(): Promise<AdminProductRow[]> {
     name: p.name,
     slug: p.slug,
     category: (embeds(p.categories)?.[0]?.name as string | undefined) ?? null,
+    institution: (embeds(p.institutions)?.[0]?.name as string | undefined) ?? null,
     basePriceCents: p.base_price_cents,
     discountType: p.discount_type,
     discountValue: p.discount_value,
@@ -98,6 +112,26 @@ export async function getAdminCategories(): Promise<AdminCategoryRow[]> {
     sortOrder: c.sort_order,
     isActive: c.is_active,
     productCount: (embeds(c.products) ?? []).length,
+  }));
+}
+
+export async function getAdminInstitutions(): Promise<AdminInstitutionRow[]> {
+  const admin = createSupabaseAdminClient();
+  if (!admin) return [];
+  const { data } = await admin
+    .from("institutions")
+    .select("id, name, slug, description, logo_path, sort_order, is_active, products(id)")
+    .order("sort_order", { ascending: true });
+  return (data ?? []).map((i) => ({
+    id: i.id,
+    name: i.name,
+    slug: i.slug,
+    description: i.description,
+    logoPath: i.logo_path,
+    logoUrl: publicStorageUrl("catalog", i.logo_path),
+    sortOrder: i.sort_order,
+    isActive: i.is_active,
+    productCount: (embeds(i.products) ?? []).length,
   }));
 }
 

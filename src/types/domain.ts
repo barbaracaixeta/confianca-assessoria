@@ -42,6 +42,22 @@ export interface Category {
   isActive: boolean;
 }
 
+/** Instituição de ensino. Dimensão independente e opcional das categorias. */
+export interface Institution {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  logoUrl: string | null;
+  sortOrder: number;
+  isActive: boolean;
+}
+
+/** Instituição com a contagem de produtos ativos vinculados (para listagens). */
+export interface InstitutionSummary extends Institution {
+  productCount: number;
+}
+
 export interface PriceTier {
   minQuantity: number;
   unitPriceCents: number;
@@ -71,6 +87,9 @@ export interface Product extends PricingInput {
   id: string;
   categoryId: string | null;
   categoryName: string | null;
+  institutionId: string | null;
+  institutionName: string | null;
+  institutionSlug: string | null;
   name: string;
   slug: string;
   shortDescription: string;

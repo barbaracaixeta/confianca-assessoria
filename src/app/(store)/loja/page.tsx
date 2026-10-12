@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { StoreListing } from "@/components/store/store-listing";
 import { Skeleton } from "@/components/ui/feedback";
-import { getActiveCategories, getActiveProducts } from "@/lib/catalog/queries";
+import { getActiveCategories, getActiveInstitutions, getActiveProducts } from "@/lib/catalog/queries";
 import { absoluteUrl } from "@/lib/seo";
 
 export const revalidate = 300;
@@ -14,7 +14,11 @@ export const metadata: Metadata = {
 };
 
 export default async function StorePage() {
-  const [products, categories] = await Promise.all([getActiveProducts(), getActiveCategories()]);
+  const [products, categories, institutions] = await Promise.all([
+    getActiveProducts(),
+    getActiveCategories(),
+    getActiveInstitutions(),
+  ]);
   return (
     <div className="mx-auto max-w-[1280px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
       <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] md:items-end md:justify-between">
@@ -28,7 +32,7 @@ export default async function StorePage() {
       </div>
 
       <Suspense fallback={<Skeleton className="mt-8 h-80 w-full" />}>
-        <StoreListing products={products} categories={categories} />
+        <StoreListing products={products} categories={categories} institutions={institutions} />
       </Suspense>
     </div>
   );

@@ -4,7 +4,7 @@
  * reais da empresa. São usados (1) como catálogo de demonstração quando o Supabase
  * ainda não está configurado e (2) para gerar supabase/seed.sql (npm run seed:generate).
  */
-import type { Category, Product, ProductFile } from "@/types/domain";
+import type { Category, Institution, Product, ProductFile } from "@/types/domain";
 
 export const DEMO_CATEGORIES: Category[] = [
   { id: "00000000-0000-4000-8000-000000000101", name: "TCC", slug: "tcc", description: "Modelos, guias e recursos para o trabalho de conclusão de curso.", sortOrder: 1, isActive: true },
@@ -15,7 +15,15 @@ export const DEMO_CATEGORIES: Category[] = [
   { id: "00000000-0000-4000-8000-000000000106", name: "E-books", slug: "ebooks", description: "Guias e e-books de apoio ao estudo.", sortOrder: 6, isActive: true },
 ];
 
+export const DEMO_INSTITUTIONS: Institution[] = [
+  { id: "00000000-0000-4000-8000-000000000301", name: "UNOPAR", slug: "unopar", description: "Materiais adequados ao modelo de trabalho da UNOPAR.", logoUrl: null, sortOrder: 1, isActive: true },
+  { id: "00000000-0000-4000-8000-000000000302", name: "UNIASSELVI", slug: "uniasselvi", description: "Recursos no padrão exigido pela UNIASSELVI.", logoUrl: null, sortOrder: 2, isActive: true },
+  { id: "00000000-0000-4000-8000-000000000303", name: "Anhanguera", slug: "anhanguera", description: "Materiais alinhados ao trabalho da Anhanguera.", logoUrl: null, sortOrder: 3, isActive: true },
+  { id: "00000000-0000-4000-8000-000000000304", name: "Estácio", slug: "estacio", description: "Conteúdo pensado para a rotina acadêmica da Estácio.", logoUrl: null, sortOrder: 4, isActive: true },
+];
+
 const cat = (slug: string) => DEMO_CATEGORIES.find((c) => c.slug === slug)!;
+const inst = (slug: string) => DEMO_INSTITUTIONS.find((i) => i.slug === slug)!;
 
 function file(id: string, name: string, label: string, sizeBytes: number): ProductFile {
   const ext = name.split(".").pop()?.toUpperCase() ?? "";
@@ -41,16 +49,19 @@ function file(id: string, name: string, label: string, sizeBytes: number): Produ
 
 type DemoProductInput = Omit<
   Product,
-  "categoryId" | "categoryName" | "imageUrl" | "isActive" | "seoTitle" | "seoDescription" | "tiers" | "promoStartsAt" | "promoEndsAt" | "minPriceCents" | "maxPriceCents" | "sku" | "stockQuantity" | "weightGrams" | "dimensions" | "productType" | "downloadLimit" | "files"
+  "categoryId" | "categoryName" | "institutionId" | "institutionName" | "institutionSlug" | "imageUrl" | "isActive" | "seoTitle" | "seoDescription" | "tiers" | "promoStartsAt" | "promoEndsAt" | "minPriceCents" | "maxPriceCents" | "sku" | "stockQuantity" | "weightGrams" | "dimensions" | "productType" | "downloadLimit" | "files"
 > &
   Partial<Pick<Product, "promoStartsAt" | "promoEndsAt" | "files">> & {
     category: string;
+    institution?: string;
   };
 
 function product(p: DemoProductInput): Product {
   const c = cat(p.category);
-  const { category: _category, ...rest } = p;
+  const i = p.institution ? inst(p.institution) : null;
+  const { category: _category, institution: _institution, ...rest } = p;
   void _category;
+  void _institution;
   return {
     tiers: [],
     promoStartsAt: null,
@@ -67,6 +78,9 @@ function product(p: DemoProductInput): Product {
     ...rest,
     categoryId: c.id,
     categoryName: c.name,
+    institutionId: i?.id ?? null,
+    institutionName: i?.name ?? null,
+    institutionSlug: i?.slug ?? null,
     imageUrl: null,
     isActive: true,
     seoTitle: null,
@@ -78,6 +92,7 @@ export const DEMO_PRODUCTS: Product[] = [
   product({
     id: "00000000-0000-4000-8000-000000000201",
     category: "tcc",
+    institution: "unopar",
     name: "Modelo de TCC ABNT (Word)",
     slug: "modelo-tcc-abnt",
     shortDescription: "Modelo de TCC completo e editável em Word, já estruturado segundo as normas ABNT.",
@@ -110,6 +125,7 @@ export const DEMO_PRODUCTS: Product[] = [
   product({
     id: "00000000-0000-4000-8000-000000000202",
     category: "artigos",
+    institution: "uniasselvi",
     name: "Modelo de Artigo Científico ABNT",
     slug: "modelo-artigo-cientifico-abnt",
     shortDescription: "Estrutura IMRaD pronta em Word com formatação ABNT e exemplos de citação.",
@@ -136,6 +152,7 @@ export const DEMO_PRODUCTS: Product[] = [
   product({
     id: "00000000-0000-4000-8000-000000000203",
     category: "abnt",
+    institution: "unopar",
     name: "Guia de Formatação ABNT",
     slug: "guia-formatacao-abnt",
     shortDescription: "Guia passo a passo para formatar TCC, dissertação e tese nas normas ABNT.",
@@ -165,6 +182,7 @@ export const DEMO_PRODUCTS: Product[] = [
   product({
     id: "00000000-0000-4000-8000-000000000204",
     category: "apresentacoes",
+    institution: "anhanguera",
     name: "Template de Apresentação de TCC",
     slug: "template-apresentacao-tcc",
     shortDescription: "Template de slides profissional para a defesa do TCC, editável no PowerPoint.",
@@ -220,6 +238,7 @@ export const DEMO_PRODUCTS: Product[] = [
   product({
     id: "00000000-0000-4000-8000-000000000206",
     category: "templates",
+    institution: "estacio",
     name: "Modelo de Projeto de Pesquisa",
     slug: "modelo-projeto-de-pesquisa",
     shortDescription: "Modelo em Word com as seções de um projeto: problema, objetivos, metodologia e cronograma.",
@@ -249,6 +268,7 @@ export const DEMO_PRODUCTS: Product[] = [
   product({
     id: "00000000-0000-4000-8000-000000000207",
     category: "templates",
+    institution: "unopar",
     name: "Checklist de Revisão de TCC",
     slug: "checklist-revisao-tcc",
     shortDescription: "Checklist de mais de 80 itens para revisar estrutura, conteúdo e normas antes da entrega.",
@@ -278,6 +298,7 @@ export const DEMO_PRODUCTS: Product[] = [
   product({
     id: "00000000-0000-4000-8000-000000000208",
     category: "ebooks",
+    institution: "uniasselvi",
     name: "E-book: Como escrever um TCC do zero",
     slug: "ebook-como-escrever-tcc-do-zero",
     shortDescription: "Roteiro prático de escrita do TCC, do tema à versão final, com método de escrita em etapas.",

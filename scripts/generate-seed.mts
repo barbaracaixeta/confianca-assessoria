@@ -3,7 +3,7 @@
  * Uso: npm run seed:generate
  */
 import { writeFileSync } from "node:fs";
-import { DEMO_CATEGORIES, DEMO_FAQS, DEMO_PRODUCTS } from "../src/lib/demo/catalog-data.ts";
+import { DEMO_CATEGORIES, DEMO_FAQS, DEMO_INSTITUTIONS, DEMO_PRODUCTS } from "../src/lib/demo/catalog-data.ts";
 
 const q = (v: string | null | undefined) => (v == null ? "null" : `'${v.replace(/'/g, "''")}'`);
 const n = (v: number | null | undefined) => (v == null ? "null" : String(v));
@@ -21,11 +21,18 @@ for (const c of DEMO_CATEGORIES) {
   );
 }
 
+for (const i of DEMO_INSTITUTIONS) {
+  lines.push(
+    `insert into public.institutions (id, name, slug, description, sort_order, is_active) values (${q(i.id)}, ${q(i.name)}, ${q(i.slug)}, ${q(i.description)}, ${i.sortOrder}, ${i.isActive}) on conflict (id) do nothing;`,
+  );
+}
+
 for (const p of DEMO_PRODUCTS) {
   lines.push(
-    `insert into public.products (id, category_id, name, slug, short_description, description, pricing_unit, base_price_cents, discount_type, discount_value, promo_starts_at, promo_ends_at, min_quantity, max_quantity, min_price_cents, max_price_cents, delivery_days, delivery_label, benefits, audience, includes, faqs, is_active, is_featured, sort_order, product_type, is_new, is_best_seller, download_limit) values (${[
+    `insert into public.products (id, category_id, institution_id, name, slug, short_description, description, pricing_unit, base_price_cents, discount_type, discount_value, promo_starts_at, promo_ends_at, min_quantity, max_quantity, min_price_cents, max_price_cents, delivery_days, delivery_label, benefits, audience, includes, faqs, is_active, is_featured, sort_order, product_type, is_new, is_best_seller, download_limit) values (${[
       q(p.id),
       q(p.categoryId),
+      q(p.institutionId),
       q(p.name),
       q(p.slug),
       q(p.shortDescription),
@@ -86,4 +93,4 @@ lines.push(
 );
 
 writeFileSync(new URL("../supabase/seed.sql", import.meta.url), lines.join("\n") + "\n");
-console.log(`seed.sql gerado: ${DEMO_CATEGORIES.length} categorias, ${DEMO_PRODUCTS.length} produtos, ${DEMO_FAQS.length} FAQs.`);
+console.log(`seed.sql gerado: ${DEMO_CATEGORIES.length} categorias, ${DEMO_INSTITUTIONS.length} instituições, ${DEMO_PRODUCTS.length} produtos, ${DEMO_FAQS.length} FAQs.`);

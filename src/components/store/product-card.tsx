@@ -81,7 +81,9 @@ export function ProductCard({ product }: { product: Product }) {
       </Link>
 
       <div className="mt-4 flex flex-1 flex-col">
-        <p className="eyebrow text-[0.6875rem] text-muted">{product.categoryName ?? "Material"}</p>
+        <p className="eyebrow text-[0.6875rem] text-muted">
+          {[product.categoryName, product.institutionName].filter(Boolean).join(" · ") || "Material"}
+        </p>
         <h3 className="mt-1.5 font-serif text-[1.2rem] leading-snug text-ink">
           <Link href={`/produto/${product.slug}`} className="transition-colors hover:text-pine">
             {product.name}

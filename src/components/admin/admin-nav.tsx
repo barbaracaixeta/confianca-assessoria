@@ -27,6 +27,7 @@ const GROUPS: { title: string; items: NavItem[] }[] = [
     items: [
       { label: "Produtos", href: "/admin/produtos", permission: "products.view" },
       { label: "Categorias", href: "/admin/categorias", permission: "products.view" },
+      { label: "Instituições", href: "/admin/instituicoes", permission: "products.view" },
       { label: "Cupons", href: "/admin/cupons", permission: "products.view" },
       { label: "Preços", href: "/admin/precos", permission: "products.view" },
       { label: "Promoções", href: "/admin/promocoes", permission: "products.view" },

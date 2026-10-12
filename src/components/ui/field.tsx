@@ -1,7 +1,7 @@
 import { useId, type ComponentProps, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-const control =
+export const control =
   "w-full rounded-[var(--radius-sm)] border border-line-strong bg-sheet px-3.5 text-[0.9375rem] text-ink " +
   "placeholder:text-muted/70 transition-colors duration-150 hover:border-ink-2/40 " +
   "focus-visible:border-pine focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-pine/25 " +

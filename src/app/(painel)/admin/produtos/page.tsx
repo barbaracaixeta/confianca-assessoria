@@ -38,12 +38,13 @@ export default async function AdminProductsPage() {
         </p>
       ) : (
         <div className="mt-8 overflow-x-auto">
-          <table className="w-full min-w-[720px] text-sm">
+          <table className="w-full min-w-[820px] text-sm">
             <thead>
               <tr className="border-b border-line text-left text-xs text-muted">
                 <th className="pb-2 font-normal">Produto</th>
                 <th className="pb-2 font-normal">Preço</th>
                 <th className="pb-2 font-normal">Categoria</th>
+                <th className="pb-2 font-normal">Instituição</th>
                 <th className="pb-2 font-normal">Arquivos</th>
                 <th className="pb-2 text-right font-normal">Pedidos</th>
                 <th className="pb-2 text-right font-normal">Publicado</th>
@@ -80,6 +81,7 @@ export default async function AdminProductsPage() {
                     {p.promoActive && <Badge tone="amber" className="ml-1">OFERTA</Badge>}
                   </td>
                   <td className="py-3 text-ink-2">{p.category ?? "—"}</td>
+                  <td className="py-3 text-ink-2">{p.institution ?? "—"}</td>
                   <td className="py-3 tabular">{p.fileCount > 0 ? p.fileCount : <span className="text-danger">sem arquivo</span>}</td>
                   <td className="py-3 text-right tabular">{p.orderCount}</td>
                   <td className="py-3 text-right">
