@@ -12,7 +12,7 @@ export default async function AdminCustomersPage() {
   const canManage = hasPermission(viewer, "customers.edit");
   return (
     <div>
-      <h1 className="display text-[2.7rem] text-pine">Clientes</h1>
+      <h1 className="display text-[2.25rem] text-pine">Clientes</h1>
       <p className="mt-1 text-sm text-muted">
         Base de clientes da loja, com histórico de pedidos e total gasto.
       </p>

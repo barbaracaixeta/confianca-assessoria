@@ -20,7 +20,7 @@ export default async function AdminCustomerPage({ params }: PageProps<"/admin/cl
   return (
     <div className="max-w-[980px]">
       <Link href="/admin/clientes" className="text-sm text-muted hover:text-pine">Clientes</Link>
-      <h1 className="display mt-2 text-[2.7rem] text-pine">{customer.fullName || "Cliente"}</h1>
+      <h1 className="display mt-2 text-[2.25rem] text-pine">{customer.fullName || "Cliente"}</h1>
 
       <dl className="mt-6 grid grid-cols-1 gap-x-8 gap-y-3 border-y border-line py-5 text-sm sm:grid-cols-2 md:grid-cols-3">
         <div><dt className="text-xs text-muted">E-mail</dt><dd className="mt-0.5 text-ink">{customer.email}</dd></div>

@@ -8,7 +8,7 @@ export default async function MyFilesPage() {
   const delivered = files.filter((f) => f.kind === "delivery");
   return (
     <div>
-      <h1 className="display text-[3rem] text-pine md:text-[3.6rem]">Arquivos</h1>
+      <h1 className="display text-[2.5rem] text-pine md:text-[3rem]">Arquivos</h1>
       <p className="mt-3 max-w-[56ch] text-muted">Arquivos ficam em armazenamento privado. Os downloads usam links temporários.</p>
       <section className="mt-10">
         <h2 className="text-[1.8rem] text-ink">Entregues pela equipe</h2>

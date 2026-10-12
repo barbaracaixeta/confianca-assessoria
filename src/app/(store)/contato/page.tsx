@@ -17,7 +17,7 @@ export default async function ContactPage() {
 
   return (
     <div className="mx-auto max-w-[1280px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
-      <h1 className="display text-[3.6rem] text-pine md:text-[5.1rem]">Contato</h1>
+      <h1 className="display text-[3rem] text-pine md:text-[4.25rem]">Contato</h1>
       <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-2">
         Para dúvidas sobre um pedido em andamento, use as mensagens na página do pedido: a equipe responsável responde por lá.
       </p>

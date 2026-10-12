@@ -11,7 +11,7 @@ export default async function AdminFaqPage() {
   const faqs = await getAdminFaqs();
   return (
     <div>
-      <h1 className="display text-[2.7rem] text-pine">FAQ</h1>
+      <h1 className="display text-[2.25rem] text-pine">FAQ</h1>
       <p className="mt-1 text-sm text-muted">
         Perguntas frequentes exibidas no site. Perguntas inativas ficam ocultas para os visitantes.
       </p>

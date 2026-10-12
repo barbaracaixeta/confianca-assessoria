@@ -43,7 +43,7 @@ export default async function CategoryPage({ params }: PageProps<"/categoria/[sl
       </nav>
 
       <div className="mt-6 max-w-2xl">
-        <h1 className="display text-[3.3rem] text-pine md:text-[4.5rem]">{category.name}</h1>
+        <h1 className="display text-[2.75rem] text-pine md:text-[3.75rem]">{category.name}</h1>
         {category.description && <p className="mt-4 text-lg leading-relaxed text-ink-2">{category.description}</p>}
       </div>
 

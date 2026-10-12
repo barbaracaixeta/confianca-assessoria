@@ -32,7 +32,7 @@ export default async function AdminDashboard() {
   return (
     <div className="max-w-[1180px]">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <h1 className="display text-[2.7rem] text-pine md:text-[3.3rem]">Dashboard</h1>
+        <h1 className="display text-[2.25rem] text-pine md:text-[2.75rem]">Dashboard</h1>
         <p className="text-sm text-muted">{formatDate(new Date(), { dateStyle: "full" })}</p>
       </div>
 

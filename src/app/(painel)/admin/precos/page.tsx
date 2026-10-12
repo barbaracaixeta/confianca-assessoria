@@ -13,7 +13,7 @@ export default async function AdminPricesPage() {
   const initialTiers = initialProductId ? await getAdminPriceTiers(initialProductId) : [];
   return (
     <div>
-      <h1 className="display text-[2.7rem] text-pine">Preços</h1>
+      <h1 className="display text-[2.25rem] text-pine">Preços</h1>
       <p className="mt-1 text-sm text-muted">
         Defina faixas de preço por quantidade para cada produto. A partir da quantidade mínima de uma faixa, o preço unitário dela é aplicado no lugar do preço base.
       </p>

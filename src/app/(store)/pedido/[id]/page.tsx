@@ -40,7 +40,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/pe
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-sm text-muted">Pedido realizado em {formatDate(order.createdAt, { dateStyle: "long" })}</p>
-          <h1 className="display mt-1 text-[3rem] text-pine tabular md:text-[3.9rem]">#{order.number}</h1>
+          <h1 className="display mt-1 text-[2.5rem] text-pine tabular md:text-[3.2rem]">#{order.number}</h1>
         </div>
         <Badge tone={paid ? "green" : failed ? "danger" : "amber"}>{PAYMENT_STATUS_LABEL[order.paymentStatus]}</Badge>
       </div>

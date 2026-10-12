@@ -20,7 +20,7 @@ export default function HowItWorksPage() {
   return (
     <>
       <div className="mx-auto max-w-[1280px] px-5 pt-12 md:px-8 md:pt-16">
-        <h1 className="display max-w-[16ch] text-[3.6rem] text-pine md:text-[5.1rem]">Como funciona</h1>
+        <h1 className="display max-w-[16ch] text-[3rem] text-pine md:text-[4.25rem]">Como funciona</h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-2">Encontre, escolha, compre e receba: a entrega acontece na hora, sem espera.</p>
       </div>
       <HowItWorks withHeading={false} />

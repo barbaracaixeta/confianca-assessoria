@@ -11,7 +11,7 @@ export default async function AdminCouponsPage() {
   const coupons = await getAdminCoupons();
   return (
     <div>
-      <h1 className="display text-[2.7rem] text-pine">Cupons</h1>
+      <h1 className="display text-[2.25rem] text-pine">Cupons</h1>
       <p className="mt-1 text-sm text-muted">
         Cupons percentuais ou em valor fixo, com validade e limites. Eles são validados automaticamente no checkout.
       </p>

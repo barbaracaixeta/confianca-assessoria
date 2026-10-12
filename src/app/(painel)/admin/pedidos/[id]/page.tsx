@@ -17,7 +17,7 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/pedid
   return (
     <div>
       <Link href="/admin/pedidos" className="text-sm text-muted hover:text-pine">Pedidos</Link>
-      <h1 className="display mt-2 text-[2.7rem] text-pine">Pedido #{order.number}</h1>
+      <h1 className="display mt-2 text-[2.25rem] text-pine">Pedido #{order.number}</h1>
       <OrderDetail order={order} staff={staff} />
     </div>
   );

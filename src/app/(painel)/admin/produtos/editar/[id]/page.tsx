@@ -71,7 +71,7 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
   return (
     <div className="max-w-[880px]">
       <Link href="/admin/produtos" className="text-sm text-muted hover:text-pine">Produtos</Link>
-      <h1 className="display mt-2 text-[2.7rem] text-pine">{p.name}</h1>
+      <h1 className="display mt-2 text-[2.25rem] text-pine">{p.name}</h1>
       <Link href={`/produto/${p.slug}`} className="mt-1 inline-block text-sm text-muted tabular hover:text-pine">/produto/{p.slug}</Link>
 
       <div className="mt-10">

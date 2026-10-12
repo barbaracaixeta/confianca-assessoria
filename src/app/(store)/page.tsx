@@ -42,7 +42,7 @@ export default async function HomePage() {
         <div className="relative mx-auto grid max-w-[1280px] items-center gap-12 px-5 pt-14 pb-16 md:px-8 md:pt-20 md:pb-24 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:gap-16">
           <div className="reveal max-w-[38rem]">
             <p className="eyebrow text-green">Materiais acadêmicos digitais</p>
-            <h1 className="display mt-5 text-[3.3rem] text-pine sm:text-[4.2rem] lg:text-[5.1rem]">
+            <h1 className="display mt-5 text-[2.9rem] text-pine sm:text-[3.5rem] lg:text-[4.2rem]">
               {heroTitle}
             </h1>
             <p className="mt-6 max-w-[32rem] text-lg leading-relaxed text-ink-2">{heroSubtitle}</p>

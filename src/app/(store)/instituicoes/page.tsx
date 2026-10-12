@@ -49,7 +49,7 @@ export default async function InstitutionsPage() {
 
       <div className="mt-6 max-w-2xl">
         <p className="text-sm font-medium text-green">Instituições de ensino</p>
-        <h1 className="display mt-2 text-[3.3rem] text-pine md:text-[4.5rem]">Encontre materiais da sua instituição</h1>
+        <h1 className="display mt-2 text-[2.75rem] text-pine md:text-[3.75rem]">Encontre materiais da sua instituição</h1>
         <p className="mt-4 text-lg leading-relaxed text-ink-2">
           Organize a busca pelos materiais mais próximos da sua rotina acadêmica. Escolha a instituição e veja os produtos disponíveis.
         </p>

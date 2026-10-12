@@ -11,7 +11,7 @@ export default async function AdminContentPage() {
   const content = await getAdminHomeContent();
   return (
     <div>
-      <h1 className="display text-[2.7rem] text-pine">Conteúdo</h1>
+      <h1 className="display text-[2.25rem] text-pine">Conteúdo</h1>
       <p className="mt-1 text-sm text-muted">
         Textos editoriais da página inicial. Diferente dos dados institucionais, aqui você escreve os destaques da vitrine.
       </p>

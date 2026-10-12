@@ -11,7 +11,7 @@ export default async function AdminBannersPage() {
   const banners = await getAdminBanners();
   return (
     <div>
-      <h1 className="display text-[2.7rem] text-pine">Banners</h1>
+      <h1 className="display text-[2.25rem] text-pine">Banners</h1>
       <p className="mt-1 text-sm text-muted">
         Destaques exibidos na página inicial. Banners inativos ou fora da vigência não aparecem para os visitantes.
       </p>

@@ -7,7 +7,7 @@ export default async function MyOrdersPage() {
   const orders = await getMyOrders();
   return (
     <div>
-      <h1 className="display text-[3rem] text-pine md:text-[3.6rem]">Pedidos</h1>
+      <h1 className="display text-[2.5rem] text-pine md:text-[3rem]">Pedidos</h1>
       <div className="mt-8">
         {orders.length > 0 ? (
           <OrderList orders={orders} />

@@ -15,7 +15,7 @@ export default async function AccountHome() {
 
   return (
     <div>
-      <h1 className="display text-[3rem] text-pine md:text-[3.9rem]">Olá, {firstName}</h1>
+      <h1 className="display text-[2.5rem] text-pine md:text-[3.2rem]">Olá, {firstName}</h1>
 
       <dl className="mt-10 grid grid-cols-3 border-y border-line">
         {[

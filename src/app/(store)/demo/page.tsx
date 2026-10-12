@@ -28,7 +28,7 @@ export default async function DemoStudioPage() {
   return (
     <div className="mx-auto max-w-[900px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
       <p className="text-sm font-medium text-green">Ferramenta de desenvolvimento</p>
-      <h1 className="display mt-2 text-[3rem] text-pine md:text-[3.9rem]">Order Studio</h1>
+      <h1 className="display mt-2 text-[2.5rem] text-pine md:text-[3.2rem]">Order Studio</h1>
       <p className="mt-4 max-w-[62ch] leading-relaxed text-ink-2">
         Exercita em memória o fluxo de entrega de produtos digitais sem depender do Supabase ou do Asaas: cria um pedido
         com preço real (<code className="rounded bg-sheet px-1.5 py-0.5 text-xs">priceCart</code>), simula o webhook de

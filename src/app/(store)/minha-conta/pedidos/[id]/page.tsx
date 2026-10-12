@@ -22,7 +22,7 @@ export default async function MyOrderPage({ params }: PageProps<"/minha-conta/pe
     <div>
       <Link href="/minha-conta/pedidos" className="text-sm text-muted hover:text-pine">Pedidos</Link>
       <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
-        <h1 className="display text-[2.7rem] text-pine tabular md:text-[3.3rem]">#{order.number}</h1>
+        <h1 className="display text-[2.25rem] text-pine tabular md:text-[2.75rem]">#{order.number}</h1>
         <Badge tone={order.status === "cancelled" ? "danger" : "green"}>{ORDER_STATUS_LABEL[order.status]}</Badge>
       </div>
 

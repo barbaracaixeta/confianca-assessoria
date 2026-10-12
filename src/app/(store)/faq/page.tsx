@@ -29,7 +29,7 @@ export default async function FaqPage() {
   return (
     <div className="mx-auto max-w-[1280px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />
-      <h1 className="display text-[3.6rem] text-pine md:text-[5.1rem]">Perguntas frequentes</h1>
+      <h1 className="display text-[3rem] text-pine md:text-[4.25rem]">Perguntas frequentes</h1>
       <div className="mt-14 space-y-14">
         {groups.map((g) => (
           <section key={g} className="grid gap-6 lg:grid-cols-[minmax(0,0.38fr)_minmax(0,1fr)] lg:gap-16">

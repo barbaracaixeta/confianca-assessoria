@@ -126,7 +126,7 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
                 </Link>
               )}
             </div>
-            <h1 className="display mt-4 text-[2.88rem] leading-[1.05] text-pine md:text-[3.9rem]">{product.name}</h1>
+            <h1 className="display mt-4 text-[2.5rem] leading-[1.05] text-pine md:text-[3.2rem]">{product.name}</h1>
             <p className="mt-5 max-w-[40rem] text-lg leading-relaxed text-ink-2">{product.shortDescription}</p>
 
             <div className="prose-academic mt-8">
