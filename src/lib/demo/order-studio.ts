@@ -466,13 +466,24 @@ export interface DemoSessionUser {
   email: string;
   fullName: string;
   role: "customer";
+  permissions: never[];
+  mustChangePassword: boolean;
+  lastLoginAt: string | null;
 }
 
 export async function getDemoSessionUser(): Promise<DemoSessionUser | null> {
   if (isSupabaseConfigured) return null;
   const store = await cookies();
   if (store.get(DEMO_SESSION_COOKIE)?.value !== DEMO_CUSTOMER.id) return null;
-  return { id: DEMO_CUSTOMER.id, email: DEMO_CUSTOMER.email, fullName: DEMO_CUSTOMER.fullName, role: "customer" };
+  return {
+    id: DEMO_CUSTOMER.id,
+    email: DEMO_CUSTOMER.email,
+    fullName: DEMO_CUSTOMER.fullName,
+    role: "customer",
+    permissions: [],
+    mustChangePassword: false,
+    lastLoginAt: null,
+  };
 }
 
 export async function setDemoSession() {

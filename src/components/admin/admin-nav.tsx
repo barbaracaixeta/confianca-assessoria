@@ -4,57 +4,56 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import type { AppRole } from "@/types/domain";
+import type { Permission } from "@/lib/admin/permissions";
 
 interface NavItem {
   label: string;
   href?: string; // sem href = módulo ainda não entregue (exibido como indisponível, nunca como link falso)
-  minRole?: AppRole;
+  permission?: Permission;
 }
 
 const GROUPS: { title: string; items: NavItem[] }[] = [
   {
     title: "Operação",
     items: [
-      { label: "Dashboard", href: "/admin" },
-      { label: "Pedidos", href: "/admin/pedidos" },
-      { label: "Clientes", href: "/admin/clientes" },
-      { label: "Pagamentos", href: "/admin/pagamentos" },
+      { label: "Dashboard", href: "/admin", permission: "dashboard.view" },
+      { label: "Pedidos", href: "/admin/pedidos", permission: "orders.view" },
+      { label: "Clientes", href: "/admin/clientes", permission: "customers.view" },
+      { label: "Pagamentos", href: "/admin/pagamentos", permission: "orders.view" },
     ],
   },
   {
     title: "Catálogo",
     items: [
-      { label: "Produtos", href: "/admin/produtos" },
-      { label: "Categorias", href: "/admin/categorias" },
-      { label: "Cupons", href: "/admin/cupons" },
-      { label: "Preços", href: "/admin/precos" },
-      { label: "Promoções", href: "/admin/promocoes" },
+      { label: "Produtos", href: "/admin/produtos", permission: "products.view" },
+      { label: "Categorias", href: "/admin/categorias", permission: "products.view" },
+      { label: "Cupons", href: "/admin/cupons", permission: "products.view" },
+      { label: "Preços", href: "/admin/precos", permission: "products.view" },
+      { label: "Promoções", href: "/admin/promocoes", permission: "products.view" },
     ],
   },
   {
     title: "Conteúdo",
     items: [
-      { label: "Banners", href: "/admin/banners" },
-      { label: "Depoimentos", href: "/admin/depoimentos" },
-      { label: "FAQ", href: "/admin/faq" },
-      { label: "Conteúdo", href: "/admin/conteudo", minRole: "admin" },
+      { label: "Banners", href: "/admin/banners", permission: "content.view" },
+      { label: "Depoimentos", href: "/admin/depoimentos", permission: "content.view" },
+      { label: "FAQ", href: "/admin/faq", permission: "content.view" },
+      { label: "Conteúdo", href: "/admin/conteudo", permission: "content.view" },
     ],
   },
   {
     title: "Sistema",
     items: [
-      { label: "Configurações", href: "/admin/configuracoes", minRole: "admin" },
-      { label: "Administradores", href: "/admin/administradores", minRole: "super_admin" },
+      { label: "Configurações", href: "/admin/configuracoes", permission: "settings.view" },
+      { label: "Administradores", href: "/admin/administradores", permission: "admins.view" },
     ],
   },
 ];
 
-const RANK: Record<AppRole, number> = { customer: 0, operator: 1, admin: 2, super_admin: 3 };
-
-export function AdminNav({ role }: { role: AppRole }) {
+export function AdminNav({ permissions }: { permissions: Permission[] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const allowed = new Set<Permission>(permissions);
 
   return (
     <>
@@ -69,13 +68,14 @@ export function AdminNav({ role }: { role: AppRole }) {
         <span aria-hidden="true">{open ? "−" : "+"}</span>
       </button>
       <nav id="admin-menu" aria-label="Painel" className={cn("overflow-y-auto px-3 pb-6 lg:block", !open && "hidden")}>
-        {GROUPS.map((g) => (
-          <div key={g.title} className="mt-4 first:mt-0">
-            <p className="px-2 pb-1.5 text-xs font-medium text-muted">{g.title}</p>
-            <ul>
-              {g.items
-                .filter((it) => RANK[role] >= RANK[it.minRole ?? "operator"])
-                .map((it) => {
+        {GROUPS.map((g) => {
+          const items = g.items.filter((it) => !it.permission || allowed.has(it.permission));
+          if (items.length === 0) return null;
+          return (
+            <div key={g.title} className="mt-4 first:mt-0">
+              <p className="px-2 pb-1.5 text-xs font-medium text-muted">{g.title}</p>
+              <ul>
+                {items.map((it) => {
                   if (!it.href) {
                     return (
                       <li key={it.label}>
@@ -102,9 +102,10 @@ export function AdminNav({ role }: { role: AppRole }) {
                     </li>
                   );
                 })}
-            </ul>
-          </div>
-        ))}
+              </ul>
+            </div>
+          );
+        })}
       </nav>
     </>
   );
