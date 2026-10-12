@@ -24,7 +24,7 @@ export default async function HomePage() {
   const heroTitle = home.heroTitle || "Mais confiança para cada etapa da sua jornada acadêmica.";
   const heroSubtitle =
     home.heroSubtitle ||
-    "Materiais de apoio, modelos e recursos organizacionais para você estruturar melhor seus trabalhos — com acesso digital imediato após a confirmação do pagamento.";
+    "Materiais de apoio, modelos e recursos organizacionais para você estruturar melhor seus trabalhos, com acesso digital imediato após a confirmação do pagamento.";
   const heroCtaLabel = home.heroCtaLabel || "Explorar materiais";
   const heroCtaHref = home.heroCtaHref.startsWith("/") ? home.heroCtaHref : "/loja";
 
