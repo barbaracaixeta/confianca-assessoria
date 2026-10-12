@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Spinner } from "./spinner";
 
-type Variant = "primary" | "accent" | "outline" | "ghost" | "danger" | "onDark";
+type Variant = "primary" | "accent" | "outline" | "ghost" | "danger" | "dangerOutline" | "onDark";
 type Size = "sm" | "md" | "lg";
 
 const base =
@@ -18,6 +18,7 @@ const variants: Record<Variant, string> = {
   outline: "border border-line-strong text-ink hover:border-pine hover:text-pine bg-transparent",
   ghost: "text-ink-2 hover:text-pine hover:bg-green-50",
   danger: "bg-danger text-white hover:bg-danger/90",
+  dangerOutline: "border border-danger/40 text-danger bg-transparent hover:bg-danger-50 hover:border-danger/70",
   onDark: "border border-paper/30 bg-transparent text-paper hover:border-paper/60 hover:bg-paper/10",
 };
 
