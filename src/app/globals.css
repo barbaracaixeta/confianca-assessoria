@@ -1,0 +1,186 @@
+@import "tailwindcss";
+
+/*
+ * Confiança — design tokens
+ * Verde domina; laranja é acento (CTA, preço, desconto, indicador). Nunca as duas
+ * cores em blocos grandes lado a lado.
+ */
+@theme {
+  /* Marca */
+  --color-pine-900: #073826;
+  --color-pine: #0b5139; /* verde profundo */
+  --color-green: #147a55; /* verde principal */
+  --color-green-2: #1f8a62; /* verde secundário */
+  --color-green-50: #eef5f1;
+  --color-green-100: #dcebe3;
+  --color-amber: #f28c28; /* laranja */
+  --color-amber-light: #ffb45c;
+  --color-amber-ink: #a8560a; /* laranja com contraste AA para texto pequeno sobre claro */
+  --color-amber-50: #fff4e6;
+
+  /* Neutros */
+  --color-paper: #f8faf8; /* off-white */
+  --color-sheet: #ffffff;
+  --color-ink: #1f2933; /* grafite */
+  --color-ink-2: #3e4c59;
+  --color-muted: #5b6875;
+  --color-line: #dde4df;
+  --color-line-strong: #c3cec7;
+
+  /* Estados */
+  --color-danger: #b42318;
+  --color-danger-50: #fef3f2;
+  --color-success: #147a55;
+
+  /* Tipografia */
+  --font-serif: var(--font-literata), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+
+  /* Escala (razão ~1.25, base 16px) */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.1rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.35rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.6rem;
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.8rem;
+
+  /* Raios: pequenos e hierárquicos */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "tnum" 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-green-100);
+    color: var(--color-pine-900);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Display: Literata com eixo óptico para títulos grandes */
+  .display {
+    font-family: var(--font-serif);
+    font-variation-settings: "opsz" 72;
+    font-weight: 450;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+
+  .prose-academic {
+    font-family: var(--font-serif);
+    font-variation-settings: "opsz" 14;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--color-ink-2);
+    max-width: 66ch;
+  }
+
+  .prose-academic p + p {
+    margin-top: 1em;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Folha de papel: única peça com sombra no sistema */
+  .sheet {
+    background: var(--color-sheet);
+    border-radius: var(--radius-xs);
+    box-shadow:
+      0 1px 0 rgb(11 81 57 / 0.06),
+      0 12px 24px -12px rgb(11 81 57 / 0.18),
+      0 32px 64px -32px rgb(31 41 51 / 0.22);
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.35s var(--ease-out-quart);
+  }
+
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+@keyframes ink-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
