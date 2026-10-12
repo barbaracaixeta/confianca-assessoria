@@ -73,7 +73,15 @@ export async function signUpAction(_: AuthState, form: FormData): Promise<AuthSt
       emailRedirectTo: `${appUrl}/auth/confirm?next=${encodeURIComponent(next)}`,
     },
   });
-  if (error) return { error: "Não foi possível criar a conta. Verifique os dados e tente novamente.", fields };
+  if (error) {
+    if (error.status === 429 || error.code === "over_email_send_rate_limit") {
+      return {
+        error: "Não conseguimos enviar o e-mail de confirmação agora (limite de envio do servidor). Tente novamente em alguns minutos.",
+        fields,
+      };
+    }
+    return { error: "Não foi possível criar a conta. Verifique os dados e tente novamente.", fields };
+  }
 
   if (data.session) redirect(next);
   return { message: `Enviamos um link de confirmação para ${parsed.data.email}. Abra o e-mail para ativar sua conta.` };

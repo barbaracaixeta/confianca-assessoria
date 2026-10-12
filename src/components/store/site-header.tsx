@@ -280,7 +280,7 @@ function HeaderLink({
       href={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "link-underline py-1 text-[0.9375rem] transition-colors",
+        "link-underline py-1 text-sm transition-colors",
         active ? "text-pine [background-size:100%_1px]" : "text-ink-2 hover:text-pine",
       )}
     >
@@ -305,7 +305,7 @@ function DropdownCategorias({ categories }: { categories: Category[] }) {
         type="button"
         aria-expanded={open}
         aria-haspopup="menu"
-        className="link-underline flex items-center gap-1 py-1 text-[0.9375rem] text-ink-2 transition-colors hover:text-pine"
+        className="link-underline flex items-center gap-1 py-1 text-sm text-ink-2 transition-colors hover:text-pine"
       >
         Categorias
         <svg viewBox="0 0 12 12" className="size-3 text-muted" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -350,7 +350,7 @@ function DropdownInstituicoes({ institutions }: { institutions: Institution[] })
         type="button"
         aria-expanded={open}
         aria-haspopup="menu"
-        className="link-underline flex items-center gap-1 py-1 text-[0.9375rem] text-ink-2 transition-colors hover:text-pine"
+        className="link-underline flex items-center gap-1 py-1 text-sm text-ink-2 transition-colors hover:text-pine"
       >
         Instituições
         <svg viewBox="0 0 12 12" className="size-3 text-muted" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
