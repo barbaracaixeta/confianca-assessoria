@@ -326,15 +326,46 @@ function CartLink() {
   );
 }
 
-/** Estado de sessão lido no navegador para manter as páginas públicas estáticas. */
+/**
+ * Estado de sessão lido no navegador para manter as páginas públicas estáticas.
+ *
+ * O login/cadastro acontece via Server Action, que grava o cookie de sessão no
+ * servidor — o cliente do navegador não recebe o evento SIGNED_IN. Por isso,
+ * além de assinar onAuthStateChange, revalidamos a sessão a cada navegação
+ * (pathname) e quando a aba volta ao foco, para o cabeçalho refletir o login
+ * sem exigir recarga manual.
+ */
 function useIsAuthenticated() {
+  const pathname = usePathname();
   const [authed, setAuthed] = useState(false);
+
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
     if (!supabase) return;
-    supabase.auth.getSession().then(({ data }) => setAuthed(Boolean(data.session)));
     const { data } = supabase.auth.onAuthStateChange((_e, session) => setAuthed(Boolean(session)));
     return () => data.subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) return;
+
+    let active = true;
+    const sync = () => {
+      supabase.auth.getSession().then(({ data }) => {
+        if (active) setAuthed(Boolean(data.session));
+      });
+    };
+
+    sync();
+    window.addEventListener("focus", sync);
+    document.addEventListener("visibilitychange", sync);
+    return () => {
+      active = false;
+      window.removeEventListener("focus", sync);
+      document.removeEventListener("visibilitychange", sync);
+    };
+  }, [pathname]);
+
   return authed;
 }

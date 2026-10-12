@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { AuthShell } from "../auth-shell";
 import { SignInForm } from "../auth-forms";
+import { getCurrentUser } from "@/lib/auth/session";
 
 export const metadata: Metadata = { title: "Entrar", robots: { index: false } };
 
 export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const sp = await searchParams;
   const next = typeof sp.next === "string" && sp.next.startsWith("/") && !sp.next.startsWith("//") ? sp.next : "/minha-conta";
+
+  // Já autenticado não precisa ver o formulário de novo.
+  if (await getCurrentUser()) redirect(next);
+
   return (
     <AuthShell
       title="Entrar"
