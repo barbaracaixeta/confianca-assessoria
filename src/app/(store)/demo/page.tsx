@@ -28,7 +28,7 @@ export default async function DemoStudioPage() {
   return (
     <div className="mx-auto max-w-[900px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
       <p className="text-sm font-medium text-green">Ferramenta de desenvolvimento</p>
-      <h1 className="display mt-2 text-[2.5rem] text-pine md:text-[3.25rem]">Order Studio</h1>
+      <h1 className="display mt-2 text-[3rem] text-pine md:text-[3.9rem]">Order Studio</h1>
       <p className="mt-4 max-w-[62ch] leading-relaxed text-ink-2">
         Exercita em memória o fluxo de entrega de produtos digitais sem depender do Supabase ou do Asaas: cria um pedido
         com preço real (<code className="rounded bg-sheet px-1.5 py-0.5 text-xs">priceCart</code>), simula o webhook de
@@ -91,7 +91,7 @@ export default async function DemoStudioPage() {
             <li key={o.id} className="rounded-[var(--radius-lg)] border border-line bg-sheet p-6">
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <div>
-                  <h2 className="font-serif text-2xl text-ink">
+                  <h2 className="text-[1.8rem] text-ink">
                     Pedido <span className="tabular">{o.number}</span>
                   </h2>
                   <p className="mt-1 text-sm text-muted">{o.productName} · {formatMoney(o.totalCents)} · criado em {formatDate(o.createdAt)}</p>
@@ -151,7 +151,7 @@ export default async function DemoStudioPage() {
 
       {snapshot.downloads.length > 0 && (
         <section className="mt-12">
-          <h2 className="font-serif text-xl text-ink">Downloads registrados (auditoria)</h2>
+          <h2 className="text-[1.5rem] text-ink">Downloads registrados (auditoria)</h2>
           <ul className="mt-3 space-y-1 text-sm text-muted">
             {snapshot.downloads.map((d) => (
               <li key={d.id}>

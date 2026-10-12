@@ -79,7 +79,7 @@ export function UploadPanel({ products }: { products: UploadProductOption[] }) {
 
   return (
     <section className="mt-8 rounded-[var(--radius)] border border-line bg-sheet p-5">
-      <h2 className="font-serif text-xl text-ink">Enviar arquivos</h2>
+      <h2 className="text-[1.5rem] text-ink">Enviar arquivos</h2>
       <p className="mt-1 text-sm text-muted">
         Qualquer formato de extensão (documentos, planilhas, apresentações, ZIP, EPUB, imagens, áudio, vídeo…), até {MAX_PRODUCT_FILE_SIZE_MB} MB por arquivo. Ao enviar, o produto é publicado na loja automaticamente.
       </p>

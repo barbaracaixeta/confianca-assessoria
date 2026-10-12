@@ -77,7 +77,7 @@ export default async function InstitutionPage({ params }: PageProps<"/instituico
           )}
           <div>
             <p className="text-sm font-medium text-green">Instituição</p>
-            <h1 className="display mt-1 text-[2.75rem] text-pine md:text-[3.5rem]">Materiais para {institution.name}</h1>
+            <h1 className="display mt-1 text-[3.3rem] text-pine md:text-[4.2rem]">Materiais para {institution.name}</h1>
           </div>
         </div>
         <p className="max-w-sm text-base leading-relaxed text-ink-2">

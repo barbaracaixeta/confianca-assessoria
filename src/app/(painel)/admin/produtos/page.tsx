@@ -21,7 +21,7 @@ export default async function AdminProductsPage() {
     <div className="max-w-[1180px]">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="display text-[2.25rem] text-pine">Produtos</h1>
+          <h1 className="display text-[2.7rem] text-pine">Produtos</h1>
           <p className="mt-1 text-sm text-muted">
             {activeCount} publicado{activeCount === 1 ? "" : "s"} · {products.length} ao total
           </p>

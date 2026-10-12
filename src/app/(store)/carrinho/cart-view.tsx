@@ -39,7 +39,7 @@ export function CartView() {
                   {p ? (
                     <>
                       <p className="text-xs text-muted">{p.product.categoryName}</p>
-                      <Link href={`/produto/${p.product.slug}`} className="font-serif text-xl text-ink hover:text-pine">
+                      <Link href={`/produto/${p.product.slug}`} className="font-display font-bold text-xl text-ink hover:text-pine">
                         {p.product.name}
                       </Link>
                       <p className="mt-1 text-sm text-muted">
@@ -82,7 +82,7 @@ export function CartView() {
                 <div className="text-left sm:text-right">
                   {p ? (
                     <>
-                      <p className="font-serif text-xl text-ink tabular">{formatMoney(p.quote.totalCents)}</p>
+                      <p className="font-display font-bold text-xl text-ink tabular">{formatMoney(p.quote.totalCents)}</p>
                       {p.quote.promoActive && <s className="text-sm text-muted tabular">{formatMoney(p.quote.listTotalCents)}</s>}
                       {p.product.pricingUnit === "per_page" && (
                         <p className="text-xs text-muted">
@@ -116,7 +116,7 @@ export function CartView() {
 
       <aside aria-label="Resumo do pedido" className="lg:sticky lg:top-28 lg:self-start">
         <div className="border-t-2 border-pine bg-sheet p-6">
-          <h2 className="font-serif text-xl text-ink">Resumo</h2>
+          <h2 className="text-[1.5rem] text-ink">Resumo</h2>
           <div className="mt-5">
             <CouponForm
               couponCode={cart.couponCode}

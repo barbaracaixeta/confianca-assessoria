@@ -15,7 +15,7 @@ export default async function AccountHome() {
 
   return (
     <div>
-      <h1 className="display text-[2.5rem] text-pine md:text-[3.25rem]">Olá, {firstName}</h1>
+      <h1 className="display text-[3rem] text-pine md:text-[3.9rem]">Olá, {firstName}</h1>
 
       <dl className="mt-10 grid grid-cols-3 border-y border-line">
         {[
@@ -25,7 +25,7 @@ export default async function AccountHome() {
         ].map(([label, n], i) => (
           <div key={label} className={i > 0 ? "border-line py-5 pl-5 max-md:odd:border-l-0 max-md:odd:pl-0 md:border-l" : "py-5"}>
             <dt className="text-sm text-muted">{label}</dt>
-            <dd className={`mt-1 font-serif text-3xl tabular ${label === "Pendências" && Number(n) > 0 ? "text-amber-ink" : "text-ink"}`}>{n}</dd>
+            <dd className={`mt-1 font-display font-bold text-3xl tabular ${label === "Pendências" && Number(n) > 0 ? "text-amber-ink" : "text-ink"}`}>{n}</dd>
           </div>
         ))}
       </dl>
@@ -33,7 +33,7 @@ export default async function AccountHome() {
       <div className="mt-12 grid gap-12 lg:grid-cols-2">
         <section>
           <div className="flex items-baseline justify-between">
-            <h2 className="font-serif text-2xl text-ink">Meus produtos</h2>
+            <h2 className="text-[1.8rem] text-ink">Meus produtos</h2>
             <Link href="/minha-conta/produtos" className="text-sm text-pine hover:underline">Abrir</Link>
           </div>
           <div className="mt-4">
@@ -46,7 +46,7 @@ export default async function AccountHome() {
 
         <section>
           <div className="flex items-baseline justify-between">
-            <h2 className="font-serif text-2xl text-ink">Pedidos recentes</h2>
+            <h2 className="text-[1.8rem] text-ink">Pedidos recentes</h2>
             {orders.length > 5 && <Link href="/minha-conta/pedidos" className="text-sm text-pine hover:underline">Ver todos</Link>}
           </div>
           <div className="mt-4">

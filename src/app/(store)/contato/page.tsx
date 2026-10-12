@@ -17,7 +17,7 @@ export default async function ContactPage() {
 
   return (
     <div className="mx-auto max-w-[1280px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
-      <h1 className="display text-[3rem] text-pine md:text-[4.25rem]">Contato</h1>
+      <h1 className="display text-[3.6rem] text-pine md:text-[5.1rem]">Contato</h1>
       <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-2">
         Para dúvidas sobre um pedido em andamento, use as mensagens na página do pedido: a equipe responsável responde por lá.
       </p>
@@ -26,7 +26,7 @@ export default async function ContactPage() {
           {channels.map((ch) => (
             <div key={ch.label}>
               <dt className="text-sm text-muted">{ch.label}</dt>
-              <dd className="mt-1 font-serif text-xl"><a href={ch.href} className="text-ink hover:text-pine">{ch.value}</a></dd>
+              <dd className="mt-1 font-display font-bold text-xl"><a href={ch.href} className="text-ink hover:text-pine">{ch.value}</a></dd>
             </div>
           ))}
           {c.address && (

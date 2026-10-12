@@ -26,7 +26,7 @@ export function PurchasedProductCard({ product }: { product: PurchasedProduct })
         </Link>
 
         <div className="flex min-w-0 flex-col">
-          <Link href={`/produto/${product.slug}`} className="font-serif text-lg leading-snug text-ink hover:text-pine sm:text-xl">
+          <Link href={`/produto/${product.slug}`} className="font-display font-bold text-lg leading-snug text-ink hover:text-pine sm:text-xl">
             {product.name}
           </Link>
           <p className="mt-1 text-xs text-muted">

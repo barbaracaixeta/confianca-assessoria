@@ -22,7 +22,7 @@ export default async function MyOrderPage({ params }: PageProps<"/minha-conta/pe
     <div>
       <Link href="/minha-conta/pedidos" className="text-sm text-muted hover:text-pine">Pedidos</Link>
       <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
-        <h1 className="display text-[2.25rem] text-pine tabular md:text-[2.75rem]">#{order.number}</h1>
+        <h1 className="display text-[2.7rem] text-pine tabular md:text-[3.3rem]">#{order.number}</h1>
         <Badge tone={order.status === "cancelled" ? "danger" : "green"}>{ORDER_STATUS_LABEL[order.status]}</Badge>
       </div>
 
@@ -36,12 +36,12 @@ export default async function MyOrderPage({ params }: PageProps<"/minha-conta/pe
       <div className="mt-10 grid gap-12 xl:grid-cols-[minmax(0,1fr)_300px]">
         <div className="space-y-12">
           <section>
-            <h2 className="font-serif text-2xl text-ink">Produtos</h2>
+            <h2 className="text-[1.8rem] text-ink">Produtos</h2>
             <ul className="mt-4 border-t border-ink/80">
               {order.items.map((item) => (
                 <li key={item.id} className="flex flex-wrap items-center justify-between gap-3 border-b border-line py-5">
                   <div>
-                    <Link href={`/produto/${item.productSlug}`} className="font-serif text-lg text-ink hover:text-pine">
+                    <Link href={`/produto/${item.productSlug}`} className="font-display font-bold text-lg text-ink hover:text-pine">
                       {item.productName}
                     </Link>
                     {item.quantity > 1 && <p className="text-sm text-muted">Quantidade: {item.quantity}</p>}
@@ -58,7 +58,7 @@ export default async function MyOrderPage({ params }: PageProps<"/minha-conta/pe
 
           {released && deliveries.length > 0 && (
             <section>
-              <h2 className="font-serif text-2xl text-ink">Entrega</h2>
+              <h2 className="text-[1.8rem] text-ink">Entrega</h2>
               <div className="mt-4"><FileList files={deliveries} /></div>
             </section>
           )}
@@ -73,7 +73,7 @@ export default async function MyOrderPage({ params }: PageProps<"/minha-conta/pe
 
         <aside className="space-y-8">
           <section className="bg-sheet p-6">
-            <h2 className="font-serif text-xl text-ink">Andamento</h2>
+            <h2 className="text-[1.5rem] text-ink">Andamento</h2>
             <div className="mt-5"><OrderTimeline status={order.status} history={order.history} /></div>
           </section>
           <dl className="space-y-3 text-sm">

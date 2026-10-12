@@ -11,7 +11,7 @@ export default async function AdminChangePasswordPage() {
 
   return (
     <>
-      <h1 className="display text-[2rem] text-pine">Altere sua senha</h1>
+      <h1 className="display text-[2.4rem] text-pine">Altere sua senha</h1>
       <p className="mt-2 text-sm leading-relaxed text-muted">
         {forced
           ? "Por segurança, você precisa definir uma nova senha antes de continuar."

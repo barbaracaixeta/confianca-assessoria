@@ -183,7 +183,7 @@ export function CheckoutForm({
           ))}
         </ol>
 
-        <h2 ref={headingRef} tabIndex={-1} className="mt-10 font-serif text-[1.75rem] text-ink outline-none">
+        <h2 ref={headingRef} tabIndex={-1} className="mt-10 text-[2.1rem] text-ink outline-none">
           {STEPS[step - 1].label}
         </h2>
 
@@ -372,7 +372,7 @@ export function CheckoutForm({
 
       <aside aria-label="Resumo do pedido" className="lg:sticky lg:top-28 lg:self-start">
         <div className="border-t-2 border-pine bg-sheet p-6">
-          <h2 className="font-serif text-xl text-ink">Seu pedido</h2>
+          <h2 className="text-[1.5rem] text-ink">Seu pedido</h2>
           <ul className="mt-4 space-y-3 border-b border-line pb-4 text-sm">
             {cart.lines.map((l) => {
               const p = priced?.lines.find((x) => x.product.id === l.productId);

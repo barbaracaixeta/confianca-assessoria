@@ -220,7 +220,7 @@ export function ProductForm({ product, categories, institutions }: { product: Ad
 
       {/* Identidade */}
       <section className="space-y-5">
-        <h2 className="font-serif text-xl text-ink">Identidade</h2>
+        <h2 className="text-[1.5rem] text-ink">Identidade</h2>
         <Field label="Nome" error={f.name.trim() && f.name.trim().length < 2 ? "Informe o nome." : undefined}>
           {(props) => <Input {...props} value={f.name} onChange={(e) => setField("name", e.target.value)} placeholder="Modelo de TCC em Word" required />}
         </Field>
@@ -264,7 +264,7 @@ export function ProductForm({ product, categories, institutions }: { product: Ad
 
       {/* Preço */}
       <section className="space-y-5">
-        <h2 className="font-serif text-xl text-ink">Preço e promoção</h2>
+        <h2 className="text-[1.5rem] text-ink">Preço e promoção</h2>
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Preço base (R$)">
             {(props) => <Input {...props} inputMode="decimal" value={reais(f.basePriceCents)} onChange={(e) => setField("basePriceCents", centsFrom(e.target.value))} />}
@@ -312,7 +312,7 @@ export function ProductForm({ product, categories, institutions }: { product: Ad
 
       {/* Entrega */}
       <section className="space-y-5">
-        <h2 className="font-serif text-xl text-ink">Entrega e catálogo</h2>
+        <h2 className="text-[1.5rem] text-ink">Entrega e catálogo</h2>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           <Field label="Tipo de produto">
             {(props) => (
@@ -343,7 +343,7 @@ export function ProductForm({ product, categories, institutions }: { product: Ad
 
       {/* Conteúdo vendido */}
       <section className="space-y-5">
-        <h2 className="font-serif text-xl text-ink">Benefícios e o que está incluído</h2>
+        <h2 className="text-[1.5rem] text-ink">Benefícios e o que está incluído</h2>
         <Field label="Benefícios" hint="Um por linha. Exibidos com ✓ na página do produto.">
           {(props) => <Textarea {...props} value={f.benefits.join("\n")} onChange={(e) => setField("benefits", e.target.value.split("\n"))} className="min-h-28" />}
         </Field>
@@ -355,7 +355,7 @@ export function ProductForm({ product, categories, institutions }: { product: Ad
 
       {/* Destaques */}
       <fieldset className="space-y-3">
-        <legend className="font-serif text-xl text-ink">Exibição</legend>
+        <legend className="font-display font-bold text-xl text-ink">Exibição</legend>
         <ul className="grid gap-3 sm:grid-cols-2">
           {(
             [
@@ -459,7 +459,7 @@ export function ProductFiles({
 
   return (
     <section className="space-y-6">
-      <h2 className="font-serif text-xl text-ink">Arquivos de entrega</h2>
+      <h2 className="text-[1.5rem] text-ink">Arquivos de entrega</h2>
       {alert && <p className="text-sm font-medium text-danger" role="alert">{alert}</p>}
 
       {/* Capa */}

@@ -11,7 +11,7 @@ export default async function AdminPaymentsPage() {
   const payments = await getAdminPayments();
   return (
     <div className="max-w-[1180px]">
-      <h1 className="display text-[2.25rem] text-pine">Pagamentos</h1>
+      <h1 className="display text-[2.7rem] text-pine">Pagamentos</h1>
       <p className="mt-1 text-sm text-muted">
         Cobranças Pix e cartão com status sincronizado pelo provedor. Expanda um pagamento para ver os eventos de webhook recebidos.
       </p>

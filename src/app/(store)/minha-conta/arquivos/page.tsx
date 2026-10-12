@@ -8,14 +8,14 @@ export default async function MyFilesPage() {
   const delivered = files.filter((f) => f.kind === "delivery");
   return (
     <div>
-      <h1 className="display text-[2.5rem] text-pine md:text-[3rem]">Arquivos</h1>
+      <h1 className="display text-[3rem] text-pine md:text-[3.6rem]">Arquivos</h1>
       <p className="mt-3 max-w-[56ch] text-muted">Arquivos ficam em armazenamento privado. Os downloads usam links temporários.</p>
       <section className="mt-10">
-        <h2 className="font-serif text-2xl text-ink">Entregues pela equipe</h2>
+        <h2 className="text-[1.8rem] text-ink">Entregues pela equipe</h2>
         <div className="mt-4">{delivered.length ? <FileList files={delivered} showOrder /> : <p className="border-t border-line py-6 text-sm text-muted">Nenhuma entrega ainda.</p>}</div>
       </section>
       <section className="mt-12">
-        <h2 className="font-serif text-2xl text-ink">Enviados por você</h2>
+        <h2 className="text-[1.8rem] text-ink">Enviados por você</h2>
         <div className="mt-4">
           {sent.length ? <FileList files={sent} showOrder /> : <EmptyState title="Nenhum arquivo enviado" description="Envie arquivos pela página de cada pedido, depois da confirmação do pagamento." />}
         </div>

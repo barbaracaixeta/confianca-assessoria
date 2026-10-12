@@ -11,7 +11,7 @@ export function HowItWorks({ withHeading = true }: { withHeading?: boolean }) {
     <section aria-labelledby={withHeading ? "como-funciona-titulo" : undefined} className="mx-auto max-w-[1280px] px-5 py-24 md:px-8">
       {withHeading && (
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <h2 id="como-funciona-titulo" className="text-[2.25rem] leading-[1.1] text-ink md:text-[2.75rem]">
+          <h2 id="como-funciona-titulo" className="text-[2.7rem] leading-[1.1] text-ink md:text-[3.3rem]">
             Como funciona
           </h2>
           <p className="max-w-sm text-muted">Quatro passos, sem cadastro obrigatório antes da compra.</p>
@@ -21,8 +21,8 @@ export function HowItWorks({ withHeading = true }: { withHeading?: boolean }) {
         {STEPS.map((s, i) => (
           <li key={s.title} className="relative border-t border-ink/80 pt-5">
             <span className="absolute -top-[5px] left-0 size-[9px] rounded-full bg-amber" aria-hidden="true" />
-            <span className="font-serif text-sm text-muted tabular">Passo {i + 1}</span>
-            <h3 className="mt-2 font-serif text-xl text-ink">{s.title}</h3>
+            <span className="font-display font-bold text-sm text-muted tabular">Passo {i + 1}</span>
+            <h3 className="mt-2 text-[1.5rem] text-ink">{s.title}</h3>
             <p className="mt-2 leading-relaxed text-muted">{s.body}</p>
           </li>
         ))}

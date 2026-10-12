@@ -37,7 +37,7 @@ export function Logo({
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <LogoMark className="size-9 shrink-0" tone={tone} />
       <span className="flex flex-col leading-none">
-        <span className={cn("font-serif text-[1.5rem] leading-none font-normal tracking-[-0.01em]", text)}>
+        <span className={cn("font-display font-bold text-[1.5rem] leading-none tracking-[-0.01em]", text)}>
           Confiança
         </span>
         {!compact && (

@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageProps<"/produto/[slug]">)
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="grid gap-4 border-t border-line pt-8 md:grid-cols-[11rem_minmax(0,1fr)] md:gap-10">
-      <h2 className="font-serif text-xl text-ink">{title}</h2>
+      <h2 className="text-[1.5rem] text-ink">{title}</h2>
       <div>{children}</div>
     </section>
   );
@@ -126,7 +126,7 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
                 </Link>
               )}
             </div>
-            <h1 className="display mt-4 text-[2.4rem] leading-[1.05] text-pine md:text-[3.25rem]">{product.name}</h1>
+            <h1 className="display mt-4 text-[2.88rem] leading-[1.05] text-pine md:text-[3.9rem]">{product.name}</h1>
             <p className="mt-5 max-w-[40rem] text-lg leading-relaxed text-ink-2">{product.shortDescription}</p>
 
             <div className="prose-academic mt-8">
@@ -155,7 +155,7 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
                 <Section title="O que você ganha">
                   <ul className="space-y-3">
                     {product.benefits.map((b) => (
-                      <li key={b} className="font-serif text-lg leading-snug text-ink">{b}</li>
+                      <li key={b} className="font-display font-bold text-lg leading-snug text-ink">{b}</li>
                     ))}
                   </ul>
                 </Section>
@@ -196,7 +196,7 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
             <div className="flex items-end justify-between gap-4">
               <div>
                 <p className="eyebrow text-green">{product.institutionName ?? product.categoryName ?? "Relacionados"}</p>
-                <h2 id="relacionados-titulo" className="mt-3 text-[1.75rem] text-ink md:text-[2.1rem]">
+                <h2 id="relacionados-titulo" className="mt-3 text-[2.1rem] text-ink md:text-[2.52rem]">
                   {product.institutionName ? `Mais materiais para ${product.institutionName}` : "Produtos relacionados"}
                 </h2>
               </div>

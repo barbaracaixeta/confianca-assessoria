@@ -42,7 +42,7 @@ export default async function HomePage() {
         <div className="relative mx-auto grid max-w-[1280px] items-center gap-12 px-5 pt-14 pb-16 md:px-8 md:pt-20 md:pb-24 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:gap-16">
           <div className="reveal max-w-[38rem]">
             <p className="eyebrow text-green">Materiais acadêmicos digitais</p>
-            <h1 className="display mt-5 text-[2.75rem] text-pine sm:text-[3.5rem] lg:text-[4.25rem]">
+            <h1 className="display mt-5 text-[3.3rem] text-pine sm:text-[4.2rem] lg:text-[5.1rem]">
               {heroTitle}
             </h1>
             <p className="mt-6 max-w-[32rem] text-lg leading-relaxed text-ink-2">{heroSubtitle}</p>
@@ -77,7 +77,7 @@ export default async function HomePage() {
             <div className="flex items-end justify-between gap-4">
               <div>
                 <p className="eyebrow text-green">Explore por categoria</p>
-                <h2 id="categorias-titulo" className="mt-3 text-[1.9rem] text-ink md:text-[2.4rem]">
+                <h2 id="categorias-titulo" className="mt-3 text-[2.28rem] text-ink md:text-[2.88rem]">
                   Encontre o material da sua etapa
                 </h2>
               </div>
@@ -91,7 +91,7 @@ export default async function HomePage() {
                   <Link href={`/categoria/${c.slug}`} className="group flex items-center justify-between gap-4 py-4">
                     <span className="flex items-baseline gap-4">
                       <span className="w-6 text-xs text-muted tabular">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="font-serif text-[1.5rem] text-ink transition-colors group-hover:text-pine">{c.name}</span>
+                      <span className="font-display font-bold text-[1.5rem] text-ink transition-colors group-hover:text-pine">{c.name}</span>
                     </span>
                     <svg viewBox="0 0 20 20" className="size-5 -translate-x-1 text-green opacity-0 transition-[opacity,transform] duration-300 ease-[var(--ease-out-quart)] group-hover:translate-x-0 group-hover:opacity-100" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
                       <path d="M4 10h11M10.5 5.5 15 10l-4.5 4.5" />
@@ -110,7 +110,7 @@ export default async function HomePage() {
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="eyebrow text-green">Da sua instituição</p>
-              <h2 id="instituicoes-titulo" className="mt-3 text-[1.9rem] text-ink md:text-[2.4rem]">
+              <h2 id="instituicoes-titulo" className="mt-3 text-[2.28rem] text-ink md:text-[2.88rem]">
                 Encontre materiais da sua instituição
               </h2>
             </div>
@@ -130,10 +130,10 @@ export default async function HomePage() {
                       {i.logoUrl ? (
                         <Image src={i.logoUrl} alt="" width={44} height={44} className="h-full w-full object-contain p-1" />
                       ) : (
-                        <span aria-hidden="true" className="font-serif text-lg text-pine">{i.name.slice(0, 1).toUpperCase()}</span>
+                        <span aria-hidden="true" className="font-display font-bold text-lg text-pine">{i.name.slice(0, 1).toUpperCase()}</span>
                       )}
                     </span>
-                    <span className="font-serif text-xl text-ink transition-colors group-hover:text-pine">{i.name}</span>
+                    <span className="font-display font-bold text-xl text-ink transition-colors group-hover:text-pine">{i.name}</span>
                   </span>
                   <span className="text-xs text-muted tabular">
                     {i.productCount} {i.productCount === 1 ? "material" : "materiais"}
@@ -150,7 +150,7 @@ export default async function HomePage() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="eyebrow text-green">Materiais em destaque</p>
-            <h2 id="destaques-titulo" className="mt-3 text-[1.9rem] text-ink md:text-[2.5rem]">
+            <h2 id="destaques-titulo" className="mt-3 text-[2.28rem] text-ink md:text-[3rem]">
               Prontos para usar a partir de agora
             </h2>
           </div>
@@ -172,7 +172,7 @@ export default async function HomePage() {
             <div className="flex items-end justify-between gap-4">
               <div>
                 <p className="eyebrow text-amber-ink">Mais procurados</p>
-                <h2 id="mais-vendidos-titulo" className="mt-3 text-[1.9rem] text-ink md:text-[2.5rem]">
+                <h2 id="mais-vendidos-titulo" className="mt-3 text-[2.28rem] text-ink md:text-[3rem]">
                   Escolhidos por quem já confia
                 </h2>
               </div>
@@ -194,7 +194,7 @@ export default async function HomePage() {
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-20">
           <div>
             <p className="eyebrow text-green">Por que escolher</p>
-            <h2 id="beneficios-titulo" className="mt-3 text-[1.9rem] text-ink md:text-[2.4rem]">
+            <h2 id="beneficios-titulo" className="mt-3 text-[2.28rem] text-ink md:text-[2.88rem]">
               Uma plataforma séria para a sua jornada
             </h2>
             {onSale.length > 0 && (
@@ -212,8 +212,8 @@ export default async function HomePage() {
             ].map(([n, title, body]) => (
               <div key={n} className="rule-top pt-5">
                 <dt className="flex items-baseline gap-3">
-                  <span className="font-serif text-sm text-amber-ink tabular">{n}</span>
-                  <span className="font-serif text-xl text-ink">{title}</span>
+                  <span className="font-display font-bold text-sm text-amber-ink tabular">{n}</span>
+                  <span className="font-display font-bold text-xl text-ink">{title}</span>
                 </dt>
                 <dd className="mt-2.5 text-sm leading-relaxed text-muted">{body}</dd>
               </div>
@@ -226,7 +226,7 @@ export default async function HomePage() {
       <section aria-labelledby="como-funciona-titulo" className="border-y border-line bg-sheet">
         <div className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
           <p className="eyebrow text-green">Como funciona</p>
-          <h2 id="como-funciona-titulo" className="mt-3 max-w-xl text-[1.9rem] text-ink md:text-[2.4rem]">
+          <h2 id="como-funciona-titulo" className="mt-3 max-w-xl text-[2.28rem] text-ink md:text-[2.88rem]">
             Do escolher ao baixar, sem espera
           </h2>
           <ol className="relative mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
@@ -238,10 +238,10 @@ export default async function HomePage() {
               ["04", "Baixe seus arquivos", "Acesse Meus produtos e baixe quantas vezes precisar, com links seguros."],
             ].map(([n, title, body]) => (
               <li key={n} className="relative bg-sheet lg:pr-6">
-                <span className="relative z-10 inline-flex size-9 items-center justify-center rounded-full bg-pine font-serif text-sm text-paper tabular">
+                <span className="relative z-10 inline-flex size-9 items-center justify-center rounded-full bg-pine font-display font-bold text-sm text-paper tabular">
                   {n}
                 </span>
-                <h3 className="mt-4 font-serif text-xl text-ink">{title}</h3>
+                <h3 className="mt-4 text-[1.5rem] text-ink">{title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
               </li>
             ))}
@@ -255,7 +255,7 @@ export default async function HomePage() {
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(100%_120%_at_100%_0%,rgb(31_138_98/0.55)_0%,transparent_55%)]" />
           <div className="relative max-w-[40rem]">
             <span className="inline-block h-1 w-12 rounded-full bg-amber" aria-hidden="true" />
-            <p className="mt-6 font-serif text-[1.9rem] leading-tight text-paper md:text-[2.6rem]">
+            <p className="mt-6 font-display font-bold text-[1.9rem] leading-tight text-paper md:text-[2.6rem]">
               Materiais pensados para organizar, orientar e apoiar a sua jornada acadêmica.
             </p>
             <p className="mt-5 max-w-[34rem] text-paper/75">
@@ -276,7 +276,7 @@ export default async function HomePage() {
       {/* Uso responsável — discreto */}
       <section aria-labelledby="uso-responsavel-titulo" className="mx-auto max-w-[1280px] px-5 pb-20 md:px-8">
         <div className="rule-top grid gap-6 pt-8 md:grid-cols-[11rem_minmax(0,1fr)] md:gap-12">
-          <h2 id="uso-responsavel-titulo" className="font-serif text-xl text-ink">Uso responsável</h2>
+          <h2 id="uso-responsavel-titulo" className="text-[1.5rem] text-ink">Uso responsável</h2>
           <p className="max-w-[64ch] leading-relaxed text-muted">
             A Confiança oferece materiais de apoio, modelos, guias e recursos acadêmicos. Os produtos não são trabalhos prontos
             para submissão nem garantem nota ou aprovação. Use-os como referência para estruturar e escrever o seu próprio
@@ -290,11 +290,11 @@ export default async function HomePage() {
         <section aria-labelledby="depoimentos-titulo" className="border-y border-line bg-sheet">
           <div className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
             <p className="eyebrow text-green">Quem já comprou</p>
-            <h2 id="depoimentos-titulo" className="mt-3 text-[2rem] text-ink">Relatos de quem confia</h2>
+            <h2 id="depoimentos-titulo" className="mt-3 text-[2.4rem] text-ink">Relatos de quem confia</h2>
             <div className="mt-10 grid gap-x-14 gap-y-10 md:grid-cols-2">
               {testimonials.map((t) => (
                 <figure key={t.id} className="rule-top pt-6">
-                  <blockquote className="font-serif text-lg leading-relaxed text-ink-2">{t.body}</blockquote>
+                  <blockquote className="font-display font-bold text-lg leading-relaxed text-ink-2">{t.body}</blockquote>
                   <figcaption className="mt-4 text-sm text-muted">
                     <span className="font-medium text-ink">{t.authorName}</span>
                     {t.authorDetail && <>, {t.authorDetail}</>}
@@ -311,7 +311,7 @@ export default async function HomePage() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.38fr)_minmax(0,1fr)] lg:gap-16">
           <div>
             <p className="eyebrow text-green">Dúvidas</p>
-            <h2 id="faq-titulo" className="mt-3 text-[2rem] leading-[1.1] text-ink">Antes de comprar</h2>
+            <h2 id="faq-titulo" className="mt-3 text-[2.4rem] leading-[1.1] text-ink">Antes de comprar</h2>
             <Link href="/faq" className="link-underline mt-5 inline-block text-sm font-medium text-pine">
               Todas as perguntas
             </Link>
@@ -323,7 +323,7 @@ export default async function HomePage() {
       {/* CTA final */}
       <section className="mx-auto max-w-[1280px] px-5 pb-24 md:px-8">
         <div className="rule-top flex flex-col gap-8 pt-12 md:flex-row md:items-end md:justify-between">
-          <p className="max-w-[24ch] font-serif text-[2rem] leading-tight text-ink md:text-[2.6rem]">
+          <p className="max-w-[24ch] font-display font-bold text-[2rem] leading-tight text-ink md:text-[2.6rem]">
             Comece pelo material que a sua etapa pede.
           </p>
           <div className="flex flex-wrap gap-3">
@@ -345,7 +345,7 @@ function BestSellerRow({ product, rank }: { product: Product; rank: number }) {
   return (
     <li>
       <Link href={`/produto/${product.slug}`} className="group grid grid-cols-[auto_auto_minmax(0,1fr)_auto] items-center gap-5 py-5">
-        <span className="font-serif text-2xl text-line-strong tabular transition-colors group-hover:text-amber md:text-3xl">
+        <span className="font-display font-bold text-2xl text-line-strong tabular transition-colors group-hover:text-amber md:text-3xl">
           {String(rank).padStart(2, "0")}
         </span>
         <span className="relative hidden size-16 shrink-0 overflow-hidden rounded-[var(--radius-sm)] border border-line sm:block">
@@ -361,7 +361,7 @@ function BestSellerRow({ product, rank }: { product: Product; rank: number }) {
           <span className="block eyebrow text-[0.6875rem] text-muted">
             {[product.categoryName, product.institutionName].filter(Boolean).join(" · ") || "Material"}
           </span>
-          <span className="mt-1 block truncate font-serif text-[1.3rem] text-ink transition-colors group-hover:text-pine">
+          <span className="mt-1 block truncate font-display font-bold text-[1.3rem] text-ink transition-colors group-hover:text-pine">
             {product.name}
           </span>
         </span>
@@ -426,7 +426,7 @@ function HeroVisual({ products }: { products: Product[] }) {
 
       {/* Selo */}
       <div className="absolute top-1/2 left-[46%] flex size-20 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-line bg-sheet text-center shadow-md">
-        <span className="font-serif text-lg leading-none text-pine">ABNT</span>
+        <span className="font-display font-bold text-lg leading-none text-pine">ABNT</span>
         <span className="mt-1 text-[9px] font-semibold tracking-[0.14em] text-muted">NORMAS</span>
       </div>
     </div>

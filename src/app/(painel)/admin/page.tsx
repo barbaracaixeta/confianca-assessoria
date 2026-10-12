@@ -32,7 +32,7 @@ export default async function AdminDashboard() {
   return (
     <div className="max-w-[1180px]">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <h1 className="display text-[2.25rem] text-pine md:text-[2.75rem]">Dashboard</h1>
+        <h1 className="display text-[2.7rem] text-pine md:text-[3.3rem]">Dashboard</h1>
         <p className="text-sm text-muted">{formatDate(new Date(), { dateStyle: "full" })}</p>
       </div>
 
@@ -54,12 +54,12 @@ export default async function AdminDashboard() {
 
       <div className="mt-10 grid gap-8 xl:grid-cols-2">
         <section className="bg-sheet p-5 md:p-6">
-          <h2 className="font-serif text-xl text-ink">Faturamento diário</h2>
+          <h2 className="text-[1.5rem] text-ink">Faturamento diário</h2>
           <p className="text-xs text-muted">Pedidos pagos, últimos 30 dias</p>
           <div className="mt-5"><DailyChart data={m.daily.map((d) => ({ day: d.day, value: d.revenueCents }))} kind="bar" format="money" /></div>
         </section>
         <section className="bg-sheet p-5 md:p-6">
-          <h2 className="font-serif text-xl text-ink">Pedidos por dia</h2>
+          <h2 className="text-[1.5rem] text-ink">Pedidos por dia</h2>
           <p className="text-xs text-muted">Todos os pedidos criados, últimos 30 dias</p>
           <div className="mt-5"><DailyChart data={m.daily.map((d) => ({ day: d.day, value: d.orders }))} kind="line" format="count" /></div>
         </section>
@@ -67,7 +67,7 @@ export default async function AdminDashboard() {
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
         <section className="bg-sheet p-5 md:p-6">
-          <h2 className="font-serif text-xl text-ink">Produtos mais vendidos</h2>
+          <h2 className="text-[1.5rem] text-ink">Produtos mais vendidos</h2>
           {m.topProducts.length === 0 ? (
             <p className="mt-4 text-sm text-muted">Sem vendas pagas no período.</p>
           ) : (
@@ -87,7 +87,7 @@ export default async function AdminDashboard() {
           )}
         </section>
         <section className="bg-sheet p-5 md:p-6">
-          <h2 className="font-serif text-xl text-ink">Cupons mais usados</h2>
+          <h2 className="text-[1.5rem] text-ink">Cupons mais usados</h2>
           {m.topCoupons.length === 0 ? (
             <p className="mt-4 text-sm text-muted">Nenhum cupom utilizado ainda.</p>
           ) : (
@@ -108,7 +108,7 @@ export default async function AdminDashboard() {
       </div>
 
       <section className="mt-8 bg-sheet p-5 md:p-6">
-        <h2 className="font-serif text-xl text-ink">Pedidos recentes</h2>
+        <h2 className="text-[1.5rem] text-ink">Pedidos recentes</h2>
         {recent.length === 0 ? (
           <p className="mt-4 text-sm text-muted">{m.isDemo ? "Os pedidos reais aparecem aqui quando o Supabase estiver configurado." : "Nenhum pedido ainda."}</p>
         ) : (

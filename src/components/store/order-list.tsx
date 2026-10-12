@@ -15,7 +15,7 @@ export function OrderList({ orders }: { orders: CustomerOrderRow[] }) {
         <li key={o.id} className="group relative grid gap-2 border-b border-line py-5 transition-colors hover:bg-green-50/50 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-3">
           <div>
             <p className="flex flex-wrap items-center gap-3">
-              <Link href={`/minha-conta/pedidos/${o.id}`} className="font-serif text-lg text-ink tabular after:absolute after:inset-0 group-hover:text-pine">
+              <Link href={`/minha-conta/pedidos/${o.id}`} className="font-display font-bold text-lg text-ink tabular after:absolute after:inset-0 group-hover:text-pine">
                 #{o.number}
               </Link>
               <Badge tone={tone(o.status)}>{ORDER_STATUS_LABEL[o.status]}</Badge>

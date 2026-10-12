@@ -24,7 +24,7 @@ export default async function StorePage() {
       <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] md:items-end md:justify-between">
         <div>
           <p className="text-sm font-medium text-green">Loja</p>
-          <h1 className="display mt-2 text-[2.75rem] text-pine md:text-[4rem]">Materiais para a sua jornada acadêmica</h1>
+          <h1 className="display mt-2 text-[3.3rem] text-pine md:text-[4.8rem]">Materiais para a sua jornada acadêmica</h1>
         </div>
         <p className="max-w-sm text-base leading-relaxed text-ink-2">
           Modelos, guias, templates e e-books prontos para baixar. Compre, pague com Pix ou cartão e receba na hora.

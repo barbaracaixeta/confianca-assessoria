@@ -3,18 +3,16 @@ import localFont from "next/font/local";
 import { appUrl } from "@/lib/env";
 import "./globals.css";
 
-const instrument = localFont({
-  src: [
-    { path: "../fonts/instrument-serif-latin-normal.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/instrument-serif-latin-italic.woff2", weight: "400", style: "italic" },
-  ],
-  variable: "--font-instrument",
-  display: "swap",
-});
-
 const hanken = localFont({
   src: "../fonts/hanken-grotesk-latin-wght-normal.woff2",
   variable: "--font-hanken",
+  weight: "100 900",
+  display: "swap",
+});
+
+const montserrat = localFont({
+  src: "../fonts/montserrat-latin-wght-normal.woff2",
+  variable: "--font-montserrat",
   weight: "100 900",
   display: "swap",
 });
@@ -45,7 +43,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${instrument.variable} ${hanken.variable}`}>
+    <html lang="pt-BR" className={`${hanken.variable} ${montserrat.variable}`}>
       <body className="min-h-dvh">
         {children}
         {process.env.NODE_ENV === "development" && (

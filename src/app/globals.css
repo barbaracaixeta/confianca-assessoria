@@ -37,8 +37,8 @@
   --color-success: #147a55;
 
   /* Tipografia */
-  --font-serif: var(--font-instrument), "Iowan Old Style", Georgia, serif;
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 
   /* Escala (razão ~1.25, base 16px) */
   --text-xs: 0.75rem;
@@ -99,8 +99,8 @@
   h1,
   h2,
   h3 {
-    font-family: var(--font-serif);
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-weight: 700;
     letter-spacing: -0.01em;
     text-wrap: balance;
   }
@@ -122,10 +122,10 @@
 }
 
 @layer components {
-  /* Display: Instrument Serif para títulos grandes */
+  /* Display: Montserrat Bold para títulos grandes */
   .display {
-    font-family: var(--font-serif);
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-weight: 700;
     line-height: 1.02;
     letter-spacing: -0.02em;
   }

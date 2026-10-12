@@ -12,7 +12,7 @@ export default async function AdminStaffPage() {
   const [staff, currentStaffId] = await Promise.all([getAdminStaff(), getCurrentStaffId()]);
   return (
     <div>
-      <h1 className="display text-[2.25rem] text-pine">Administradores</h1>
+      <h1 className="display text-[2.7rem] text-pine">Administradores</h1>
       <p className="mt-1 max-w-2xl text-sm text-muted">
         Defina quem acessa o painel, o perfil de permissões e a situação de cada conta. Novos acessos recebem uma senha temporária e a trocam no primeiro login.
       </p>

@@ -11,7 +11,7 @@ export default async function AdminSettingsPage() {
   const [company, checkout] = await Promise.all([getAdminCompanySettings(), getAdminCheckoutSettings()]);
   return (
     <div>
-      <h1 className="display text-[2.25rem] text-pine">Configurações</h1>
+      <h1 className="display text-[2.7rem] text-pine">Configurações</h1>
       <p className="mt-1 text-sm text-muted">
         Dados institucionais e regras de pagamento da loja. O que for salvo aqui passa a valer imediatamente para clientes e checkout.
       </p>

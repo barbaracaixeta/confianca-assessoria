@@ -53,7 +53,7 @@ export function OrderDetail({ order, staff }: { order: AdminOrderDetail; staff: 
       <section className="rounded-[var(--radius-sm)] border border-line bg-sheet p-5 md:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="font-serif text-2xl text-ink">Pedido #{order.number}</p>
+            <p className="font-display font-bold text-2xl text-ink">Pedido #{order.number}</p>
             <p className="mt-1 text-sm text-muted">
               {formatDate(order.createdAt, { dateStyle: "full", timeStyle: "short" })} · {order.items.length} itens
             </p>
@@ -99,7 +99,7 @@ export function OrderDetail({ order, staff }: { order: AdminOrderDetail; staff: 
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
         <div className="rounded-[var(--radius-sm)] border border-line bg-sheet p-5">
-          <h2 className="font-serif text-lg text-ink">Mover status</h2>
+          <h2 className="text-[1.35rem] text-ink">Mover status</h2>
           <p className="mt-0.5 text-xs text-muted">
             De <span className="font-medium text-ink">{ORDER_STATUS_LABEL[order.status as OrderStatus]}</span>
           </p>
@@ -131,7 +131,7 @@ export function OrderDetail({ order, staff }: { order: AdminOrderDetail; staff: 
 
         <div className="space-y-6">
           <section className="rounded-[var(--radius-sm)] border border-line bg-sheet p-5">
-            <h2 className="font-serif text-lg text-ink">Responsável</h2>
+            <h2 className="text-[1.35rem] text-ink">Responsável</h2>
             <div className="mt-3 flex flex-col gap-3">
               <Field label="Equipe">
                 {(props) => (
@@ -154,7 +154,7 @@ export function OrderDetail({ order, staff }: { order: AdminOrderDetail; staff: 
           </section>
 
           <section className="rounded-[var(--radius-sm)] border border-line bg-sheet p-5">
-            <h2 className="font-serif text-lg text-ink">Prazo</h2>
+            <h2 className="text-[1.35rem] text-ink">Prazo</h2>
             <div className="mt-3 flex flex-col gap-3">
               <Field label="Entrega prevista" optional>
                 {(props) => (
@@ -174,7 +174,7 @@ export function OrderDetail({ order, staff }: { order: AdminOrderDetail; staff: 
       </section>
 
       <section className="rounded-[var(--radius-sm)] border border-line bg-sheet p-5 md:p-6">
-        <h2 className="font-serif text-lg text-ink">Itens</h2>
+        <h2 className="text-[1.35rem] text-ink">Itens</h2>
         <div className="mt-3 overflow-x-auto">
           <table className="w-full min-w-[520px] text-sm">
             <thead>
@@ -204,7 +204,7 @@ export function OrderDetail({ order, staff }: { order: AdminOrderDetail; staff: 
 
       <section className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-[var(--radius-sm)] border border-line bg-sheet p-5 md:p-6">
-          <h2 className="font-serif text-lg text-ink">Cliente</h2>
+          <h2 className="text-[1.35rem] text-ink">Cliente</h2>
           {order.customer ? (
             <dl className="mt-3 space-y-2 text-sm">
               <div><dt className="inline-block w-24 text-muted">Nome</dt><dd className="inline text-ink">{order.customer.fullName}</dd></div>
@@ -215,7 +215,7 @@ export function OrderDetail({ order, staff }: { order: AdminOrderDetail; staff: 
           ) : (
             <p className="mt-3 text-sm text-muted">Cliente não encontrado.</p>
           )}
-          <h3 className="mt-6 font-serif text-lg text-ink">Observações do cliente</h3>
+          <h3 className="mt-6 text-[1.35rem] text-ink">Observações do cliente</h3>
           <div className="mt-3 flex flex-col gap-3">
             <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Anotações internas do pedido" />
             <div className="flex justify-end">
@@ -231,7 +231,7 @@ export function OrderDetail({ order, staff }: { order: AdminOrderDetail; staff: 
         </div>
 
         <div className="rounded-[var(--radius-sm)] border border-line bg-sheet p-5 md:p-6">
-          <h2 className="font-serif text-lg text-ink">Pagamento</h2>
+          <h2 className="text-[1.35rem] text-ink">Pagamento</h2>
           {order.payments.length === 0 ? (
             <p className="mt-3 text-sm text-muted">Nenhuma cobrança registrada.</p>
           ) : (
@@ -255,7 +255,7 @@ export function OrderDetail({ order, staff }: { order: AdminOrderDetail; staff: 
             </div>
           )}
 
-          <h2 className="mt-6 font-serif text-lg text-ink">Histórico</h2>
+          <h2 className="mt-6 text-[1.35rem] text-ink">Histórico</h2>
           {order.history.length === 0 ? (
             <p className="mt-3 text-sm text-muted">Sem histórico.</p>
           ) : (

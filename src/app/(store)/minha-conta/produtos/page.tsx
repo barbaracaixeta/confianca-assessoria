@@ -11,7 +11,7 @@ export default async function MyProductsPage() {
 
   return (
     <div>
-      <h1 className="display text-[2.5rem] text-pine md:text-[3rem]">Meus produtos</h1>
+      <h1 className="display text-[3rem] text-pine md:text-[3.6rem]">Meus produtos</h1>
       <p className="mt-3 max-w-[56ch] text-muted">
         {totalFiles > 0
           ? `${products.length} ${products.length === 1 ? "produto liberado" : "produtos liberados"} para download. Os links são temporários e podem ser usados quantas vezes você quiser.`

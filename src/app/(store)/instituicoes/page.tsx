@@ -18,7 +18,7 @@ function Monogram({ name, url }: { name: string; url: string | null }) {
       {url ? (
         <Image src={url} alt={name} width={56} height={56} className="h-full w-full object-contain p-1.5" />
       ) : (
-        <span aria-hidden="true" className="font-serif text-2xl text-pine">{name.slice(0, 1).toUpperCase()}</span>
+        <span aria-hidden="true" className="font-display font-bold text-2xl text-pine">{name.slice(0, 1).toUpperCase()}</span>
       )}
     </span>
   );
@@ -49,7 +49,7 @@ export default async function InstitutionsPage() {
 
       <div className="mt-6 max-w-2xl">
         <p className="text-sm font-medium text-green">Instituições de ensino</p>
-        <h1 className="display mt-2 text-[2.75rem] text-pine md:text-[3.75rem]">Encontre materiais da sua instituição</h1>
+        <h1 className="display mt-2 text-[3.3rem] text-pine md:text-[4.5rem]">Encontre materiais da sua instituição</h1>
         <p className="mt-4 text-lg leading-relaxed text-ink-2">
           Organize a busca pelos materiais mais próximos da sua rotina acadêmica. Escolha a instituição e veja os produtos disponíveis.
         </p>
@@ -65,7 +65,7 @@ export default async function InstitutionsPage() {
             >
               <Monogram name={i.name} url={i.logoUrl} />
               <div className="min-w-0 flex-1">
-                <h2 className="font-serif text-xl text-ink transition-colors group-hover:text-pine">{i.name}</h2>
+                <h2 className="text-[1.5rem] text-ink transition-colors group-hover:text-pine">{i.name}</h2>
                 <p className="text-xs text-muted tabular">
                   {i.productCount} {i.productCount === 1 ? "material" : "materiais"}
                 </p>

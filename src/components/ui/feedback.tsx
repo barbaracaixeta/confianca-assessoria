@@ -55,7 +55,7 @@ export function Alert({
 export function EmptyState({ title, description, action }: { title: string; description?: string; action?: ReactNode }) {
   return (
     <div className="flex flex-col items-start gap-3 border-y border-line py-12">
-      <h2 className="text-2xl text-ink">{title}</h2>
+      <h2 className="text-[1.8rem] text-ink">{title}</h2>
       {description && <p className="max-w-md text-muted">{description}</p>}
       {action && <div className="mt-2">{action}</div>}
     </div>

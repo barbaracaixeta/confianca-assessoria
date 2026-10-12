@@ -206,7 +206,7 @@ export function SiteHeader({ categories, institutions = [] }: { categories: Cate
           <ul className="border-t border-line">
             {[{ href: "/", label: "Início" }, { href: "/loja", label: "Loja" }, ...NAV.slice(1)].map((item) => (
               <li key={item.href} className="border-b border-line">
-                <Link href={item.href} className="block py-4 font-serif text-[1.75rem] text-ink hover:text-pine">
+                <Link href={item.href} className="block py-4 font-display font-bold text-[1.75rem] text-ink hover:text-pine">
                   {item.label}
                 </Link>
               </li>

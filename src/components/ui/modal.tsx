@@ -66,7 +66,7 @@ export function Modal({
       >
         <header className="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
           <div>
-            <h2 id={titleId} className="text-lg font-semibold text-ink">{title}</h2>
+            <h2 id={titleId} className="text-[1.35rem] font-semibold text-ink">{title}</h2>
             {description && <p id={descId} className="mt-1 text-sm text-muted">{description}</p>}
           </div>
           {dismissible && (
