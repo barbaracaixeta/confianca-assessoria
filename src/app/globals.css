@@ -4,11 +4,15 @@
  * Confiança — design tokens
  * Verde domina; laranja é acento (CTA, preço, desconto, indicador). Nunca as duas
  * cores em blocos grandes lado a lado.
+ *
+ * Direção: editorial premium + SaaS moderno + e-commerce sofisticado.
+ * Títulos em Instrument Serif (autoridade); interface em Hanken Grotesk (moderno).
  */
 @theme {
   /* Marca */
   --color-pine-900: #073826;
   --color-pine: #0b5139; /* verde profundo */
+  --color-pine-800: #094430;
   --color-green: #147a55; /* verde principal */
   --color-green-2: #1f8a62; /* verde secundário */
   --color-green-50: #eef5f1;
@@ -33,7 +37,7 @@
   --color-success: #147a55;
 
   /* Tipografia */
-  --font-serif: var(--font-literata), "Iowan Old Style", Georgia, serif;
+  --font-serif: var(--font-instrument), "Iowan Old Style", Georgia, serif;
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
 
   /* Escala (razão ~1.25, base 16px) */
@@ -47,17 +51,30 @@
   --text-lg--line-height: 1.8rem;
 
   /* Raios: pequenos e hierárquicos */
-  --radius-xs: 2px;
-  --radius-sm: 4px;
-  --radius-md: 6px;
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
 
+  /* Profundidade: uma única linguagem de sombra, esverdeada e discreta */
+  --shadow-xs: 0 1px 0 rgb(11 81 57 / 0.05);
+  --shadow-sm: 0 1px 0 rgb(11 81 57 / 0.05), 0 6px 16px -10px rgb(11 81 57 / 0.16);
+  --shadow-md: 0 1px 0 rgb(11 81 57 / 0.05), 0 14px 30px -16px rgb(11 81 57 / 0.2);
+  --shadow-lg: 0 1px 0 rgb(11 81 57 / 0.06), 0 28px 60px -28px rgb(31 41 51 / 0.28);
+
+  /* Movimento */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 180ms;
+  --dur-base: 260ms;
+  --dur-slow: 400ms;
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -76,15 +93,15 @@
   :focus-visible {
     outline: 2px solid var(--color-amber);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 3px;
   }
 
   h1,
   h2,
   h3 {
     font-family: var(--font-serif);
-    font-weight: 500;
-    letter-spacing: -0.012em;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     text-wrap: balance;
   }
 
@@ -105,20 +122,25 @@
 }
 
 @layer components {
-  /* Display: Literata com eixo óptico para títulos grandes */
+  /* Display: Instrument Serif para títulos grandes */
   .display {
     font-family: var(--font-serif);
-    font-variation-settings: "opsz" 72;
-    font-weight: 450;
+    font-weight: 400;
     line-height: 1.02;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.02em;
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
   }
 
   .prose-academic {
-    font-family: var(--font-serif);
-    font-variation-settings: "opsz" 14;
+    font-family: var(--font-sans);
     font-size: 1.0625rem;
-    line-height: 1.75;
+    line-height: 1.8;
     color: var(--color-ink-2);
     max-width: 66ch;
   }
@@ -131,14 +153,16 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Folha de papel: única peça com sombra no sistema */
+  /* Folha de papel: a única peça com sombra pronunciada no sistema */
   .sheet {
     background: var(--color-sheet);
-    border-radius: var(--radius-xs);
-    box-shadow:
-      0 1px 0 rgb(11 81 57 / 0.06),
-      0 12px 24px -12px rgb(11 81 57 / 0.18),
-      0 32px 64px -32px rgb(31 41 51 / 0.22);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Ritmo editorial: fio superior que ancora cada seção */
+  .rule-top {
+    border-top: 2px solid var(--color-pine);
   }
 
   .link-underline {
@@ -146,12 +170,28 @@
     background-size: 0% 1px;
     background-position: 0 100%;
     background-repeat: no-repeat;
-    transition: background-size 0.35s var(--ease-out-quart);
+    transition: background-size var(--dur-slow) var(--ease-out-quart);
   }
 
   .link-underline:hover,
   .link-underline:focus-visible {
     background-size: 100% 1px;
+  }
+
+  /* Entrada editorial suave. Respeita prefers-reduced-motion globalmente. */
+  .reveal {
+    animation: rise-in var(--dur-slow) var(--ease-out-expo) both;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 

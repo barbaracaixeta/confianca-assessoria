@@ -1,5 +1,6 @@
 import "server-only";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { publicStorageUrl } from "@/lib/supabase/public";
 import { DEMO_PRODUCTS } from "@/lib/demo/catalog-data";
 import { getStudioSnapshot, type StudioOrderView } from "@/lib/demo/order-studio";
 import type { OrderStatus, PaymentStatus } from "@/types/domain";
@@ -97,6 +98,7 @@ export interface PurchasedProduct {
   slug: string;
   summary: string | null;
   categoryName: string | null;
+  imageUrl: string | null;
   orderNumber: string;
   purchasedAt: string;
   files: PurchasedFile[];
@@ -112,7 +114,7 @@ export async function getMyPurchasedProducts(): Promise<PurchasedProduct[]> {
   const { data } = await supabase
     .from("orders")
     .select(
-      "number, created_at, order_items(product_id, product_name, product_slug, products(id, name, slug, short_description, categories(name), product_files!product_id(id, original_name, mime_type, size_bytes)))",
+      "number, created_at, order_items(product_id, product_name, product_slug, products(id, name, slug, short_description, image_path, categories(name), product_files!product_id(id, original_name, mime_type, size_bytes)))",
     )
     .in("payment_status", ["confirmed", "received"])
     .neq("status", "cancelled")
@@ -128,6 +130,7 @@ export async function getMyPurchasedProducts(): Promise<PurchasedProduct[]> {
         name: string;
         slug: string;
         short_description: string | null;
+        image_path: string | null;
         categories: { name: string }[] | null;
         product_files: { id: string; original_name: string; mime_type: string; size_bytes: number | null }[] | null;
       };
@@ -139,6 +142,7 @@ export async function getMyPurchasedProducts(): Promise<PurchasedProduct[]> {
         slug: product.slug,
         summary: product.short_description,
         categoryName: product.categories?.[0]?.name ?? null,
+        imageUrl: product.image_path ? publicStorageUrl("catalog", product.image_path) : null,
         orderNumber: o.number,
         purchasedAt: o.created_at,
         files: (product.product_files ?? []).map((f) => ({
@@ -188,6 +192,7 @@ function getStudioPurchasedProducts(): PurchasedProduct[] {
       slug: product.slug,
       summary: product.shortDescription,
       categoryName: product.categoryName,
+      imageUrl: product.imageUrl,
       orderNumber: o.number,
       purchasedAt: o.createdAt,
       files: product.files.map((f) => ({

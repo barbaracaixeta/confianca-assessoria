@@ -34,7 +34,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/pe
   const qr = pending && pay?.method === "pix" ? await pixImage(pay.providerPaymentId) : null;
 
   return (
-    <div className="mx-auto max-w-[1240px] px-5 pt-12 pb-24 md:px-8">
+    <div className="mx-auto max-w-[1280px] px-5 pt-12 pb-24 md:px-8">
       <PaymentWatcher orderId={order.id} token={token} initial={order.paymentStatus} />
 
       <div className="flex flex-wrap items-end justify-between gap-4">

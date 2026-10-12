@@ -31,7 +31,7 @@ export default async function CategoryPage({ params }: PageProps<"/categoria/[sl
   if (!category) notFound();
 
   return (
-    <div className="mx-auto max-w-[1240px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
+    <div className="mx-auto max-w-[1280px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
       <nav aria-label="Trilha de navegação" className="text-sm text-muted">
         <ol className="flex flex-wrap items-center gap-2">
           <li><Link href="/" className="hover:text-pine">Início</Link></li>

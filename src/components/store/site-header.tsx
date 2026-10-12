@@ -28,7 +28,6 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Fecha o menu ao navegar (ajuste de estado durante a renderização).
   const [lastPath, setLastPath] = useState(pathname);
   if (lastPath !== pathname) {
     setLastPath(pathname);
@@ -70,15 +69,15 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 bg-paper/92 backdrop-blur-[6px] transition-[border-color] duration-300",
+        "sticky top-0 z-40 bg-paper/85 backdrop-blur-[10px] transition-[border-color,box-shadow] duration-300",
         "border-b",
-        scrolled ? "border-line" : "border-transparent",
+        scrolled ? "border-line shadow-xs" : "border-transparent",
       )}
     >
       <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-sheet focus:px-3 focus:py-2">
         Pular para o conteúdo
       </a>
-      <div className="mx-auto flex h-[72px] max-w-[1240px] items-center gap-6 px-5 md:px-8">
+      <div className="mx-auto grid h-[76px] max-w-[1280px] grid-cols-[auto_1fr_auto] items-center gap-4 px-5 md:px-8">
         <Link href="/" aria-label="Confiança Assessoria Acadêmica — página inicial" className="shrink-0">
           <span className="hidden sm:block">
             <Logo />
@@ -89,14 +88,17 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
         </Link>
 
         <nav aria-label="Principal" className="hidden lg:block">
-          <ul className="flex items-center gap-6">
-            {NAV.slice(0, 1).map((item) => (
-              <li key={item.href}>
-                <HeaderLink href={item.href} pathname={pathname}>
-                  {item.label}
-                </HeaderLink>
-              </li>
-            ))}
+          <ul className="flex items-center justify-center gap-7">
+            <li>
+              <HeaderLink href="/" pathname={pathname}>
+                Início
+              </HeaderLink>
+            </li>
+            <li>
+              <HeaderLink href="/loja" pathname={pathname}>
+                Loja
+              </HeaderLink>
+            </li>
             {categories.length > 0 && (
               <li>
                 <DropdownCategorias categories={categories} />
@@ -112,7 +114,7 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
           </ul>
         </nav>
 
-        <div className="ml-auto flex items-center gap-1.5 md:gap-2">
+        <div className="flex items-center justify-end gap-1 md:gap-1.5">
           <button
             type="button"
             onClick={() => setSearchOpen((v) => !v)}
@@ -121,27 +123,28 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
             aria-label={searchOpen ? "Fechar busca" : "Abrir busca"}
             className="inline-flex size-10 items-center justify-center rounded-[var(--radius-sm)] text-ink-2 transition-colors hover:bg-green-50 hover:text-pine"
           >
-            <svg viewBox="0 0 24 24" className="size-[22px]" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+            <svg viewBox="0 0 24 24" className="size-[21px]" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
               <circle cx="11" cy="11" r="7" />
               <path d="m16.5 16.5 4 4" />
             </svg>
           </button>
 
-          <Link href={accountHref} className="hidden px-2 text-[0.9375rem] text-ink-2 transition-colors hover:text-pine md:inline">
+          <CartLink />
+
+          <Link
+            href={accountHref}
+            className="ml-1 hidden items-center gap-2 rounded-[var(--radius-sm)] border border-line-strong px-3.5 py-2 text-sm font-medium text-ink transition-colors hover:border-pine hover:text-pine sm:inline-flex"
+          >
+            <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+              <circle cx="12" cy="8" r="3.5" />
+              <path d="M5 19a7 7 0 0 1 14 0" />
+            </svg>
             {accountLabel}
           </Link>
 
-          <CartLink />
-
-          <span className="hidden md:block">
-            <ButtonLink href="/loja" size="sm">
-              Comprar
-            </ButtonLink>
-          </span>
-
           <button
             type="button"
-            className="inline-flex size-10 items-center justify-center rounded-[var(--radius-sm)] text-ink hover:bg-green-50 lg:hidden"
+            className="inline-flex size-10 items-center justify-center rounded-[var(--radius-sm)] text-ink transition-colors hover:bg-green-50 lg:hidden"
             aria-expanded={open}
             aria-controls="menu-mobile"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
@@ -158,7 +161,7 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
       {searchOpen && (
         <div id={searchId} className="border-t border-line bg-sheet">
           <form
-            className="mx-auto flex max-w-[1240px] items-center gap-3 px-5 py-4 md:px-8"
+            className="mx-auto flex max-w-[1280px] items-center gap-3 px-5 py-4 md:px-8"
             role="search"
             onSubmit={(e) => {
               e.preventDefault();
@@ -192,7 +195,7 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
         id="menu-mobile"
         ref={menuRef}
         hidden={!open}
-        className="fixed inset-x-0 top-[72px] bottom-0 z-40 overflow-y-auto bg-paper px-5 pt-6 pb-10 lg:hidden"
+        className="fixed inset-x-0 top-[76px] bottom-0 z-40 overflow-y-auto bg-paper px-5 pt-6 pb-10 lg:hidden"
       >
         <nav aria-label="Menu">
           <ul className="border-t border-line">
@@ -221,7 +224,7 @@ export function SiteHeader({ categories }: { categories: Category[] }) {
         </nav>
         <div className="mt-8 flex flex-col gap-3">
           <ButtonLink href="/loja" size="lg">
-            Explorar produtos
+            Explorar materiais
           </ButtonLink>
           <ButtonLink href={accountHref} variant="outline" size="lg">
             {accountLabel}
@@ -241,8 +244,9 @@ function HeaderLink({
   pathname: string;
   children: React.ReactNode;
 }) {
+  const hasQuery = href.includes("?");
   const base = href.split("?")[0];
-  const active = base === "/" ? pathname === "/" : pathname === base || pathname.startsWith(`${base}/`);
+  const active = !hasQuery && (base === "/" ? pathname === "/" : pathname === base || pathname.startsWith(`${base}/`));
   return (
     <Link
       href={href}
@@ -281,8 +285,8 @@ function DropdownCategorias({ categories }: { categories: Category[] }) {
         </svg>
       </button>
       {open && (
-        <div className="absolute top-full left-0 z-50 pt-1">
-          <ul className="min-w-[220px] rounded-[var(--radius-md)] border border-line bg-sheet p-2 shadow-[0_16px_40px_-16px_rgb(31_41_51/0.25)]">
+        <div className="absolute top-full left-0 z-50 pt-2">
+          <ul className="min-w-[230px] rounded-[var(--radius-md)] border border-line bg-sheet p-2 shadow-md">
             <li>
               <Link href="/loja" className="block rounded-[var(--radius-xs)] px-3 py-2 text-sm font-medium text-pine hover:bg-green-50">
                 Todas as categorias
@@ -310,7 +314,7 @@ function CartLink() {
       className="relative inline-flex size-10 items-center justify-center rounded-[var(--radius-sm)] text-ink-2 transition-colors hover:bg-green-50 hover:text-pine"
       aria-label={ready && count > 0 ? `Carrinho com ${count} ${count === 1 ? "produto" : "produtos"}` : "Carrinho"}
     >
-      <svg viewBox="0 0 24 24" className="size-[22px]" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <svg viewBox="0 0 24 24" className="size-[21px]" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
         <path d="M5 7h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 7Z" />
         <path d="M9 7V6a3 3 0 0 1 6 0v1" />
       </svg>

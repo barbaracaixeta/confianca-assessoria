@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink } from "@/components/ui/button";
 import { ProductCard } from "@/components/store/product-card";
@@ -5,7 +6,8 @@ import { FaqList } from "@/components/store/faq-list";
 import { getActiveCategories, getActiveFaqs, getActiveProducts, getActiveTestimonials } from "@/lib/catalog/queries";
 import { getHomeSettings } from "@/lib/settings";
 import { quoteProduct } from "@/lib/pricing";
-import { cn } from "@/lib/utils";
+import { formatMoney } from "@/lib/utils";
+import type { Product } from "@/types/domain";
 
 export const revalidate = 300;
 
@@ -18,158 +20,186 @@ export default async function HomePage() {
     getHomeSettings(),
   ]);
 
-  const heroTitle = home.heroTitle || "Materiais acadêmicos para facilitar sua jornada.";
+  const heroTitle = home.heroTitle || "Mais confiança para cada etapa da sua jornada acadêmica.";
   const heroSubtitle =
     home.heroSubtitle ||
-    "Modelos, templates, guias e recursos acadêmicos desenvolvidos para ajudar você a estudar, organizar e apresentar seus trabalhos com mais segurança.";
-  const heroCtaLabel = home.heroCtaLabel || "Explorar produtos";
+    "Materiais de apoio, modelos e recursos organizacionais para você estruturar melhor seus trabalhos — com acesso digital imediato após a confirmação do pagamento.";
+  const heroCtaLabel = home.heroCtaLabel || "Explorar materiais";
   const heroCtaHref = home.heroCtaHref.startsWith("/") ? home.heroCtaHref : "/loja";
 
   const featured = products.filter((p) => p.isFeatured);
-  const onSale = products.filter((p) => quoteProduct(p).promoActive);
   const bestSellers = products.filter((p) => p.isBestSeller);
-  const showcase = featured.length >= 4 ? featured : products.slice(0, 4);
+  const onSale = products.filter((p) => quoteProduct(p).promoActive);
+  const showcase = (featured.length >= 4 ? featured : products).slice(0, 4);
+  const heroProducts = products.filter((p) => p.imageUrl).slice(0, 3);
 
   return (
     <>
-      {/* Hero comercial */}
-      <section className="mx-auto max-w-[1240px] px-5 pt-10 pb-16 md:px-8 md:pt-16 md:pb-20">
-        <div className="grid gap-10 rounded-[var(--radius-md)] border border-line bg-sheet px-6 pt-10 pb-8 md:px-12 md:pt-14 md:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-14">
-          <div className="max-w-[36rem] self-center">
-            <h1 className="display mt-6 text-[2.6rem] text-pine sm:text-[3.4rem] lg:text-[3.9rem]">
+      {/* Hero editorial */}
+      <section className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_88%_-10%,var(--color-green-100)_0%,transparent_58%)]" />
+        <div className="relative mx-auto grid max-w-[1280px] items-center gap-12 px-5 pt-14 pb-16 md:px-8 md:pt-20 md:pb-24 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:gap-16">
+          <div className="reveal max-w-[38rem]">
+            <p className="eyebrow text-green">Materiais acadêmicos digitais</p>
+            <h1 className="display mt-5 text-[2.75rem] text-pine sm:text-[3.5rem] lg:text-[4.25rem]">
               {heroTitle}
             </h1>
-            <p className="mt-6 max-w-[30rem] text-lg leading-relaxed text-ink-2">
-              {heroSubtitle}
-            </p>
-            <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <p className="mt-6 max-w-[32rem] text-lg leading-relaxed text-ink-2">{heroSubtitle}</p>
+            <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
               <ButtonLink href={heroCtaHref} size="lg">
                 {heroCtaLabel}
               </ButtonLink>
-              {onSale.length > 0 && (
-                <Link href="/loja?ofertas=1" className="link-underline text-[0.9375rem] font-medium text-pine">
-                  Ver ofertas
-                </Link>
-              )}
+              <Link href="/sobre" className="link-underline text-[0.9375rem] font-medium text-pine">
+                Conhecer a Confiança
+              </Link>
             </div>
-            <p className="mt-10 flex max-w-[30rem] flex-wrap gap-x-8 gap-y-3 border-t border-line pt-6 text-sm text-muted">
-              <span className="inline-flex items-center gap-2">
-                <svg viewBox="0 0 16 16" className="size-4 text-green" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-                  <path d="M3 8.5 6.5 12 13 4.5" />
-                </svg>
-                Entrega imediata
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <svg viewBox="0 0 16 16" className="size-4 text-green" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-                  <path d="M3 8.5 6.5 12 13 4.5" />
-                </svg>
-                Pix ou cartão
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <svg viewBox="0 0 16 16" className="size-4 text-green" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-                  <path d="M3 8.5 6.5 12 13 4.5" />
-                </svg>
-                Download ilimitado
-              </span>
-            </p>
+            <ul className="mt-12 flex max-w-[32rem] flex-wrap gap-x-8 gap-y-3 border-t border-line pt-6 text-sm text-muted">
+              {["Acesso imediato após o pagamento", "Pix ou cartão", "Download ilimitado"].map((t) => (
+                <li key={t} className="inline-flex items-center gap-2">
+                  <svg viewBox="0 0 16 16" className="size-4 text-green" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+                    <path d="M3 8.5 6.5 12 13 4.5" />
+                  </svg>
+                  {t}
+                </li>
+              ))}
+            </ul>
           </div>
-          <HeroVisual />
+
+          <HeroVisual products={heroProducts} />
         </div>
       </section>
 
-      {/* Categorias */}
+      {/* Categorias — navegação editorial */}
       {categories.length > 0 && (
-        <section aria-labelledby="categorias-titulo" className="mx-auto max-w-[1240px] px-5 pb-20 md:px-8">
-          <div className="flex items-end justify-between gap-4">
-            <h2 id="categorias-titulo" className="text-[1.75rem] text-ink md:text-[2.25rem]">
-              Explore por categoria
-            </h2>
-            <Link href="/loja" className="link-underline text-sm font-medium text-pine">
-              Ver tudo
-            </Link>
+        <section aria-labelledby="categorias-titulo" className="border-t border-line bg-sheet">
+          <div className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="eyebrow text-green">Explore por categoria</p>
+                <h2 id="categorias-titulo" className="mt-3 text-[1.9rem] text-ink md:text-[2.4rem]">
+                  Encontre o material da sua etapa
+                </h2>
+              </div>
+              <Link href="/loja" className="link-underline hidden text-sm font-medium text-pine sm:block">
+                Ver tudo
+              </Link>
+            </div>
+            <ul className="mt-10 grid gap-x-12 sm:grid-cols-2">
+              {categories.map((c, i) => (
+                <li key={c.id} className="border-t border-line">
+                  <Link href={`/categoria/${c.slug}`} className="group flex items-center justify-between gap-4 py-4">
+                    <span className="flex items-baseline gap-4">
+                      <span className="w-6 text-xs text-muted tabular">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="font-serif text-[1.5rem] text-ink transition-colors group-hover:text-pine">{c.name}</span>
+                    </span>
+                    <svg viewBox="0 0 20 20" className="size-5 -translate-x-1 text-green opacity-0 transition-[opacity,transform] duration-300 ease-[var(--ease-out-quart)] group-hover:translate-x-0 group-hover:opacity-100" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+                      <path d="M4 10h11M10.5 5.5 15 10l-4.5 4.5" />
+                    </svg>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            {categories.map((c, i) => (
-              <li key={c.id}>
-                <Link
-                  href={`/categoria/${c.slug}`}
-                  className="group flex h-full flex-col justify-between gap-6 rounded-[var(--radius-md)] border border-line bg-sheet p-4 transition-colors hover:border-pine/40"
-                >
-                  <span
-                    className={cn(
-                      "flex size-10 items-center justify-center rounded-[var(--radius-xs)] font-serif text-lg",
-                      i % 3 === 0 ? "bg-pine text-paper" : i % 3 === 1 ? "bg-green-50 text-pine" : "bg-amber-50 text-amber-ink",
-                    )}
-                    aria-hidden="true"
-                  >
-                    {c.name.slice(0, 1)}
-                  </span>
-                  <span className="font-medium text-ink group-hover:text-pine">{c.name}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
         </section>
       )}
 
       {/* Produtos em destaque */}
-      <section aria-labelledby="destaques-titulo" className="mx-auto max-w-[1240px] px-5 pb-20 md:px-8">
+      <section aria-labelledby="destaques-titulo" className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2 id="destaques-titulo" className="text-[1.75rem] text-ink md:text-[2.5rem]">
-              Produtos em destaque
+            <p className="eyebrow text-green">Materiais em destaque</p>
+            <h2 id="destaques-titulo" className="mt-3 text-[1.9rem] text-ink md:text-[2.5rem]">
+              Prontos para usar a partir de agora
             </h2>
-            <p className="mt-2 max-w-md text-muted">Modelos e materiais prontos para você usar a partir de agora.</p>
           </div>
           <Link href="/loja" className="link-underline hidden text-sm font-medium text-pine sm:block">
             Ver todos
           </Link>
         </div>
-        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {showcase.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
       </section>
 
-      {/* Mais vendidos */}
+      {/* Mais vendidos — ranking */}
       {bestSellers.length > 0 && (
-        <section aria-labelledby="mais-vendidos-titulo" className="mx-auto max-w-[1240px] px-5 py-20 md:px-8">
-          <div className="flex items-end justify-between gap-4">
-            <h2 id="mais-vendidos-titulo" className="text-[1.75rem] text-ink md:text-[2.5rem]">
-              Os mais escolhidos
-            </h2>
-            <Link href="/loja?mais-vendidos=1" className="link-underline text-sm font-medium text-pine">
-              Ver todos
-            </Link>
-          </div>
-          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {bestSellers.slice(0, 4).map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
+        <section aria-labelledby="mais-vendidos-titulo" className="border-y border-line bg-sheet">
+          <div className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="eyebrow text-amber-ink">Mais procurados</p>
+                <h2 id="mais-vendidos-titulo" className="mt-3 text-[1.9rem] text-ink md:text-[2.5rem]">
+                  Escolhidos por quem já confia
+                </h2>
+              </div>
+              <Link href="/loja?mais-vendidos=1" className="link-underline hidden text-sm font-medium text-pine sm:block">
+                Ver todos
+              </Link>
+            </div>
+            <ol className="mt-10 divide-y divide-line border-t border-line">
+              {bestSellers.slice(0, 5).map((p, i) => (
+                <BestSellerRow key={p.id} product={p} rank={i + 1} />
+              ))}
+            </ol>
           </div>
         </section>
       )}
 
+      {/* Benefícios — composição editorial */}
+      <section aria-labelledby="beneficios-titulo" className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-20">
+          <div>
+            <p className="eyebrow text-green">Por que escolher</p>
+            <h2 id="beneficios-titulo" className="mt-3 text-[1.9rem] text-ink md:text-[2.4rem]">
+              Uma plataforma séria para a sua jornada
+            </h2>
+            {onSale.length > 0 && (
+              <Link href="/loja?ofertas=1" className="link-underline mt-6 inline-block text-sm font-medium text-pine">
+                Ver ofertas em aberto
+              </Link>
+            )}
+          </div>
+          <dl className="grid gap-x-12 gap-y-10 sm:grid-cols-2">
+            {[
+              ["01", "Materiais selecionados", "Modelos, guias e templates revisados para apoiar cada etapa do trabalho acadêmico."],
+              ["02", "Acesso imediato", "Assim que o pagamento é confirmado, o material fica liberado automaticamente na sua conta."],
+              ["03", "Arquivos organizados", "Cada produto traz seus arquivos identificados, com formato e tamanho visíveis antes da compra."],
+              ["04", "Compra segura", "Pagamento por Pix ou cartão, com liberação registrada e histórico no seu painel."],
+            ].map(([n, title, body]) => (
+              <div key={n} className="rule-top pt-5">
+                <dt className="flex items-baseline gap-3">
+                  <span className="font-serif text-sm text-amber-ink tabular">{n}</span>
+                  <span className="font-serif text-xl text-ink">{title}</span>
+                </dt>
+                <dd className="mt-2.5 text-sm leading-relaxed text-muted">{body}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
       {/* Como funciona */}
       <section aria-labelledby="como-funciona-titulo" className="border-y border-line bg-sheet">
-        <div className="mx-auto max-w-[1240px] px-5 py-20 md:px-8">
-          <h2 id="como-funciona-titulo" className="text-[1.75rem] text-ink md:text-[2.5rem]">
-            Encontre · Escolha · Compre · Receba
+        <div className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
+          <p className="eyebrow text-green">Como funciona</p>
+          <h2 id="como-funciona-titulo" className="mt-3 max-w-xl text-[1.9rem] text-ink md:text-[2.4rem]">
+            Do escolher ao baixar, sem espera
           </h2>
-          <p className="mt-3 max-w-xl text-muted">
-            Todo o processo acontece na hora: sem conversas, sem esperar aprovação.
-          </p>
-          <ol className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="relative mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+            <span aria-hidden="true" className="absolute top-[1.1rem] left-0 hidden h-px w-full bg-line lg:block" />
             {[
-              ["01", "Encontre", "Explore a loja por categoria, busca ou oferta e compare modelos, guias e templates."],
-              ["02", "Escolha", "Veja o preço, o formato e o que está incluído em cada produto antes de comprar."],
-              ["03", "Compre", "Pague com Pix ou cartão de crédito. Cupons de desconto são aceitos no checkout."],
-              ["04", "Receba", "Assim que o pagamento confirmar, o produto é liberado na sua conta para download."],
+              ["01", "Escolha seu material", "Navegue por categoria, busca ou oferta e veja o que está incluído em cada produto."],
+              ["02", "Faça o pagamento", "Pague com Pix ou cartão. Cupons de desconto são aceitos no checkout."],
+              ["03", "Receba o acesso", "A confirmação do pagamento libera o produto automaticamente, sem nenhuma ação manual."],
+              ["04", "Baixe seus arquivos", "Acesse Meus produtos e baixe quantas vezes precisar, com links seguros."],
             ].map(([n, title, body]) => (
-              <li key={n} className="border-t-2 border-pine pt-5">
-                <span className="font-serif text-sm text-amber-ink tabular">{n}</span>
-                <h3 className="mt-2 font-serif text-xl text-ink">{title}</h3>
+              <li key={n} className="relative bg-sheet lg:pr-6">
+                <span className="relative z-10 inline-flex size-9 items-center justify-center rounded-full bg-pine font-serif text-sm text-paper tabular">
+                  {n}
+                </span>
+                <h3 className="mt-4 font-serif text-xl text-ink">{title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
               </li>
             ))}
@@ -177,29 +207,69 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Destaque de confiança */}
+      <section className="mx-auto max-w-[1280px] px-5 py-16 md:px-8">
+        <div className="relative overflow-hidden rounded-[var(--radius-lg)] bg-pine px-7 py-14 text-paper md:px-14 md:py-20">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(100%_120%_at_100%_0%,rgb(31_138_98/0.55)_0%,transparent_55%)]" />
+          <div className="relative max-w-[40rem]">
+            <span className="inline-block h-1 w-12 rounded-full bg-amber" aria-hidden="true" />
+            <p className="mt-6 font-serif text-[1.9rem] leading-tight text-paper md:text-[2.6rem]">
+              Materiais pensados para organizar, orientar e apoiar a sua jornada acadêmica.
+            </p>
+            <p className="mt-5 max-w-[34rem] text-paper/75">
+              Recursos de apoio, modelos e guias que ajudam você a estruturar melhor seus estudos e trabalhos — sempre com a sua autoria em primeiro lugar.
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <ButtonLink href="/loja" variant="accent" size="lg">
+                Explorar materiais
+              </ButtonLink>
+              <ButtonLink href="/como-funciona" variant="onDark" size="lg">
+                Como funciona
+              </ButtonLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Uso responsável — discreto */}
+      <section aria-labelledby="uso-responsavel-titulo" className="mx-auto max-w-[1280px] px-5 pb-20 md:px-8">
+        <div className="rule-top grid gap-6 pt-8 md:grid-cols-[11rem_minmax(0,1fr)] md:gap-12">
+          <h2 id="uso-responsavel-titulo" className="font-serif text-xl text-ink">Uso responsável</h2>
+          <p className="max-w-[64ch] leading-relaxed text-muted">
+            A Confiança oferece materiais de apoio, modelos, guias e recursos acadêmicos. Os produtos não são trabalhos prontos
+            para submissão nem garantem nota ou aprovação. Use-os como referência para estruturar e escrever o seu próprio
+            trabalho, preservando a sua autoria e as boas práticas acadêmicas.
+          </p>
+        </div>
+      </section>
+
       {/* Depoimentos (somente se cadastrados pelo admin) */}
       {testimonials.length > 0 && (
-        <section aria-labelledby="depoimentos-titulo" className="mx-auto max-w-[1240px] px-5 py-20 md:px-8">
-          <h2 id="depoimentos-titulo" className="text-[2rem] text-ink">Quem já comprou</h2>
-          <div className="mt-10 grid gap-x-12 gap-y-10 md:grid-cols-2">
-            {testimonials.map((t) => (
-              <figure key={t.id} className="border-t border-line pt-6">
-                <blockquote className="font-serif text-lg leading-relaxed text-ink-2">{t.body}</blockquote>
-                <figcaption className="mt-4 text-sm text-muted">
-                  <span className="font-medium text-ink">{t.authorName}</span>
-                  {t.authorDetail && <>, {t.authorDetail}</>}
-                </figcaption>
-              </figure>
-            ))}
+        <section aria-labelledby="depoimentos-titulo" className="border-y border-line bg-sheet">
+          <div className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
+            <p className="eyebrow text-green">Quem já comprou</p>
+            <h2 id="depoimentos-titulo" className="mt-3 text-[2rem] text-ink">Relatos de quem confia</h2>
+            <div className="mt-10 grid gap-x-14 gap-y-10 md:grid-cols-2">
+              {testimonials.map((t) => (
+                <figure key={t.id} className="rule-top pt-6">
+                  <blockquote className="font-serif text-lg leading-relaxed text-ink-2">{t.body}</blockquote>
+                  <figcaption className="mt-4 text-sm text-muted">
+                    <span className="font-medium text-ink">{t.authorName}</span>
+                    {t.authorDetail && <>, {t.authorDetail}</>}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
           </div>
         </section>
       )}
 
       {/* FAQ */}
-      <section aria-labelledby="faq-titulo" className="border-t border-line bg-sheet">
-        <div className="mx-auto grid max-w-[1240px] gap-10 px-5 py-20 md:px-8 lg:grid-cols-[minmax(0,0.38fr)_minmax(0,1fr)] lg:gap-16">
+      <section aria-labelledby="faq-titulo" className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.38fr)_minmax(0,1fr)] lg:gap-16">
           <div>
-            <h2 id="faq-titulo" className="text-[2rem] leading-[1.1] text-ink">Antes de comprar</h2>
+            <p className="eyebrow text-green">Dúvidas</p>
+            <h2 id="faq-titulo" className="mt-3 text-[2rem] leading-[1.1] text-ink">Antes de comprar</h2>
             <Link href="/faq" className="link-underline mt-5 inline-block text-sm font-medium text-pine">
               Todas as perguntas
             </Link>
@@ -209,14 +279,14 @@ export default async function HomePage() {
       </section>
 
       {/* CTA final */}
-      <section className="mx-auto max-w-[1240px] px-5 py-20 md:px-8 lg:py-24">
-        <div className="flex flex-col gap-8 border-t-2 border-pine pt-10 md:flex-row md:items-end md:justify-between">
-          <p className="max-w-[24ch] font-serif text-[2rem] leading-tight text-ink md:text-[2.5rem]">
+      <section className="mx-auto max-w-[1280px] px-5 pb-24 md:px-8">
+        <div className="rule-top flex flex-col gap-8 pt-12 md:flex-row md:items-end md:justify-between">
+          <p className="max-w-[24ch] font-serif text-[2rem] leading-tight text-ink md:text-[2.6rem]">
             Comece pelo material que a sua etapa pede.
           </p>
           <div className="flex flex-wrap gap-3">
             <ButtonLink href="/loja" variant="accent" size="lg">
-              Explorar produtos
+              Explorar materiais
             </ButtonLink>
             <ButtonLink href="/como-funciona" variant="outline" size="lg">
               Como funciona
@@ -228,51 +298,92 @@ export default async function HomePage() {
   );
 }
 
-/** Composição editorial sem imagens genéricas: página de documento + arquivos. */
-function HeroVisual() {
+function BestSellerRow({ product, rank }: { product: Product; rank: number }) {
+  const q = quoteProduct(product);
   return (
-    <div className="relative mx-auto aspect-[4/3] w-full max-w-[26rem] lg:mr-0" aria-hidden="true">
-      <div className="absolute top-0 right-0 h-[55%] w-[46%] rotate-[3deg] rounded-[var(--radius-sm)] border border-line bg-sheet p-5 shadow-[0_18px_40px_-24px_rgb(11_81_57/0.4)]">
-        <div className="space-y-2">
-          <div className="h-1.5 w-1/2 rounded-full bg-amber" />
-          <div className="h-2 w-full rounded-sm bg-ink/25" />
-          <div className="h-2 w-11/12 rounded-sm bg-ink/20" />
-          <div className="h-2 w-4/5 rounded-sm bg-ink/15" />
-          <div className="mt-3 space-y-1">
-            <div className="h-px w-full bg-line" />
-            <div className="h-px w-2/3 bg-line" />
-          </div>
-          <div className="mt-4 flex items-end justify-between">
-            <span className="inline-flex h-8 w-14 items-center justify-center rounded-[var(--radius-xs)] bg-green-50 text-[10px] font-bold text-pine">DOCX</span>
-            <span className="text-xs font-bold text-amber-ink tabular">{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(99.9)}</span>
-          </div>
-        </div>
-      </div>
-      <div className="absolute bottom-0 left-0 w-[52%] -rotate-2 rounded-[var(--radius-sm)] border border-line bg-sheet p-6 shadow-[0_24px_56px_-28px_rgb(31_41_51/0.4)]">
+    <li>
+      <Link href={`/produto/${product.slug}`} className="group grid grid-cols-[auto_auto_minmax(0,1fr)_auto] items-center gap-5 py-5">
+        <span className="font-serif text-2xl text-line-strong tabular transition-colors group-hover:text-amber md:text-3xl">
+          {String(rank).padStart(2, "0")}
+        </span>
+        <span className="relative hidden size-16 shrink-0 overflow-hidden rounded-[var(--radius-sm)] border border-line sm:block">
+          {product.imageUrl ? (
+            <Image src={product.imageUrl} alt="" fill sizes="64px" className="object-cover" />
+          ) : (
+            <span className="flex h-full w-full items-center justify-center bg-green-50 text-[9px] font-bold tracking-wide text-green">
+              {(product.files?.[0]?.originalName.split(".").pop() ?? "DOC").toUpperCase().slice(0, 4)}
+            </span>
+          )}
+        </span>
+        <span className="min-w-0">
+          <span className="block eyebrow text-[0.6875rem] text-muted">{product.categoryName ?? "Material"}</span>
+          <span className="mt-1 block truncate font-serif text-[1.3rem] text-ink transition-colors group-hover:text-pine">
+            {product.name}
+          </span>
+        </span>
+        <span className="hidden shrink-0 text-right sm:block">
+          <span className="block font-sans text-lg font-semibold text-ink tabular">{formatMoney(q.totalCents)}</span>
+          {q.promoActive && <span className="block text-xs text-muted tabular"><s>{formatMoney(q.listTotalCents)}</s></span>}
+        </span>
+      </Link>
+    </li>
+  );
+}
+
+/** Composição editorial: capas reais dos produtos + folha de documento. */
+function HeroVisual({ products }: { products: Product[] }) {
+  return (
+    <div className="relative mx-auto aspect-[5/4] w-full max-w-[30rem] lg:mr-0" aria-hidden="true">
+      {/* Folha base */}
+      <div className="absolute bottom-0 left-0 w-[58%] -rotate-[4deg] rounded-[var(--radius-md)] border border-line bg-sheet p-6 shadow-md">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold text-green">Kit Acadêmico</span>
-          <span className="inline-flex items-center gap-1 rounded-[var(--radius-xs)] bg-amber px-1.5 py-px text-[10px] font-bold text-pine-900 tabular">25% OFF</span>
+          <span className="eyebrow text-[0.625rem] text-green">Kit acadêmico</span>
+          <span className="rounded-[var(--radius-xs)] bg-amber px-1.5 py-px text-[10px] font-bold text-pine-900 tabular">25% OFF</span>
         </div>
         <div className="mt-4 space-y-2.5">
           <div className="h-2 w-full rounded-sm bg-ink/25" />
           <div className="h-2 w-5/6 rounded-sm bg-ink/20" />
           <div className="h-2 w-3/4 rounded-sm bg-ink/15" />
-          <div className="mt-4 space-y-1">
-            <div className="h-px w-full bg-line" />
-            <div className="h-px w-full bg-line" />
-            <div className="h-px w-2/3 bg-line" />
-          </div>
         </div>
         <div className="mt-5 flex items-center gap-2 border-t border-line pt-4">
-          <svg viewBox="0 0 24 24" className="size-9 rounded-[var(--radius-xs)] bg-pine p-1.5 text-paper" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+          <svg viewBox="0 0 24 24" className="size-8 rounded-[var(--radius-xs)] bg-pine p-1.5 text-paper" fill="none" stroke="currentColor" strokeWidth="1.7">
             <path d="M5 7h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 7Z" />
             <path d="M9 7V6a3 3 0 0 1 6 0v1" />
           </svg>
-          <div>
-            <p className="text-xs font-medium text-ink">Entrega imediata</p>
-            <p className="text-[11px] text-muted">Pix ou cartão · Download ilimitado</p>
+          <span className="text-xs text-muted">
+            <span className="block font-medium text-ink">Entrega imediata</span>
+            Pix ou cartão · Download ilimitado
+          </span>
+        </div>
+      </div>
+
+      {/* Capas reais dos produtos */}
+      {products.length > 0 ? (
+        <div className="absolute top-0 right-0 grid w-[54%] gap-4">
+          {products.slice(0, 2).map((p, i) => (
+            <div
+              key={p.id}
+              className={`relative aspect-[4/3] overflow-hidden rounded-[var(--radius-md)] border border-line bg-green-50 shadow-sm ${i === 0 ? "rotate-[2deg]" : "-rotate-[2deg]"}`}
+            >
+              <Image src={p.imageUrl as string} alt="" fill sizes="(min-width:1024px) 18vw, 40vw" className="object-cover" />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="absolute top-0 right-0 w-[54%] rotate-[2deg] rounded-[var(--radius-md)] border border-line bg-sheet p-5 shadow-sm">
+          <span className="eyebrow text-[0.625rem] text-amber-ink">Documento</span>
+          <div className="mt-3 space-y-2">
+            <div className="h-2 w-full rounded-sm bg-ink/25" />
+            <div className="h-2 w-11/12 rounded-sm bg-ink/20" />
+            <div className="h-2 w-4/5 rounded-sm bg-ink/15" />
           </div>
         </div>
+      )}
+
+      {/* Selo */}
+      <div className="absolute top-1/2 left-[46%] flex size-20 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-line bg-sheet text-center shadow-md">
+        <span className="font-serif text-lg leading-none text-pine">ABNT</span>
+        <span className="mt-1 text-[9px] font-semibold tracking-[0.14em] text-muted">NORMAS</span>
       </div>
     </div>
   );

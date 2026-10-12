@@ -3,10 +3,12 @@ import localFont from "next/font/local";
 import { appUrl } from "@/lib/env";
 import "./globals.css";
 
-const literata = localFont({
-  src: "../fonts/literata-latin-standard-normal.woff2",
-  variable: "--font-literata",
-  weight: "200 900",
+const instrument = localFont({
+  src: [
+    { path: "../fonts/instrument-serif-latin-normal.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/instrument-serif-latin-italic.woff2", weight: "400", style: "italic" },
+  ],
+  variable: "--font-instrument",
   display: "swap",
 });
 
@@ -43,7 +45,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${literata.variable} ${hanken.variable}`}>
+    <html lang="pt-BR" className={`${instrument.variable} ${hanken.variable}`}>
       <body className="min-h-dvh">
         {children}
         {process.env.NODE_ENV === "development" && (

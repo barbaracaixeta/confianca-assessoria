@@ -13,7 +13,7 @@ function Stat({ label, value, note, accent }: { label: string; value: string; no
   return (
     <div className="py-5 pr-4">
       <dt className="text-sm text-muted">{label}</dt>
-      <dd className={`mt-1.5 font-serif text-[1.75rem] leading-none tabular ${accent ? "text-amber-ink" : "text-ink"}`} style={{ fontVariationSettings: '"opsz" 36' }}>
+      <dd className={`mt-1.5 font-sans text-[1.75rem] font-semibold leading-none tabular ${accent ? "text-amber-ink" : "text-ink"}`}>
         {value}
       </dd>
       {note && <p className="mt-1.5 text-xs text-muted">{note}</p>}

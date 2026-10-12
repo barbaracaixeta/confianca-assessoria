@@ -23,7 +23,7 @@ export default async function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[1240px] px-5 pt-12 pb-24 md:px-8">
+    <div className="mx-auto max-w-[1280px] px-5 pt-12 pb-24 md:px-8">
       <h1 className="display text-[2.75rem] text-pine md:text-[3.5rem]">Pagamento</h1>
       <p className="mt-3 mb-10 text-muted">
         {user ? `Comprando como ${user.email}.` : "Não precisa criar conta agora: você acompanha o pedido pelo link enviado por e-mail."}

@@ -15,7 +15,7 @@ export function AccountNav() {
   const pathname = usePathname();
   return (
     <nav aria-label="Minha conta" className="mt-6 -mx-5 overflow-x-auto px-5 lg:mx-0 lg:px-0">
-      <ul className="flex gap-1 lg:flex-col">
+      <ul className="flex gap-1.5 lg:flex-col lg:gap-0.5">
         {ITEMS.map((it) => {
           const active = it.href === "/minha-conta" ? pathname === it.href : pathname.startsWith(it.href);
           return (
@@ -24,8 +24,8 @@ export function AccountNav() {
                 href={it.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "block whitespace-nowrap border-b-2 px-3 py-2 text-[0.9375rem] transition-colors lg:border-b-0 lg:border-l-2",
-                  active ? "border-amber text-pine" : "border-transparent text-ink-2 hover:text-pine",
+                  "block whitespace-nowrap rounded-[var(--radius-sm)] px-3 py-2 text-[0.9375rem] transition-colors",
+                  active ? "bg-green-50 font-medium text-pine" : "text-ink-2 hover:bg-green-50/60 hover:text-pine",
                 )}
               >
                 {it.label}

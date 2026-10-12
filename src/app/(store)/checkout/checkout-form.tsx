@@ -6,7 +6,7 @@ import { useMemo, useRef, useState, useTransition, type FormEvent } from "react"
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { Alert, EmptyState, Skeleton } from "@/components/ui/feedback";
-import { Totals } from "@/components/store/order-summary";
+import { Totals, TrustList } from "@/components/store/order-summary";
 import { usePricedCart } from "@/components/store/use-priced-cart";
 import { placeOrderAction } from "./actions";
 import { customerDetailsSchema, cardSchema } from "@/lib/validation/schemas";
@@ -390,6 +390,7 @@ export function CheckoutForm({
           <div className="mt-4">
             <Totals priced={priced} loading={loading} />
           </div>
+          <TrustList className="mt-6 border-t border-line pt-5" />
           {cart.couponCode && priced?.coupon?.status === "applied" && (
             <p className="mt-3 text-xs text-muted">Cupom {cart.couponCode} aplicado.</p>
           )}

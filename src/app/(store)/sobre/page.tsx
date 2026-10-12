@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-[1240px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
+    <div className="mx-auto max-w-[1280px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
       <div className="grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] lg:gap-20">
         <h1 className="display text-[3rem] text-pine md:text-[4.25rem]">Recursos para estudar com mais segurança.</h1>
         <div className="prose-academic lg:pt-4">

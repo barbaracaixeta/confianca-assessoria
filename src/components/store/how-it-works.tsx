@@ -8,7 +8,7 @@ const STEPS = [
 /** Etapas reais e sequenciais — por isso numeradas. */
 export function HowItWorks({ withHeading = true }: { withHeading?: boolean }) {
   return (
-    <section aria-labelledby={withHeading ? "como-funciona-titulo" : undefined} className="mx-auto max-w-[1240px] px-5 py-24 md:px-8">
+    <section aria-labelledby={withHeading ? "como-funciona-titulo" : undefined} className="mx-auto max-w-[1280px] px-5 py-24 md:px-8">
       {withHeading && (
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <h2 id="como-funciona-titulo" className="text-[2.25rem] leading-[1.1] text-ink md:text-[2.75rem]">

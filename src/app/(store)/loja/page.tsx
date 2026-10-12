@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default async function StorePage() {
   const [products, categories] = await Promise.all([getActiveProducts(), getActiveCategories()]);
   return (
-    <div className="mx-auto max-w-[1240px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
+    <div className="mx-auto max-w-[1280px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
       <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] md:items-end md:justify-between">
         <div>
           <p className="text-sm font-medium text-green">Loja</p>

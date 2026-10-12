@@ -13,11 +13,11 @@ export function Price({
   prefix?: string;
   className?: string;
 }) {
-  const main = { sm: "text-base", md: "text-xl", lg: "text-4xl" }[size];
+  const main = { sm: "text-base", md: "text-xl", lg: "text-[2.5rem] leading-none" }[size];
   return (
     <div className={cn("flex flex-wrap items-baseline gap-x-2.5 gap-y-1", className)}>
       {prefix && <span className="text-xs text-muted">{prefix}</span>}
-      <span className={cn("font-serif font-medium tabular text-ink", main)} style={{ fontVariationSettings: '"opsz" 36' }}>
+      <span className={cn("font-sans font-semibold tracking-[-0.01em] text-ink tabular", main)}>
         {formatMoney(quote.totalCents)}
       </span>
       {quote.promoActive && (

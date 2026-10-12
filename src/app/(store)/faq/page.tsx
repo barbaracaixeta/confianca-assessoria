@@ -27,7 +27,7 @@ export default async function FaqPage() {
     mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.question, acceptedAnswer: { "@type": "Answer", text: f.answer } })),
   };
   return (
-    <div className="mx-auto max-w-[1240px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
+    <div className="mx-auto max-w-[1280px] px-5 pt-12 pb-24 md:px-8 md:pt-16">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />
       <h1 className="display text-[3rem] text-pine md:text-[4.25rem]">Perguntas frequentes</h1>
       <div className="mt-14 space-y-14">

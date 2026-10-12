@@ -14,12 +14,18 @@ function Badges({ product }: { product: Product }) {
   const q = quoteProduct(product);
   const badges: { label: string; className: string }[] = [];
   if (q.promoActive) badges.push({ label: `${q.percentOff}% OFF`, className: "bg-amber text-pine-900" });
-  if (product.isNew) badges.push({ label: "NOVO", className: "bg-pine text-paper" });
-  if (product.isBestSeller) badges.push({ label: "MAIS VENDIDO", className: "bg-ink text-paper" });
+  if (product.isNew) badges.push({ label: "NOVO", className: "bg-sheet/95 text-pine" });
+  if (product.isBestSeller) badges.push({ label: "MAIS VENDIDO", className: "bg-pine text-paper" });
   return (
-    <div className="pointer-events-none absolute top-2.5 left-2.5 z-10 flex max-w-[calc(100%-2.5rem)] flex-wrap gap-1.5">
+    <div className="pointer-events-none absolute top-3 left-3 z-10 flex max-w-[calc(100%-1.5rem)] flex-wrap gap-1.5">
       {badges.map((b) => (
-        <span key={b.label} className={cn("rounded-[var(--radius-xs)] px-2 py-0.5 text-[11px] font-bold tracking-wide tabular", b.className)}>
+        <span
+          key={b.label}
+          className={cn(
+            "rounded-[var(--radius-xs)] px-2 py-1 text-[10px] font-bold tracking-[0.08em] backdrop-blur-[2px] tabular",
+            b.className,
+          )}
+        >
           {b.label}
         </span>
       ))}
@@ -37,7 +43,6 @@ export function ProductCard({ product }: { product: Product }) {
 
   const q = quoteProduct(product);
   const bundle = productBundleSize(product);
-  const delivery = product.productType === "digital" ? "Entregue na hora" : product.deliveryLabel ?? "Entrega física";
 
   function quickAdd() {
     add({ productId: product.id, slug: product.slug, quantity: 1 });
@@ -47,42 +52,57 @@ export function ProductCard({ product }: { product: Product }) {
   }
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-[var(--radius-md)] border border-line bg-sheet transition-[border-color,transform] duration-300 hover:border-pine/40">
-      <Link href={`/produto/${product.slug}`} className="relative block aspect-[4/3] overflow-hidden bg-green-50">
+    <article className="group flex flex-col">
+      <Link
+        href={`/produto/${product.slug}`}
+        aria-label={`Ver ${product.name}`}
+        className="relative block overflow-hidden rounded-[var(--radius-md)] border border-line bg-green-50 transition-[box-shadow,border-color] duration-300 ease-[var(--ease-out-quart)] group-hover:border-pine/30 group-hover:shadow-md"
+      >
+        <div className="aspect-[4/3] overflow-hidden">
+          <ProductCover
+            product={product}
+            className="transition-transform duration-[700ms] ease-[var(--ease-out-quart)] group-hover:scale-[1.05]"
+          />
+        </div>
         <Badges product={product} />
-        <ProductCover product={product} className="transition-transform duration-500 ease-[var(--ease-out-quart)] group-hover:scale-[1.03]" />
+        <span className="pointer-events-none absolute inset-x-3 bottom-3 flex translate-y-2 items-center justify-between gap-2 opacity-0 transition-[opacity,transform] duration-300 ease-[var(--ease-out-quart)] group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+          <span className="inline-flex h-9 items-center gap-1.5 rounded-[var(--radius-sm)] bg-sheet/95 px-3.5 text-[0.8125rem] font-semibold text-pine shadow-xs backdrop-blur-[2px]">
+            Ver produto
+            <svg viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+              <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" />
+            </svg>
+          </span>
+          {bundle && (
+            <span className="rounded-[var(--radius-xs)] bg-pine/90 px-2 py-1 text-[10px] font-bold text-paper tabular">
+              {bundle}
+            </span>
+          )}
+        </span>
       </Link>
 
-      <div className="flex flex-1 flex-col gap-2.5 p-4">
-        <div className="flex items-center justify-between gap-3 text-xs">
-          <span className="truncate text-muted">{product.categoryName ?? "Produto"}</span>
-          <span className="shrink-0 font-medium text-green">{delivery}</span>
-        </div>
-
-        <h3 className="font-serif text-[1.15rem] leading-snug text-ink">
-          <Link href={`/produto/${product.slug}`}>{product.name}</Link>
+      <div className="mt-4 flex flex-1 flex-col">
+        <p className="eyebrow text-[0.6875rem] text-muted">{product.categoryName ?? "Material"}</p>
+        <h3 className="mt-1.5 font-serif text-[1.2rem] leading-snug text-ink">
+          <Link href={`/produto/${product.slug}`} className="transition-colors hover:text-pine">
+            {product.name}
+          </Link>
         </h3>
-        <p className="line-clamp-2 text-sm leading-relaxed text-muted">{product.shortDescription}</p>
 
-        <div className="mt-auto flex items-end justify-between gap-3 pt-2">
+        <div className="mt-3 flex items-end justify-between gap-3 pt-1">
           <div>
             {q.promoActive && (
               <p className="text-xs text-muted tabular">
                 <s>{formatMoney(q.listTotalCents)}</s>
               </p>
             )}
-            <p className="font-serif text-xl leading-none text-ink tabular" style={{ fontVariationSettings: '"opsz" 36' }}>
+            <p className="font-sans text-xl font-semibold leading-none tracking-[-0.01em] text-ink tabular">
               {formatMoney(q.totalCents)}
             </p>
-            {bundle && <p className="mt-1 text-[11px] text-muted">{bundle}</p>}
           </div>
           <Button
             variant={added ? "primary" : "accent"}
             size="sm"
-            onClick={(e) => {
-              e.preventDefault();
-              quickAdd();
-            }}
+            onClick={quickAdd}
             aria-label={`Adicionar ${product.name} ao carrinho`}
           >
             {added ? "Adicionado ✓" : inCart ? "No carrinho" : "Adicionar"}

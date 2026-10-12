@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ButtonLink } from "@/components/ui/button";
 import { Alert, EmptyState, Skeleton } from "@/components/ui/feedback";
-import { CouponForm, Totals } from "@/components/store/order-summary";
+import { CouponForm, Totals, TrustList } from "@/components/store/order-summary";
 import { usePricedCart } from "@/components/store/use-priced-cart";
 import { formatDeliveryDays, formatMoney } from "@/lib/utils";
 
@@ -128,6 +128,7 @@ export function CartView() {
           <div className="mt-6">
             <Totals priced={priced} loading={loading} />
           </div>
+          <TrustList className="mt-6 border-t border-line pt-5" />
           <ButtonLink
             href="/checkout"
             variant="accent"

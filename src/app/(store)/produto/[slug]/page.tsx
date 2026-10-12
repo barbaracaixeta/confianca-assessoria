@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductCover } from "@/components/store/product-cover";
+import { ProductCard } from "@/components/store/product-card";
 import { ProductPurchasePanel } from "@/components/store/product-purchase-panel";
 import { FaqList } from "@/components/store/faq-list";
-import { getProductBySlug } from "@/lib/catalog/queries";
+import { getActiveProducts, getProductBySlug } from "@/lib/catalog/queries";
 import { absoluteUrl, breadcrumbJsonLd, jsonLdScript, productJsonLd } from "@/lib/seo";
 
 export const revalidate = 300;
@@ -56,12 +57,18 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
 
   const formats = [...new Set(product.files.map((f) => f.originalName.split(".").pop()?.toUpperCase()).filter(Boolean))];
 
+  const related = product.categoryId
+    ? (await getActiveProducts())
+        .filter((p) => p.id !== product.id && p.categoryId === product.categoryId)
+        .slice(0, 4)
+    : [];
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(productJsonLd(product)) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(breadcrumbJsonLd(crumbs)) }} />
 
-      <div className="mx-auto max-w-[1240px] px-5 pt-8 pb-24 md:px-8 md:pt-10">
+      <div className="mx-auto max-w-[1280px] px-5 pt-8 pb-24 md:px-8 md:pt-10">
         <nav aria-label="Trilha de navegação" className="text-sm text-muted">
           <ol className="flex flex-wrap items-center gap-2">
             <li><Link href="/loja" className="hover:text-pine">Loja</Link></li>
@@ -150,6 +157,27 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
             </div>
           </aside>
         </div>
+
+        {related.length > 0 && (
+          <section aria-labelledby="relacionados-titulo" className="mt-24 border-t border-line pt-12">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="eyebrow text-green">{product.categoryName ?? "Relacionados"}</p>
+                <h2 id="relacionados-titulo" className="mt-3 text-[1.75rem] text-ink md:text-[2.1rem]">
+                  Produtos relacionados
+                </h2>
+              </div>
+              <Link href="/loja" className="link-underline hidden text-sm font-medium text-pine sm:block">
+                Ver a loja
+              </Link>
+            </div>
+            <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+              {related.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </>
   );
