@@ -69,11 +69,15 @@ export function SiteHeader({ categories, institutions = [] }: { categories: Cate
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 bg-paper/85 backdrop-blur-[10px] transition-[border-color,box-shadow] duration-300",
+        "sticky top-0 z-40 transition-[border-color,box-shadow] duration-300",
         "border-b",
         scrolled ? "border-line shadow-xs" : "border-transparent",
       )}
     >
+      {/* Fundo fosco isolado numa camada própria: um `backdrop-filter` no <header>
+          criaria um containing block para o menu mobile (position: fixed) e o
+          prendaria dentro da barra. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-paper/85 backdrop-blur-[10px]" />
       <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-sheet focus:px-3 focus:py-2">
         Pular para o conteúdo
       </a>
