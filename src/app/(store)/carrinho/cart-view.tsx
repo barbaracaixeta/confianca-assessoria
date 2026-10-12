@@ -42,6 +42,9 @@ export function CartView() {
                       <Link href={`/produto/${p.product.slug}`} className="font-display font-bold text-xl text-ink hover:text-pine">
                         {p.product.name}
                       </Link>
+                      {p.product.shortDescription && (
+                        <p className="mt-1.5 max-w-[44ch] text-sm leading-relaxed text-ink-2">{p.product.shortDescription}</p>
+                      )}
                       <p className="mt-1 text-sm text-muted">
                         {p.product.deliveryDays === 0 ? "Entrega imediata após o pagamento" : `Prazo: ${p.product.deliveryLabel ?? formatDeliveryDays(p.product.deliveryDays)}`}
                       </p>

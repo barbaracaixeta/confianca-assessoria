@@ -17,7 +17,16 @@ export interface PricedCartLine {
   line: CartLine;
   product: Pick<
     Product,
-    "id" | "name" | "slug" | "pricingUnit" | "minQuantity" | "maxQuantity" | "deliveryDays" | "deliveryLabel" | "categoryName"
+    | "id"
+    | "name"
+    | "slug"
+    | "shortDescription"
+    | "pricingUnit"
+    | "minQuantity"
+    | "maxQuantity"
+    | "deliveryDays"
+    | "deliveryLabel"
+    | "categoryName"
   >;
   quote: PriceQuote;
 }
@@ -124,6 +133,7 @@ export async function priceCart(lines: CartLine[], couponCode?: string, customer
         id: product.id,
         name: product.name,
         slug: product.slug,
+        shortDescription: product.shortDescription,
         pricingUnit: product.pricingUnit,
         minQuantity: product.minQuantity,
         maxQuantity: product.maxQuantity,
