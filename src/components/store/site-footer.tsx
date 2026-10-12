@@ -19,7 +19,7 @@ export async function SiteFooter() {
     <footer className="bg-pine text-paper/80">
       <div className="mx-auto grid max-w-[1280px] gap-12 px-5 pt-16 pb-10 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:px-8">
         <div className="max-w-sm">
-          <Logo tone="light" className="h-[64px]" />
+          <Logo tone="light" className="h-[72px]" />
           <p className="mt-6 font-display font-bold text-lg leading-relaxed text-paper">
             Materiais acadêmicos para facilitar a sua jornada.
           </p>

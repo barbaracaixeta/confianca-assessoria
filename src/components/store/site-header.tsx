@@ -81,7 +81,7 @@ export function SiteHeader({ categories, institutions = [] }: { categories: Cate
       <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-sheet focus:px-3 focus:py-2">
         Pular para o conteúdo
       </a>
-      <div className="mx-auto grid h-[76px] max-w-[1280px] grid-cols-[auto_1fr_auto] items-center gap-4 px-5 md:px-8">
+      <div className="mx-auto grid h-[88px] max-w-[1280px] grid-cols-[auto_1fr_auto] items-center gap-4 px-5 md:px-8">
         <Link href="/" aria-label="Confiança Assessoria Acadêmica — página inicial" className="shrink-0">
           <span className="hidden sm:block">
             <Logo priority />
@@ -204,7 +204,7 @@ export function SiteHeader({ categories, institutions = [] }: { categories: Cate
         id="menu-mobile"
         ref={menuRef}
         hidden={!open}
-        className="fixed inset-x-0 top-[76px] bottom-0 z-40 overflow-y-auto bg-paper px-5 pt-6 pb-10 lg:hidden"
+        className="fixed inset-x-0 top-[88px] bottom-0 z-40 overflow-y-auto bg-paper px-5 pt-6 pb-10 lg:hidden"
       >
         <nav aria-label="Menu">
           <ul className="border-t border-line">
