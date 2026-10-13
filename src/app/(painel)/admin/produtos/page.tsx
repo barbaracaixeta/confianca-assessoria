@@ -3,19 +3,36 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/feedback";
 import { ButtonLink } from "@/components/ui/button";
-import { getAdminProducts } from "@/lib/admin/catalog";
+import { getAdminInstitutions, getAdminProducts } from "@/lib/admin/catalog";
 import { formatMoney } from "@/lib/utils";
 import { toggleProductFormAction } from "./actions";
 import { UploadPanel } from "./upload-panel";
 import { DeleteProductButton } from "./delete-product-button";
+import { ProductFilters } from "./product-filters";
 
 export const metadata: Metadata = { title: "Produtos" };
 export const dynamic = "force-dynamic";
 
-export default async function AdminProductsPage() {
+export default async function AdminProductsPage({ searchParams }: PageProps<"/admin/produtos">) {
   await requireAdminPermission("products.view");
-  const products = await getAdminProducts();
+  const sp = await searchParams;
+  const [allProducts, institutions] = await Promise.all([getAdminProducts(), getAdminInstitutions()]);
+
+  const q = (typeof sp.q === "string" ? sp.q : "").trim().toLowerCase();
+  const institution = typeof sp.instituicao === "string" ? sp.instituicao : "";
+  const status = typeof sp.status === "string" ? sp.status : "";
+
+  const products = allProducts.filter((p) => {
+    if (q && !`${p.name} ${p.institution ?? ""}`.toLowerCase().includes(q)) return false;
+    if (institution === "none" && p.institutionId) return false;
+    if (institution && institution !== "none" && p.institutionId !== institution) return false;
+    if (status === "published" && !p.isActive) return false;
+    if (status === "draft" && p.isActive) return false;
+    return true;
+  });
+
   const activeCount = products.filter((p) => p.isActive).length;
+  const hasFilters = Boolean(q || institution || status);
 
   return (
     <div className="max-w-[1180px]">
@@ -29,12 +46,20 @@ export default async function AdminProductsPage() {
         <ButtonLink href="/admin/produtos/novo">Novo produto</ButtonLink>
       </div>
 
+      <ProductFilters institutions={institutions.map((i) => ({ id: i.id, name: i.name }))} />
+
       <UploadPanel products={products.map((p) => ({ id: p.id, name: p.name, isActive: p.isActive }))} />
 
       {products.length === 0 ? (
         <p className="mt-10 text-sm text-muted">
-          Nenhum produto ainda. Crie o primeiro para começar a vender.{" "}
-          <span className="block text-xs opacity-80">Sem Supabase configurado, a lista é exibida vazia em modo prévia.</span>
+          {hasFilters ? (
+            "Nenhum produto corresponde aos filtros."
+          ) : (
+            <>
+              Nenhum produto ainda. Crie o primeiro para começar a vender.{" "}
+              <span className="block text-xs opacity-80">Sem Supabase configurado, a lista é exibida vazia em modo prévia.</span>
+            </>
+          )}
         </p>
       ) : (
         <div className="mt-8 overflow-x-auto">

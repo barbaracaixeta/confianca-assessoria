@@ -8,6 +8,7 @@ export interface AdminProductRow {
   slug: string;
   category: string | null;
   institution: string | null;
+  institutionId: string | null;
   basePriceCents: number;
   discountType: string;
   discountValue: number;
@@ -69,7 +70,7 @@ export async function getAdminProducts(): Promise<AdminProductRow[]> {
   const { data } = await admin
     .from("products")
     .select(
-      "id, name, slug, product_type, base_price_cents, discount_type, discount_value, promo_starts_at, promo_ends_at, is_active, is_featured, is_new, is_best_seller, image_path, categories(name), institutions(name), product_files!product_id(id), order_items(id)",
+      "id, name, slug, product_type, base_price_cents, discount_type, discount_value, promo_starts_at, promo_ends_at, is_active, is_featured, is_new, is_best_seller, image_path, institution_id, categories(name), institutions(name), product_files!product_id(id), order_items(id)",
     )
     .order("sort_order", { ascending: true, nullsFirst: false });
   return (data ?? []).map((p) => ({
@@ -78,6 +79,7 @@ export async function getAdminProducts(): Promise<AdminProductRow[]> {
     slug: p.slug,
     category: (embeds(p.categories)?.[0]?.name as string | undefined) ?? null,
     institution: (embeds(p.institutions)?.[0]?.name as string | undefined) ?? null,
+    institutionId: p.institution_id ?? null,
     basePriceCents: p.base_price_cents,
     discountType: p.discount_type,
     discountValue: p.discount_value,
