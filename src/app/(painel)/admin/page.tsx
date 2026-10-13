@@ -13,11 +13,11 @@ export const dynamic = "force-dynamic";
 function Stat({ label, value, note, accent }: { label: string; value: string; note?: string; accent?: boolean }) {
   return (
     <div className="py-5 pr-4">
-      <dt className="text-base text-muted">{label}</dt>
-      <dd className={`mt-1.5 font-sans text-[2rem] font-semibold leading-none tabular ${accent ? "text-amber-ink" : "text-ink"}`}>
+      <dt className="text-lg text-muted">{label}</dt>
+      <dd className={`mt-1.5 font-sans text-[2.25rem] font-semibold leading-none tabular ${accent ? "text-amber-ink" : "text-ink"}`}>
         {value}
       </dd>
-      {note && <p className="mt-1.5 text-sm text-muted">{note}</p>}
+      {note && <p className="mt-1.5 text-base text-muted">{note}</p>}
     </div>
   );
 }
@@ -32,8 +32,8 @@ export default async function AdminDashboard() {
   return (
     <div className="max-w-[1180px]">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <h1 className="display text-[2.5rem] text-pine md:text-[3rem]">Dashboard</h1>
-        <p className="text-base text-muted">{formatDate(new Date(), { dateStyle: "full" })}</p>
+        <h1 className="display text-[2.75rem] text-pine md:text-[3.25rem]">Dashboard</h1>
+        <p className="text-lg text-muted">{formatDate(new Date(), { dateStyle: "full" })}</p>
       </div>
 
       {/* Faturamento é a manchete; contagens operacionais logo abaixo */}
@@ -54,27 +54,27 @@ export default async function AdminDashboard() {
 
       <div className="mt-10 grid gap-8 xl:grid-cols-2">
         <section className="bg-sheet p-5 md:p-6">
-          <h2 className="text-[1.75rem] text-ink">Faturamento diário</h2>
-          <p className="text-sm text-muted">Pedidos pagos, últimos 30 dias</p>
+          <h2 className="text-[2rem] text-ink">Faturamento diário</h2>
+          <p className="text-base text-muted">Pedidos pagos, últimos 30 dias</p>
           <div className="mt-5"><DailyChart data={m.daily.map((d) => ({ day: d.day, value: d.revenueCents }))} kind="bar" format="money" /></div>
         </section>
         <section className="bg-sheet p-5 md:p-6">
-          <h2 className="text-[1.75rem] text-ink">Pedidos por dia</h2>
-          <p className="text-sm text-muted">Todos os pedidos criados, últimos 30 dias</p>
+          <h2 className="text-[2rem] text-ink">Pedidos por dia</h2>
+          <p className="text-base text-muted">Todos os pedidos criados, últimos 30 dias</p>
           <div className="mt-5"><DailyChart data={m.daily.map((d) => ({ day: d.day, value: d.orders }))} kind="line" format="count" /></div>
         </section>
       </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
         <section className="bg-sheet p-5 md:p-6">
-          <h2 className="text-[1.75rem] text-ink">Produtos mais vendidos</h2>
+          <h2 className="text-[2rem] text-ink">Produtos mais vendidos</h2>
           {m.topProducts.length === 0 ? (
-            <p className="mt-4 text-base text-muted">Sem vendas pagas no período.</p>
+            <p className="mt-4 text-lg text-muted">Sem vendas pagas no período.</p>
           ) : (
             <ol className="mt-4 space-y-3.5">
               {m.topProducts.map((p) => (
                 <li key={p.name}>
-                  <div className="flex items-baseline justify-between gap-4 text-base">
+                  <div className="flex items-baseline justify-between gap-4 text-lg">
                     <span className="text-ink">{p.name}</span>
                     <span className="tabular text-ink-2">{formatMoney(p.revenueCents)} <span className="text-muted">({p.quantity})</span></span>
                   </div>
@@ -87,12 +87,12 @@ export default async function AdminDashboard() {
           )}
         </section>
         <section className="bg-sheet p-5 md:p-6">
-          <h2 className="text-[1.75rem] text-ink">Cupons mais usados</h2>
+          <h2 className="text-[2rem] text-ink">Cupons mais usados</h2>
           {m.topCoupons.length === 0 ? (
-            <p className="mt-4 text-base text-muted">Nenhum cupom utilizado ainda.</p>
+            <p className="mt-4 text-lg text-muted">Nenhum cupom utilizado ainda.</p>
           ) : (
-            <table className="mt-4 w-full text-base">
-              <thead><tr className="border-b border-line text-left text-sm text-muted"><th className="pb-2 font-normal">Código</th><th className="pb-2 text-right font-normal">Usos</th><th className="pb-2 text-right font-normal">Desconto</th></tr></thead>
+            <table className="mt-4 w-full text-lg">
+              <thead><tr className="border-b border-line text-left text-base text-muted"><th className="pb-2 font-normal">Código</th><th className="pb-2 text-right font-normal">Usos</th><th className="pb-2 text-right font-normal">Desconto</th></tr></thead>
               <tbody>
                 {m.topCoupons.map((c) => (
                   <tr key={c.code} className="border-b border-line last:border-0">
@@ -108,14 +108,14 @@ export default async function AdminDashboard() {
       </div>
 
       <section className="mt-8 bg-sheet p-5 md:p-6">
-        <h2 className="text-[1.75rem] text-ink">Pedidos recentes</h2>
+        <h2 className="text-[2rem] text-ink">Pedidos recentes</h2>
         {recent.length === 0 ? (
-          <p className="mt-4 text-base text-muted">{m.isDemo ? "Os pedidos reais aparecem aqui quando o Supabase estiver configurado." : "Nenhum pedido ainda."}</p>
+          <p className="mt-4 text-lg text-muted">{m.isDemo ? "Os pedidos reais aparecem aqui quando o Supabase estiver configurado." : "Nenhum pedido ainda."}</p>
         ) : (
           <div className="mt-4 overflow-x-auto">
-            <table className="w-full min-w-[640px] text-base">
+            <table className="w-full min-w-[640px] text-lg">
               <thead>
-                <tr className="border-b border-line text-left text-sm text-muted">
+                <tr className="border-b border-line text-left text-base text-muted">
                   <th className="pb-2 font-normal">Pedido</th><th className="pb-2 font-normal">Cliente</th><th className="pb-2 font-normal">Status</th><th className="pb-2 font-normal">Pagamento</th><th className="pb-2 text-right font-normal">Valor</th><th className="pb-2 text-right font-normal">Data</th>
                 </tr>
               </thead>
