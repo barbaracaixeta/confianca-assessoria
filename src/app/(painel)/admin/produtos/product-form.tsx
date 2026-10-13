@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ export interface AdminProductFile {
   size_bytes: number | null;
   label: string;
   previewUrl: string | null;
-  previewStatus: "pending" | "completed" | "fallback" | "failed" | null;
+  previewStatus: "pending" | "processing" | "completed" | "fallback" | "failed" | null;
 }
 
 export interface AdminCategoryOption {
@@ -296,17 +296,22 @@ export function ProductForm({ product, categories, institutions }: { product: Ad
 }
 
 const PREVIEW_STATUS: Record<NonNullable<AdminProductFile["previewStatus"]>, { label: string; tone: string }> = {
-  completed: { label: "Prévia do conteúdo", tone: "text-pine" },
+  completed: { label: "✓ Prévia do conteúdo", tone: "text-pine" },
   fallback: { label: "Capa de marca", tone: "text-amber" },
-  failed: { label: "Falha ao gerar", tone: "text-danger" },
-  pending: { label: "Processando…", tone: "text-muted" },
+  failed: { label: "⚠ Não foi possível gerar o preview", tone: "text-danger" },
+  processing: { label: "Gerando preview…", tone: "text-muted" },
+  pending: { label: "Gerando preview…", tone: "text-muted" },
 };
+
+/** Status em que a geração do preview ainda está em andamento. */
+const IN_PROGRESS: AdminProductFile["previewStatus"][] = ["pending", "processing"];
 
 function PreviewThumb({ file, className }: { file: AdminProductFile; className?: string }) {
   if (!file.previewUrl) {
+    const generating = file.previewStatus === "pending" || file.previewStatus === "processing";
     return (
-      <div className={cn("grid place-items-center rounded-[var(--radius-sm)] border border-line bg-green-50 text-xs text-muted", className)}>
-        Sem prévia
+      <div className={cn("grid place-items-center rounded-[var(--radius-sm)] border border-line bg-green-50 px-1 text-center text-xs text-muted", className)}>
+        {generating ? "Gerando…" : "Sem prévia"}
       </div>
     );
   }
@@ -340,6 +345,15 @@ export function ProductFiles({
   const coverSource = files.find((f) => f.id === coverSourceFileId) ?? null;
   const coverStatus = coverSource?.previewStatus ?? null;
   const alert = message ?? upload.message;
+
+  // Enquanto algum preview está sendo gerado (upload em segundo plano),
+  // atualiza a lista periodicamente para refletir o resultado.
+  const generating = files.some((f) => f.previewStatus && IN_PROGRESS.includes(f.previewStatus));
+  useEffect(() => {
+    if (!generating) return;
+    const timer = setInterval(() => router.refresh(), 3000);
+    return () => clearInterval(timer);
+  }, [generating, router]);
 
   async function run(key: string, fn: () => Promise<{ ok: true } | { ok: false; error: string }>) {
     setBusy(key);
@@ -460,13 +474,20 @@ export function ProductFiles({
                   )}
                   {isCover ? (
                     <span className="rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-pine">Capa atual</span>
-                  ) : (
+                  ) : f.previewUrl ? (
                     <Button type="button" variant="outline" size="sm" loading={busy === `cover-${f.id}`} onClick={() => run(`cover-${f.id}`, () => setProductCoverAction({ productId, fileId: f.id }))}>
                       Usar como capa
                     </Button>
-                  )}
-                  <Button type="button" variant="ghost" size="sm" loading={busy === `regen-${f.id}`} onClick={() => run(`regen-${f.id}`, () => regenerateProductPreviewAction({ productId, fileId: f.id }))}>
-                    Regenerar
+                  ) : null}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    loading={busy === `regen-${f.id}`}
+                    disabled={f.previewStatus === "processing" || f.previewStatus === "pending"}
+                    onClick={() => run(`regen-${f.id}`, () => regenerateProductPreviewAction({ productId, fileId: f.id }))}
+                  >
+                    {f.previewUrl ? "Regenerar" : "Gerar preview"}
                   </Button>
                   <Button type="button" variant="danger" size="sm" loading={busy === `del-${f.id}`} onClick={() => run(`del-${f.id}`, () => removeFile(f))}>
                     Remover

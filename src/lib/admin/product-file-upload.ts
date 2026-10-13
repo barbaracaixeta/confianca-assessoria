@@ -1,4 +1,5 @@
 import "server-only";
+import { after } from "next/server";
 import type { AdminSupabase } from "@/lib/supabase/admin";
 import { displayName, extensionOf } from "@/lib/admin/product-files";
 import {
@@ -29,9 +30,11 @@ export type RegisterResult =
   | { ok: false; error: string };
 
 /**
- * Insere o arquivo já armazenado no Storage e dispara a geração da capa.
- * A geração NUNCA falha o cadastro: se o preview não sair, o arquivo continua
- * salvo e o produto segue válido (requisito 13/34).
+ * Insere o arquivo já armazenado no Storage e AGENDA a geração do preview.
+ *
+ * O upload NÃO espera a renderização (requisito 17): o preview roda em segundo
+ * plano (`after`) e a UI acompanha o status. A geração NUNCA falha o cadastro:
+ * se o preview não sair, o arquivo continua salvo e o produto segue válido.
  */
 export async function registerUploadedProductFile(
   admin: AdminSupabase,
@@ -50,20 +53,29 @@ export async function registerUploadedProductFile(
       label: input.label,
       extension: extensionOf(originalName),
       status: "active",
+      preview_status: "pending",
     })
     .select("id")
     .single();
   if (error || !data) return { ok: false, error: `Não foi possível registrar: ${error?.message ?? "erro"}` };
 
+  const fileId = data.id;
   const { data: product } = await admin.from("products").select("name").eq("id", input.productId).maybeSingle();
-  const preview = await generateFilePreview(admin, {
-    fileId: data.id,
-    productId: input.productId,
-    productName: product?.name ?? "Material digital",
-  });
-  await assignProductCover(admin, input.productId, { onlyIfUnset: true });
+  const productName = product?.name ?? "Material digital";
 
-  return { ok: true, id: data.id, previewStatus: preview.status };
+  const run = async () => {
+    await generateFilePreview(admin, { fileId, productId: input.productId, productName });
+    await assignProductCover(admin, input.productId, { onlyIfUnset: true });
+  };
+
+  try {
+    after(run); // continua após a resposta; limitado por maxDuration da rota
+    return { ok: true, id: fileId, previewStatus: "pending" };
+  } catch {
+    // Fora de um contexto de requisição (ex.: script): gera de forma síncrona.
+    await run();
+    return { ok: true, id: fileId, previewStatus: "pending" };
+  }
 }
 
 export type DeleteResult =

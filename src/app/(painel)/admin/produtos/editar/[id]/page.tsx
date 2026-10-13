@@ -8,6 +8,8 @@ import { ProductForm, ProductFiles, type AdminProductFile, type AdminProductValu
 
 export const metadata: Metadata = { title: "Editar produto" };
 export const dynamic = "force-dynamic";
+// A geração do preview roda em segundo plano (after) após o upload.
+export const maxDuration = 60;
 
 export default async function EditProductPage({ params }: PageProps<"/admin/produtos/editar/[id]">) {
   await requireAdminPermission("products.edit");

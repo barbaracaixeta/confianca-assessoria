@@ -11,6 +11,8 @@ import { ProductFilters } from "./product-filters";
 
 export const metadata: Metadata = { title: "Produtos" };
 export const dynamic = "force-dynamic";
+// A geração do preview roda em segundo plano (after) após o upload.
+export const maxDuration = 60;
 
 export default async function AdminProductsPage({ searchParams }: PageProps<"/admin/produtos">) {
   await requireAdminPermission("products.view");

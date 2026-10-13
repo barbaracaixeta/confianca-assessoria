@@ -6,6 +6,15 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Módulos nativos / pesados usados na geração de preview dos produtos.
+  // Não devem ser empacotados pelo bundler (o @napi-rs/canvas tem um addon .node
+  // e o pdf.js lê arquivos de fonte/cmap do disco em runtime).
+  serverExternalPackages: ["@napi-rs/canvas", "sharp", "pdfjs-dist", "exceljs", "fflate"],
+  // Garante que os dados de fonte padrão e os cmaps do pdf.js existam no runtime
+  // serverless da Vercel (não são importados via JS, então o tracing não os vê).
+  outputFileTracingIncludes: {
+    "/**": ["node_modules/pdfjs-dist/standard_fonts/**", "node_modules/pdfjs-dist/cmaps/**"],
+  },
   async redirects() {
     return [
       { source: "/servicos", destination: "/loja", permanent: true },
