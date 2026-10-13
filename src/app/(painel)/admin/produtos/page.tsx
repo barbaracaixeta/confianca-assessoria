@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/feedback";
 import { ButtonLink } from "@/components/ui/button";
-import { getAdminCategories, getAdminInstitutions, getAdminProducts } from "@/lib/admin/catalog";
+import { getAdminInstitutions, getAdminProducts } from "@/lib/admin/catalog";
 import { formatMoney } from "@/lib/utils";
 import { toggleProductFormAction } from "./actions";
 import { UploadPanel } from "./upload-panel";
@@ -16,21 +16,14 @@ export const dynamic = "force-dynamic";
 export default async function AdminProductsPage({ searchParams }: PageProps<"/admin/produtos">) {
   await requireAdminPermission("products.view");
   const sp = await searchParams;
-  const [allProducts, institutions, categories] = await Promise.all([
-    getAdminProducts(),
-    getAdminInstitutions(),
-    getAdminCategories(),
-  ]);
+  const [allProducts, institutions] = await Promise.all([getAdminProducts(), getAdminInstitutions()]);
 
   const q = (typeof sp.q === "string" ? sp.q : "").trim().toLowerCase();
-  const category = typeof sp.categoria === "string" ? sp.categoria : "";
   const institution = typeof sp.instituicao === "string" ? sp.instituicao : "";
   const status = typeof sp.status === "string" ? sp.status : "";
 
   const products = allProducts.filter((p) => {
     if (q && !`${p.name} ${p.institution ?? ""}`.toLowerCase().includes(q)) return false;
-    if (category === "none" && p.categoryId) return false;
-    if (category && category !== "none" && p.categoryId !== category) return false;
     if (institution === "none" && p.institutionId) return false;
     if (institution && institution !== "none" && p.institutionId !== institution) return false;
     if (status === "published" && !p.isActive) return false;
@@ -39,7 +32,7 @@ export default async function AdminProductsPage({ searchParams }: PageProps<"/ad
   });
 
   const activeCount = products.filter((p) => p.isActive).length;
-  const hasFilters = Boolean(q || category || institution || status);
+  const hasFilters = Boolean(q || institution || status);
 
   return (
     <div className="max-w-[1180px]">
@@ -53,10 +46,7 @@ export default async function AdminProductsPage({ searchParams }: PageProps<"/ad
         <ButtonLink href="/admin/produtos/novo">Novo produto</ButtonLink>
       </div>
 
-      <ProductFilters
-        institutions={institutions.map((i) => ({ id: i.id, name: i.name }))}
-        categories={categories.map((c) => ({ id: c.id, name: c.name }))}
-      />
+      <ProductFilters institutions={institutions.map((i) => ({ id: i.id, name: i.name }))} />
 
       <UploadPanel products={products.map((p) => ({ id: p.id, name: p.name, isActive: p.isActive }))} />
 
