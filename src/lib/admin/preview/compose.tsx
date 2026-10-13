@@ -119,10 +119,15 @@ const GRID_PAD = 30;
 
 /**
  * Preview da primeira worksheet: desenha a grade real da planilha (com a fonte
- * embutida do Satori) e aplica a marca d'água. É uma representação fiel do
- * conteúdo, não uma capa genérica.
+ * embutida do Satori). Com `watermark` (padrão) aplica a marca d'água e a
+ * tarja de prévia; com `watermark: false` gera a versão limpa (capa). É uma
+ * representação fiel do conteúdo, não uma capa genérica.
  */
-export async function renderSpreadsheetPreview(sheet: SheetData): Promise<{ png: Buffer; width: number; height: number }> {
+export async function renderSpreadsheetPreview(
+  sheet: SheetData,
+  opts: { watermark?: boolean } = {},
+): Promise<{ png: Buffer; width: number; height: number }> {
+  const withWatermark = opts.watermark ?? true;
   const rows = sheet.rows.slice(0, 28);
   const cols = Math.max(1, ...rows.map((r) => r.length));
   const colWidth = Math.max(90, Math.floor((GRID_WIDTH - GRID_PAD * 2) / Math.min(cols, 8)));
@@ -194,8 +199,8 @@ export async function renderSpreadsheetPreview(sheet: SheetData): Promise<{ png:
           ))}
         </div>
 
-        <WatermarkOverlay width={width} height={height} />
-        <BrandFooter width={width} />
+        {withWatermark && <WatermarkOverlay width={width} height={height} />}
+        {withWatermark && <BrandFooter width={width} />}
       </div>
     ),
     { width, height },

@@ -90,9 +90,9 @@ export async function deleteProductFile(
 ): Promise<DeleteResult> {
   const { data: file } = await admin
     .from("product_files")
-    .select("bucket, path, preview_path, product_id")
+    .select("bucket, path, preview_path, extension, original_name, product_id")
     .eq("id", fileId)
-    .maybeSingle<{ bucket: string; path: string; preview_path: string | null; product_id: string }>();
+    .maybeSingle<{ bucket: string; path: string; preview_path: string | null; extension: string | null; original_name: string; product_id: string }>();
   if (!file) return { ok: false, error: "Arquivo não encontrado." };
 
   // §17: se o produto já foi pago, a exclusão definitiva exige confirmação
@@ -126,6 +126,7 @@ export async function deleteProductFile(
     productId: file.product_id,
     removedFileId: fileId,
     removedPreviewPath: file.preview_path,
+    removedExtension: file.extension || extensionOf(file.original_name),
   });
   return { ok: true, productId: file.product_id };
 }
