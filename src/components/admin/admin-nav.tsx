@@ -60,7 +60,7 @@ export function AdminNav({ permissions }: { permissions: Permission[] }) {
     <>
       <button
         type="button"
-        className="mx-5 mb-4 flex h-10 w-[calc(100%-2.5rem)] items-center justify-between rounded-[var(--radius-sm)] border border-line px-3 text-sm lg:hidden"
+        className="mx-5 mb-4 flex h-10 w-[calc(100%-2.5rem)] items-center justify-between rounded-[var(--radius-sm)] border border-line px-3 text-base lg:hidden"
         aria-expanded={open}
         aria-controls="admin-menu"
         onClick={() => setOpen((v) => !v)}
@@ -74,13 +74,13 @@ export function AdminNav({ permissions }: { permissions: Permission[] }) {
           if (items.length === 0) return null;
           return (
             <div key={g.title} className="mt-4 first:mt-0">
-              <p className="px-2 pb-1.5 text-xs font-medium text-muted">{g.title}</p>
+              <p className="px-2 pb-1.5 text-sm font-medium text-muted">{g.title}</p>
               <ul>
                 {items.map((it) => {
                   if (!it.href) {
                     return (
                       <li key={it.label}>
-                        <span className="flex items-center justify-between rounded-[var(--radius-sm)] px-2 py-1.5 text-sm text-muted/70" aria-disabled="true">
+                        <span className="flex items-center justify-between rounded-[var(--radius-sm)] px-2 py-1.5 text-base text-muted/70" aria-disabled="true">
                           {it.label}
                           <span className="text-[10px] text-muted/70">em breve</span>
                         </span>
@@ -94,7 +94,7 @@ export function AdminNav({ permissions }: { permissions: Permission[] }) {
                         href={it.href}
                         aria-current={active ? "page" : undefined}
                         className={cn(
-                          "block rounded-[var(--radius-sm)] px-2 py-1.5 text-sm transition-colors",
+                          "block rounded-[var(--radius-sm)] px-2 py-1.5 text-base transition-colors",
                           active ? "bg-green-50 font-medium text-pine" : "text-ink-2 hover:bg-paper hover:text-pine",
                         )}
                       >
