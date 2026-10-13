@@ -4,15 +4,22 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { Input, Select } from "@/components/ui/field";
 
-export function ProductFilters({ institutions }: { institutions: { id: string; name: string }[] }) {
+export function ProductFilters({
+  institutions,
+  categories,
+}: {
+  institutions: { id: string; name: string }[];
+  categories: { id: string; name: string }[];
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const q = searchParams.get("q") ?? "";
+  const category = searchParams.get("categoria") ?? "";
   const institution = searchParams.get("instituicao") ?? "";
   const status = searchParams.get("status") ?? "";
-  const hasFilters = Boolean(q || institution || status);
+  const hasFilters = Boolean(q || category || institution || status);
 
   function patch(next: Record<string, string | null>) {
     const params = new URLSearchParams(searchParams);
@@ -35,6 +42,18 @@ export function ProductFilters({ institutions }: { institutions: { id: string; n
           aria-label="Buscar produtos"
         />
       </div>
+      <label className="flex items-center gap-2 text-sm text-muted">
+        Categoria
+        <Select value={category} onChange={(e) => patch({ categoria: e.target.value || null })} aria-label="Filtrar por categoria">
+          <option value="">Todas</option>
+          <option value="none">Sem categoria</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </Select>
+      </label>
       <label className="flex items-center gap-2 text-sm text-muted">
         Instituição
         <Select value={institution} onChange={(e) => patch({ instituicao: e.target.value || null })} aria-label="Filtrar por instituição">
