@@ -72,21 +72,31 @@ export interface AdminProductValue {
 const reais = (cents: number) => (cents / 100).toFixed(2).replace(".", ",");
 const centsFrom = (v: string) => Math.round(Number(v.replace(/\./g, "").replace(",", ".")) * 100) || 0;
 
-/** Combobox pesquisável de instituição (busca por nome, valor = id). */
-function InstitutionPicker({
+interface ComboBoxOption {
+  id: string;
+  name: string;
+  note?: string;
+}
+
+/** Combobox pesquisável (busca por nome, valor = id). */
+function ComboBox({
   id,
   options,
   value,
   onChange,
-  "aria-describedby": describedBy,
-  "aria-invalid": invalid,
+  emptyLabel,
+  searchPlaceholder,
+  ariaDescribedBy,
+  invalid,
 }: {
   id: string;
-  options: AdminInstitutionOption[];
+  options: ComboBoxOption[];
   value: string | null;
   onChange: (id: string | null) => void;
-  "aria-describedby"?: string;
-  "aria-invalid"?: boolean;
+  emptyLabel: string;
+  searchPlaceholder: string;
+  ariaDescribedBy?: string;
+  invalid?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -127,12 +137,12 @@ function InstitutionPicker({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={`${id}-listbox`}
-        aria-describedby={describedBy}
+        aria-describedby={ariaDescribedBy}
         aria-invalid={invalid}
         onClick={() => setOpen((v) => !v)}
         className={cn(control, "flex h-11 items-center justify-between text-left")}
       >
-        <span className={selected ? "text-ink" : "text-muted"}>{selected ? selected.name : "Sem instituição"}</span>
+        <span className={selected ? "text-ink" : "text-muted"}>{selected ? selected.name : emptyLabel}</span>
         <span aria-hidden="true" className="text-muted">▾</span>
       </button>
       {open && (
@@ -141,9 +151,9 @@ function InstitutionPicker({
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar instituição…"
+            placeholder={searchPlaceholder}
             className="h-9"
-            aria-label="Buscar instituição"
+            aria-label={searchPlaceholder}
           />
           <ul id={`${id}-listbox`} role="listbox" className="mt-2 max-h-56 space-y-0.5 overflow-y-auto">
             <li>
@@ -154,7 +164,7 @@ function InstitutionPicker({
                 onClick={() => choose(null)}
                 className={cn("w-full rounded-[var(--radius-xs)] px-2.5 py-2 text-left text-sm", !value ? "bg-green-50 text-pine" : "text-ink-2 hover:bg-paper")}
               >
-                Sem instituição
+                {emptyLabel}
               </button>
             </li>
             {filtered.map((o) => (
@@ -170,11 +180,11 @@ function InstitutionPicker({
                   )}
                 >
                   {o.name}
-                  {!o.isActive && <span className="text-xs text-muted">oculta</span>}
+                  {o.note && <span className="text-xs text-muted">{o.note}</span>}
                 </button>
               </li>
             ))}
-            {filtered.length === 0 && <li className="px-2.5 py-2 text-sm text-muted">Nenhuma instituição encontrada.</li>}
+            {filtered.length === 0 && <li className="px-2.5 py-2 text-sm text-muted">Nenhum resultado encontrado.</li>}
           </ul>
         </div>
       )}
@@ -241,17 +251,30 @@ export function ProductForm({ product, categories, institutions }: { product: Ad
         </Field>
         <Field label="Categoria">
           {(props) => (
-            <Select {...props} value={f.categoryId ?? ""} onChange={(e) => setField("categoryId", e.target.value || null)}>
-              <option value="">Sem categoria</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </Select>
+            <ComboBox
+              id={props.id}
+              options={categories}
+              value={f.categoryId}
+              onChange={(id) => setField("categoryId", id)}
+              emptyLabel="Sem categoria"
+              searchPlaceholder="Buscar categoria…"
+              ariaDescribedBy={props["aria-describedby"]}
+              invalid={props["aria-invalid"]}
+            />
           )}
         </Field>
         <Field label="Instituição" hint="Opcional. Filtro independente das categorias.">
           {(props) => (
-            <InstitutionPicker id={props.id} options={institutions} value={f.institutionId} onChange={(id) => setField("institutionId", id)} />
+            <ComboBox
+              id={props.id}
+              options={institutions.map((i) => ({ id: i.id, name: i.name, note: i.isActive ? undefined : "oculta" }))}
+              value={f.institutionId}
+              onChange={(id) => setField("institutionId", id)}
+              emptyLabel="Sem instituição"
+              searchPlaceholder="Buscar instituição…"
+              ariaDescribedBy={props["aria-describedby"]}
+              invalid={props["aria-invalid"]}
+            />
           )}
         </Field>
         <Field label="Resumo da vitrine" hint="Uma frase curta exibida no catálogo e nos cards.">
