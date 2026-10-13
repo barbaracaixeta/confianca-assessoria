@@ -76,7 +76,7 @@
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
     /* Escala tipográfica global: reduz textos e títulos (rem). */
-    font-size: 81.25%; /* ~13px sobre o padrão de 16px */
+    font-size: 87.5%; /* ~14px sobre o padrão de 16px */
   }
 
   body {
