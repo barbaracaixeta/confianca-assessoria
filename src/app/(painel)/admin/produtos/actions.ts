@@ -345,6 +345,7 @@ export async function regenerateProductPreviewAction(input: { productId: string;
 export async function createProductQuickAction(input: {
   name: string;
   priceCents?: number;
+  institutionId?: string | null;
 }): Promise<Result<{ id: string; slug: string }>> {
   const auth = await authorizePermission("products.create");
   if ("error" in auth) return { ok: false, error: auth.error };
@@ -353,6 +354,7 @@ export async function createProductQuickAction(input: {
     .object({
       name: z.string().trim().min(2, "Informe o nome do produto.").max(120),
       priceCents: z.number().int().min(0).max(10_000_000).optional(),
+      institutionId: z.string().uuid().nullable().optional(),
     })
     .safeParse(input);
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0].message };
@@ -376,7 +378,7 @@ export async function createProductQuickAction(input: {
       short_description: "",
       description: "",
       category_id: null,
-      institution_id: null,
+      institution_id: parsed.data.institutionId ?? null,
       base_price_cents: parsed.data.priceCents ?? 0,
       discount_type: "none",
       discount_value: 0,

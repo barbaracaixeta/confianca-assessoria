@@ -2,7 +2,6 @@ import { requireAdminPermission } from "@/lib/admin/access";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/feedback";
-import { ButtonLink } from "@/components/ui/button";
 import { getAdminInstitutions, getAdminProducts } from "@/lib/admin/catalog";
 import { formatMoney } from "@/lib/utils";
 import { toggleProductFormAction } from "./actions";
@@ -43,12 +42,14 @@ export default async function AdminProductsPage({ searchParams }: PageProps<"/ad
             {activeCount} publicado{activeCount === 1 ? "" : "s"} · {products.length} ao total
           </p>
         </div>
-        <ButtonLink href="/admin/produtos/novo">Novo produto</ButtonLink>
       </div>
 
       <ProductFilters institutions={institutions.map((i) => ({ id: i.id, name: i.name }))} />
 
-      <UploadPanel products={products.map((p) => ({ id: p.id, name: p.name, isActive: p.isActive }))} />
+      <UploadPanel
+        products={products.map((p) => ({ id: p.id, name: p.name, isActive: p.isActive }))}
+        institutions={institutions.map((i) => ({ id: i.id, name: i.name, isActive: i.isActive }))}
+      />
 
       {products.length === 0 ? (
         <p className="mt-10 text-sm text-muted">

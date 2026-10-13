@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select } from "@/components/ui/field";
 import { FileTypeIcon } from "@/components/files/file-type-icon";
@@ -8,8 +8,15 @@ import { cn, formatBytes } from "@/lib/utils";
 import { MAX_PRODUCT_FILE_SIZE_MB, extensionOf } from "@/lib/admin/product-files";
 import { useUploadQueue } from "./use-upload-queue";
 import { createProductQuickAction } from "./actions";
+import { ComboBox } from "./combobox";
 
 export interface UploadProductOption {
+  id: string;
+  name: string;
+  isActive: boolean;
+}
+
+export interface UploadInstitutionOption {
   id: string;
   name: string;
   isActive: boolean;
@@ -29,16 +36,18 @@ function parsePriceToCents(raw: string): number {
  * de um produto novo (é assim que ele aparece na loja e na home) ou escolhe um
  * existente, arrasta arquivos de qualquer formato e o produto é publicado.
  */
-export function UploadPanel({ products }: { products: UploadProductOption[] }) {
+export function UploadPanel({ products, institutions }: { products: UploadProductOption[]; institutions: UploadInstitutionOption[] }) {
   const [created, setCreated] = useState<UploadProductOption[]>([]);
   const [mode, setMode] = useState<"new" | "existing">("new");
   const [productId, setProductId] = useState(products[0]?.id ?? "");
   const [newName, setNewName] = useState("");
   const [newPrice, setNewPrice] = useState("");
+  const [newInstitutionId, setNewInstitutionId] = useState<string | null>(null);
   const [label, setLabel] = useState("");
   const [dragging, setDragging] = useState(false);
   const [creating, setCreating] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const institutionFieldId = useId();
   const upload = useUploadQueue();
 
   const options = [...products, ...created.filter((c) => !products.some((p) => p.id === c.id))];
@@ -59,7 +68,7 @@ export function UploadPanel({ products }: { products: UploadProductOption[] }) {
         return;
       }
       setCreating(true);
-      const created = await createProductQuickAction({ name: newName, priceCents: parsePriceToCents(newPrice) });
+      const created = await createProductQuickAction({ name: newName, priceCents: parsePriceToCents(newPrice), institutionId: newInstitutionId });
       setCreating(false);
       if (!created.ok) {
         upload.setMessage(created.error);
@@ -71,6 +80,7 @@ export function UploadPanel({ products }: { products: UploadProductOption[] }) {
       setMode("existing");
       setNewName("");
       setNewPrice("");
+      setNewInstitutionId(null);
       target = id;
     }
 
@@ -126,6 +136,18 @@ export function UploadPanel({ products }: { products: UploadProductOption[] }) {
                   onChange={(e) => setNewPrice(e.target.value)}
                   inputMode="decimal"
                   placeholder="Ex.: 49,90"
+                />
+              )}
+            </Field>
+            <Field label="Instituição" optional hint="Classifica o produto pela instituição de ensino." className="sm:col-span-2">
+              {() => (
+                <ComboBox
+                  id={institutionFieldId}
+                  options={institutions.map((i) => ({ id: i.id, name: i.name, note: i.isActive ? undefined : "oculta" }))}
+                  value={newInstitutionId}
+                  onChange={setNewInstitutionId}
+                  emptyLabel="Sem instituição"
+                  searchPlaceholder="Buscar instituição…"
                 />
               )}
             </Field>
