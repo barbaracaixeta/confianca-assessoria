@@ -73,7 +73,18 @@ export interface AdminProductValue {
 const reais = (cents: number) => (cents / 100).toFixed(2).replace(".", ",");
 const centsFrom = (v: string) => Math.round(Number(v.replace(/\./g, "").replace(",", ".")) * 100) || 0;
 
-export function ProductForm({ product, categories, institutions }: { product: AdminProductValue; categories: AdminCategoryOption[]; institutions: AdminInstitutionOption[] }) {
+export function ProductForm({
+  product,
+  categories,
+  institutions,
+  fileCount,
+}: {
+  product: AdminProductValue;
+  categories: AdminCategoryOption[];
+  institutions: AdminInstitutionOption[];
+  /** Nº de arquivos de entrega. Quando informado, avisa se publicar sem arquivo. */
+  fileCount?: number;
+}) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -282,6 +293,11 @@ export function ProductForm({ product, categories, institutions }: { product: Ad
         </ul>
         {f.productType !== "digital" && !f.isActive && (
           <p className="text-xs text-muted">Produtos físicos exigem estoque e logística; publique apenas quando estiver pronto para vender.</p>
+        )}
+        {f.isActive && fileCount === 0 && (
+          <Alert tone="amber" role="status">
+            Este produto não possui arquivo de entrega. Adicione pelo menos um arquivo antes de publicar.
+          </Alert>
         )}
       </fieldset>
 

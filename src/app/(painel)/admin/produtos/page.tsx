@@ -110,7 +110,7 @@ export default async function AdminProductsPage({ searchParams }: PageProps<"/ad
                   </td>
                   <td className="py-3 text-ink-2">{p.category ?? "—"}</td>
                   <td className="py-3 text-ink-2">{p.institution ?? "—"}</td>
-                  <td className="py-3 tabular">{p.fileCount > 0 ? p.fileCount : <span className="text-danger">sem arquivo</span>}</td>
+                  <td className="py-3 tabular">{p.fileCount > 0 ? p.fileCount : <span className="text-danger">⚠ sem arquivo</span>}</td>
                   <td className="py-3 text-right tabular">{p.orderCount}</td>
                   <td className="py-3 text-right">
                     <form action={toggleProductFormAction.bind(null, { id: p.id, isActive: !p.isActive })}>

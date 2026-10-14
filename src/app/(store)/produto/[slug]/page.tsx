@@ -76,11 +76,16 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
 
   const allProducts = await getActiveProducts();
   const others = allProducts.filter((p) => p.id !== product.id);
+  const sameCategory = product.categoryId ? others.filter((p) => p.categoryId === product.categoryId) : [];
   const sameInstitution = product.institutionId
     ? others.filter((p) => p.institutionId === product.institutionId)
     : [];
-  const sameCategory = product.categoryId ? others.filter((p) => p.categoryId === product.categoryId) : [];
-  const related = uniqueById([...sameInstitution, ...sameCategory, ...others.filter((p) => p.isFeatured)]).slice(0, 4);
+  const related = uniqueById([
+    ...sameCategory,
+    ...sameInstitution,
+    ...others.filter((p) => p.isFeatured),
+    ...others.filter((p) => p.isBestSeller),
+  ]).slice(0, 4);
 
   return (
     <>
@@ -206,7 +211,7 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
               <div>
                 <p className="eyebrow text-green">{product.institutionName ?? product.categoryName ?? "Relacionados"}</p>
                 <h2 id="relacionados-titulo" className="mt-3 text-[2.1rem] text-ink md:text-[2.52rem]">
-                  {product.institutionName ? `Mais materiais para ${product.institutionName}` : "Produtos relacionados"}
+                  Você também pode precisar
                 </h2>
               </div>
               <Link href="/loja" className="link-underline hidden text-sm font-medium text-pine sm:block">

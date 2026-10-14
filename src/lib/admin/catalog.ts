@@ -99,8 +99,17 @@ export async function getAdminProducts(): Promise<AdminProductRow[]> {
   }));
 }
 
-export async function getAdminCategories(): Promise<AdminCategoryRow[]> {
-  const admin = createSupabaseAdminClient();
+/**
+ * Produtos publicados sem nenhum arquivo de entrega — não podem ser vendidos
+ * de verdade. Usado no dashboard para alertar a equipe (briefing §36/§37).
+ */
+export async function getProductsMissingFiles(): Promise<{ count: number; ids: string[] }> {
+  const products = await getAdminProducts();
+  const missing = products.filter((p) => p.isActive && p.fileCount === 0);
+  return { count: missing.length, ids: missing.map((p) => p.id) };
+}
+
+export async function getAdminCategories(): Promise<AdminCategoryRow[]> {  const admin = createSupabaseAdminClient();
   if (!admin) return [];
   const { data } = await admin
     .from("categories")

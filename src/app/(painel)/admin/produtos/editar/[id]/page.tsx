@@ -81,6 +81,7 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
           product={value}
           categories={(catRes.data ?? []).map((c) => ({ id: c.id, name: c.name }))}
           institutions={(instRes.data ?? []).map((i) => ({ id: i.id, name: i.name, isActive: i.is_active }))}
+          fileCount={productFiles.length}
         />
       </div>
 

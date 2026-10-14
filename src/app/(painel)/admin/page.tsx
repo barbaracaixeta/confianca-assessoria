@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { DailyChart } from "@/components/admin/daily-chart";
-import { Badge } from "@/components/ui/feedback";
+import { Alert, Badge } from "@/components/ui/feedback";
 import { requireAdminPermission } from "@/lib/admin/access";
 import { getDashboardMetrics, getRecentOrders } from "@/lib/admin/metrics";
+import { getProductsMissingFiles } from "@/lib/admin/catalog";
 import { ORDER_STATUS_LABEL, PAYMENT_STATUS_LABEL } from "@/lib/orders/state-machine";
 import { formatDate, formatMoney } from "@/lib/utils";
 import type { OrderStatus, PaymentStatus } from "@/types/domain";
@@ -24,7 +26,11 @@ function Stat({ label, value, note, accent }: { label: string; value: string; no
 
 export default async function AdminDashboard() {
   await requireAdminPermission("dashboard.view");
-  const [m, recent] = await Promise.all([getDashboardMetrics(), getRecentOrders()]);
+  const [m, recent, missingFiles] = await Promise.all([
+    getDashboardMetrics(),
+    getRecentOrders(),
+    getProductsMissingFiles(),
+  ]);
   const monthName = new Date().toLocaleDateString("pt-BR", { month: "long", timeZone: "America/Sao_Paulo" });
   m.topProducts.sort((a, b) => b.revenueCents - a.revenueCents);
   const topMax = Math.max(1, ...m.topProducts.map((p) => p.revenueCents));
@@ -51,6 +57,18 @@ export default async function AdminDashboard() {
         <Stat label="Clientes novos" value={String(m.newCustomersMonth)} note="no mês" />
         <Stat label="Taxa de conversão" value={`${m.conversionRate.toLocaleString("pt-BR")}%`} note="pedidos pagos / criados" />
       </dl>
+
+      {missingFiles.count > 0 && (
+        <Alert tone="amber" className="mt-8" role="status">
+          <Link
+            href={missingFiles.count === 1 ? `/admin/produtos/editar/${missingFiles.ids[0]}` : "/admin/produtos"}
+            className="font-semibold underline"
+          >
+            {missingFiles.count} {missingFiles.count === 1 ? "produto precisa" : "produtos precisam"} de arquivos
+          </Link>
+          {" — "}publicados sem nenhum arquivo de entrega. Envie os arquivos antes de vender.
+        </Alert>
+      )}
 
       <div className="mt-10 grid gap-8 xl:grid-cols-2">
         <section className="bg-sheet p-5 md:p-6">
