@@ -1,21 +1,18 @@
+import Image from "next/image";
 import { ButtonLink } from "@/components/ui/button";
-import { ProductCover } from "@/components/store/product-cover";
-import type { Product } from "@/types/domain";
 
 const TRUST = ["Compra segura", "Acesso digital", "Arquivos protegidos"];
 
 /**
- * Herói editorial. A arte da direita é composta com as capas reais do catálogo —
- * nenhuma imagem falsa é criada. Sem produtos com capa, cai para o motivo da marca.
+ * Herói editorial. A arte da direita é a imagem de capa da marca; à esquerda, o
+ * discurso e a chamada para a ação.
  */
 export function Hero({
-  products,
   title,
   subtitle,
   ctaLabel,
   ctaHref,
 }: {
-  products: Product[];
   title: string;
   subtitle: string;
   ctaLabel: string;
@@ -54,111 +51,17 @@ export function Hero({
           </ul>
         </div>
 
-        <HeroGallery products={products} />
+        <div className="relative mx-auto w-full max-w-[34rem] lg:mr-0">
+          <Image
+            src="/hero/hero-img-2.webp"
+            alt="Materiais acadêmicos digitais Confiança"
+            width={1600}
+            height={893}
+            priority
+            className="h-auto w-full rounded-[var(--radius-md)] border border-line shadow-md"
+          />
+        </div>
       </div>
     </section>
   );
 }
-
-function HeroCoverTile({
-  product,
-  className,
-  priority = false,
-}: {
-  product: Product;
-  className?: string;
-  priority?: boolean;
-}) {
-  return (
-    <div className={`relative overflow-hidden rounded-[var(--radius-md)] border border-line bg-green-50 shadow-md ${className ?? ""}`}>
-      <ProductCover product={product} priority={priority} sizes="(min-width: 1024px) 20vw, 40vw" />
-    </div>
-  );
-}
-
-/**
- * Estante editorial de capas reais: a do meio é a protagonista, as laterais
- * formam a coleção. Composição flexível — nunca cria imagem falsa.
- */
-function HeroGallery({ products }: { products: Product[] }) {
-  const tiles = products.slice(0, 3);
-
-  if (tiles.length === 0) {
-    return (
-      <div className="mx-auto w-full max-w-[26rem] lg:mr-0">
-        <HeroCoverTile product={EMPTY_PRODUCT} className="aspect-[3/4] w-[68%] mx-auto" />
-      </div>
-    );
-  }
-
-  if (tiles.length === 1) {
-    return (
-      <div className="mx-auto w-full max-w-[26rem] lg:mr-0">
-        <HeroCoverTile product={tiles[0]} priority className="aspect-[3/4] w-[72%] mx-auto" />
-      </div>
-    );
-  }
-
-  if (tiles.length === 2) {
-    return (
-      <div className="mx-auto flex w-full max-w-[30rem] items-end justify-center gap-5 lg:mr-0">
-        <HeroCoverTile product={tiles[0]} priority className="aspect-[3/4] w-[50%]" />
-        <HeroCoverTile product={tiles[1]} className="aspect-[3/4] w-[42%]" />
-      </div>
-    );
-  }
-
-  return (
-    <div className="mx-auto flex w-full max-w-[31rem] items-end justify-center gap-4 lg:mr-0">
-      <HeroCoverTile product={tiles[0]} priority className="aspect-[3/4] w-[26%]" />
-      <HeroCoverTile product={tiles[1]} priority className="aspect-[3/4] w-[40%]" />
-      <HeroCoverTile product={tiles[2]} className="aspect-[3/4] w-[26%]" />
-    </div>
-  );
-}
-
-/** Produto vazio só para desenhar o motivo de marca quando o catálogo não tem capas. */
-const EMPTY_PRODUCT: Product = {
-  id: "placeholder",
-  categoryId: null,
-  categoryName: null,
-  institutionId: null,
-  institutionName: null,
-  institutionSlug: null,
-  name: "Materiais acadêmicos digitais",
-  slug: "",
-  shortDescription: "",
-  description: "",
-  deliveryDays: 0,
-  deliveryLabel: null,
-  benefits: [],
-  audience: [],
-  includes: [],
-  faqs: [],
-  imageUrl: null,
-  isActive: true,
-  isFeatured: false,
-  sortOrder: 0,
-  seoTitle: null,
-  seoDescription: null,
-  productType: "digital",
-  sku: null,
-  stockQuantity: null,
-  weightGrams: null,
-  dimensions: null,
-  isNew: false,
-  isBestSeller: false,
-  downloadLimit: null,
-  files: [],
-  pricingUnit: "fixed",
-  basePriceCents: 0,
-  discountType: "none",
-  discountValue: 0,
-  promoStartsAt: null,
-  promoEndsAt: null,
-  minQuantity: 1,
-  maxQuantity: null,
-  minPriceCents: null,
-  maxPriceCents: null,
-  tiers: [],
-};

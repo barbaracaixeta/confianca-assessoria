@@ -66,17 +66,10 @@ export default async function HomePage() {
   const bestSellers = products.filter((p) => p.isBestSeller);
   const onSale = products.filter((p) => quoteProduct(p).promoActive);
   const showcase = (featured.length >= 4 ? featured : products).slice(0, 8);
-  const heroProducts = products.filter((p) => p.imageUrl).slice(0, 3);
 
   return (
     <>
-      <Hero
-        products={heroProducts}
-        title={heroTitle}
-        subtitle={heroSubtitle}
-        ctaLabel={heroCtaLabel}
-        ctaHref={heroCtaHref}
-      />
+      <Hero title={heroTitle} subtitle={heroSubtitle} ctaLabel={heroCtaLabel} ctaHref={heroCtaHref} />
 
       <CategoryNav categories={categories} />
 
