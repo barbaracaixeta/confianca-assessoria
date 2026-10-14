@@ -3,19 +3,32 @@ import { formatBytes } from "@/lib/files/rules";
 import type { Product } from "@/types/domain";
 
 /**
- * Capa editorial do produto: usa a imagem cadastrada ou um motivo de
- * "documento acadêmico" da marca quando ainda não há imagem. Nunca deixa
- * espaço vazio nem imagem quebrada — a marca é o fallback.
+ * Capa editorial do produto.
+ *
+ * Ordem de prioridade da imagem: capa cadastrada (product.cover, ou o preview
+ * real da primeira página gerado no painel). Quando não há imagem, cai para um
+ * motivo de "documento acadêmico" da marca — nunca deixa buraco nem imagem
+ * quebrada.
  */
-export function ProductCover({ product, className, priority = false }: { product: Product; className?: string; priority?: boolean }) {
+export function ProductCover({
+  product,
+  className,
+  priority = false,
+  sizes = "(min-width: 1280px) 22vw, (min-width: 1024px) 25vw, (min-width: 640px) 45vw, 90vw",
+}: {
+  product: Product;
+  className?: string;
+  priority?: boolean;
+  sizes?: string;
+}) {
   if (product.imageUrl) {
     return (
       <Image
         src={product.imageUrl}
-        alt={`Capa do produto ${product.name}`}
+        alt={`Capa de ${product.name}`}
         fill
         priority={priority}
-        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+        sizes={sizes}
         className={`bg-[var(--color-green-50)] object-contain ${className ?? ""}`}
       />
     );

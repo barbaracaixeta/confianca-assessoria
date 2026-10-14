@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
 
-type Tone = "discount" | "new" | "best";
+type Tone = "discount" | "new" | "best" | "featured";
 
 const tones: Record<Tone, string> = {
   discount: "bg-amber text-pine-900",
   new: "bg-sheet/95 text-pine",
   best: "bg-pine text-paper",
+  featured: "border border-pine/25 bg-sheet/90 text-pine",
 };
 
 /** Selo compacto de produto. A cor nunca é o único sinal: o rótulo sempre diz o que é. */

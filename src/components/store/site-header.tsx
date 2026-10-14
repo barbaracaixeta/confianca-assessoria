@@ -75,8 +75,9 @@ export function SiteHeader({ categories, institutions = [] }: { categories: Cate
 
   const NAV = [
     { href: "/loja", label: "Loja" },
-    { href: "/loja?mais-vendidos=1", label: "Mais vendidos" },
     { href: "/loja?ofertas=1", label: "Ofertas" },
+  ];
+  const SECONDARY = [
     { href: "/sobre", label: "Sobre" },
     { href: "/faq", label: "FAQ" },
   ];
@@ -225,7 +226,7 @@ export function SiteHeader({ categories, institutions = [] }: { categories: Cate
       >
         <nav aria-label="Menu">
           <ul className="border-t border-line">
-            {[{ href: "/", label: "Início" }, { href: "/loja", label: "Loja" }, ...NAV.slice(1)].map((item) => (
+            {[{ href: "/", label: "Início" }, { href: "/loja", label: "Loja" }, ...NAV.slice(1), ...SECONDARY].map((item) => (
               <li key={item.href} className="border-b border-line">
                 <Link href={item.href} className="block py-4 font-display font-bold text-[1.75rem] text-ink hover:text-pine">
                   {item.label}

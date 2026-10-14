@@ -7,16 +7,23 @@ import { ProductBadge } from "./product-badge";
 import { useCart } from "./cart-provider";
 import { Button } from "@/components/ui/button";
 import { quoteProduct } from "@/lib/pricing";
-import { formatMoney } from "@/lib/utils";
+import { formatMoney, cn } from "@/lib/utils";
 import type { Product } from "@/types/domain";
 
+/**
+ * Selos reais do produto. Só aparecem quando o dado existe no banco: nenhum
+ * selo é inventado para preencher espaço.
+ */
 function Badges({ product }: { product: Product }) {
   const q = quoteProduct(product);
+  const showFeatured = product.isFeatured && !product.isNew && !product.isBestSeller;
+  if (!q.promoActive && !product.isNew && !product.isBestSeller && !showFeatured) return null;
   return (
     <div className="pointer-events-none absolute top-3 left-3 z-10 flex max-w-[calc(100%-1.5rem)] flex-wrap gap-1.5">
       {q.promoActive && <ProductBadge tone="discount">{q.percentOff}% OFF</ProductBadge>}
       {product.isNew && <ProductBadge tone="new">NOVO</ProductBadge>}
       {product.isBestSeller && <ProductBadge tone="best">MAIS VENDIDO</ProductBadge>}
+      {showFeatured && <ProductBadge tone="featured">DESTAQUE</ProductBadge>}
     </div>
   );
 }
@@ -31,7 +38,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
 
   const q = quoteProduct(product);
   const bundle = productBundleSize(product);
-  const meta = [product.categoryName, product.institutionName].filter(Boolean).join(" · ") || "Material digital";
+  const meta = product.categoryName ?? "Material digital";
 
   function quickAdd() {
     add({ productId: product.id, slug: product.slug, quantity: 1 });
@@ -40,64 +47,68 @@ export function ProductCard({ product, priority = false }: { product: Product; p
     timer.current = setTimeout(() => setAdded(false), 1600);
   }
 
+  const label = added ? "Adicionado" : inCart ? "No carrinho" : "Adicionar";
+
   return (
-    <article className="group flex flex-col">
+    <article className="group flex h-full flex-col">
       <Link
         href={`/produto/${product.slug}`}
         aria-label={`Ver ${product.name}`}
         className="relative block overflow-hidden rounded-[var(--radius-md)] border border-line bg-green-50 transition-[box-shadow,border-color] duration-300 ease-[var(--ease-out-quart)] group-hover:border-pine/30 group-hover:shadow-md"
       >
-        <div className="aspect-[4/3] overflow-hidden">
+        <div className="aspect-[4/5] overflow-hidden">
           <ProductCover
             product={product}
             priority={priority}
-            className="transition-transform duration-[700ms] ease-[var(--ease-out-quart)] group-hover:scale-[1.04]"
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 90vw"
+            className="transition-transform duration-[800ms] ease-[var(--ease-out-quart)] group-hover:scale-[1.03]"
           />
         </div>
         <Badges product={product} />
-        <span className="pointer-events-none absolute inset-x-3 bottom-3 flex translate-y-2 items-center justify-between gap-2 opacity-0 transition-[opacity,transform] duration-300 ease-[var(--ease-out-quart)] group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
-          <span className="inline-flex h-9 items-center gap-1.5 rounded-[var(--radius-sm)] bg-sheet/95 px-3.5 text-[0.8125rem] font-semibold text-pine shadow-xs backdrop-blur-[2px]">
-            Ver produto
-            <svg viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-              <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" />
-            </svg>
-          </span>
-          {bundle && (
-            <span className="rounded-[var(--radius-xs)] bg-pine/90 px-2 py-1 text-[10px] font-bold text-paper tabular">
-              {bundle}
-            </span>
-          )}
-        </span>
       </Link>
 
       <div className="mt-4 flex flex-1 flex-col">
         <p className="eyebrow text-[0.6875rem] text-muted">{meta}</p>
-        <h3 className="mt-1.5 text-[1.44rem] leading-snug text-ink">
-          <Link href={`/produto/${product.slug}`} className="transition-colors hover:text-pine">
+        <h3 className="mt-2 text-[1.3rem] leading-snug text-ink">
+          <Link href={`/produto/${product.slug}`} className="line-clamp-2 transition-colors hover:text-pine">
             {product.name}
           </Link>
         </h3>
 
-        <div className="mt-auto flex items-end justify-between gap-3 pt-3">
-          <div>
-            {q.promoActive && (
-              <p className="text-xs text-muted tabular">
-                <s>{formatMoney(q.listTotalCents)}</s>
-              </p>
-            )}
-            <p className="font-sans text-xl font-semibold leading-none tracking-[-0.01em] text-ink tabular">
+        <div className="mt-auto pt-4">
+          <div className="flex items-baseline gap-2.5">
+            <span className="font-sans text-xl font-semibold leading-none tracking-[-0.01em] text-ink tabular">
               {formatMoney(q.totalCents)}
-            </p>
+            </span>
+            {q.promoActive && (
+              <s className="text-sm text-muted tabular">{formatMoney(q.listTotalCents)}</s>
+            )}
           </div>
-          <Button
-            variant={added ? "primary" : "accent"}
-            size="sm"
-            onClick={quickAdd}
-            aria-label={`Adicionar ${product.name} ao carrinho`}
-          >
-            {added ? "Adicionado ✓" : inCart ? "No carrinho" : "Adicionar"}
-          </Button>
+          <p className="mt-1.5 text-xs text-muted">
+            {product.deliveryLabel ?? "Acesso digital após a confirmação"}
+            {bundle && <> · {bundle}</>}
+          </p>
         </div>
+
+        <Button
+          variant={added ? "primary" : "outline"}
+          size="sm"
+          onClick={quickAdd}
+          className={cn("mt-4 w-full", added && "border-pine")}
+          aria-label={`Adicionar ${product.name} ao carrinho`}
+        >
+          <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+            {added ? (
+              <path d="M5 12.5 10 17l9-10" />
+            ) : (
+              <>
+                <path d="M5 7h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 7Z" />
+                <path d="M9 7V6a3 3 0 0 1 6 0v1" />
+              </>
+            )}
+          </svg>
+          {label}
+        </Button>
       </div>
     </article>
   );
