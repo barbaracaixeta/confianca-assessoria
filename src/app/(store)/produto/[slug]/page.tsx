@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductCover } from "@/components/store/product-cover";
-import { ProductCard } from "@/components/store/product-card";
+import { ProductGrid } from "@/components/store/product-grid";
+import { ProductBadge } from "@/components/store/product-badge";
 import { ProductPurchasePanel } from "@/components/store/product-purchase-panel";
 import { FaqList } from "@/components/store/faq-list";
 import { getActiveProducts, getProductBySlug } from "@/lib/catalog/queries";
+import { quoteProduct } from "@/lib/pricing";
 import { absoluteUrl, breadcrumbJsonLd, jsonLdScript, productJsonLd } from "@/lib/seo";
 import type { Product } from "@/types/domain";
 
@@ -55,6 +57,8 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) notFound();
+
+  const q = quoteProduct(product);
 
   const crumbs = [
     { name: "Início", path: "/" },
@@ -107,7 +111,12 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
         <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_400px] lg:gap-16">
           <div>
             <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-md)] border border-line bg-green-50">
-              <ProductCover product={product} />
+              <ProductCover product={product} priority />
+              <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-1.5">
+                {q.promoActive && <ProductBadge tone="discount">{q.percentOff}% OFF</ProductBadge>}
+                {product.isNew && <ProductBadge tone="new">NOVO</ProductBadge>}
+                {product.isBestSeller && <ProductBadge tone="best">MAIS VENDIDO</ProductBadge>}
+              </div>
             </div>
 
             <div className="mt-8 lg:hidden">
@@ -204,11 +213,7 @@ export default async function ProductPage({ params }: PageProps<"/produto/[slug]
                 Ver a loja
               </Link>
             </div>
-            <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-              {related.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
+            <ProductGrid products={related} className="mt-8" />
           </section>
         )}
       </div>

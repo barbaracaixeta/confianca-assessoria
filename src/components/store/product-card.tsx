@@ -3,37 +3,25 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ProductCover, productBundleSize } from "./product-cover";
+import { ProductBadge } from "./product-badge";
 import { useCart } from "./cart-provider";
 import { Button } from "@/components/ui/button";
 import { quoteProduct } from "@/lib/pricing";
 import { formatMoney } from "@/lib/utils";
 import type { Product } from "@/types/domain";
-import { cn } from "@/lib/utils";
 
 function Badges({ product }: { product: Product }) {
   const q = quoteProduct(product);
-  const badges: { label: string; className: string }[] = [];
-  if (q.promoActive) badges.push({ label: `${q.percentOff}% OFF`, className: "bg-amber text-pine-900" });
-  if (product.isNew) badges.push({ label: "NOVO", className: "bg-sheet/95 text-pine" });
-  if (product.isBestSeller) badges.push({ label: "MAIS VENDIDO", className: "bg-pine text-paper" });
   return (
     <div className="pointer-events-none absolute top-3 left-3 z-10 flex max-w-[calc(100%-1.5rem)] flex-wrap gap-1.5">
-      {badges.map((b) => (
-        <span
-          key={b.label}
-          className={cn(
-            "rounded-[var(--radius-xs)] px-2 py-1 text-[10px] font-bold tracking-[0.08em] backdrop-blur-[2px] tabular",
-            b.className,
-          )}
-        >
-          {b.label}
-        </span>
-      ))}
+      {q.promoActive && <ProductBadge tone="discount">{q.percentOff}% OFF</ProductBadge>}
+      {product.isNew && <ProductBadge tone="new">NOVO</ProductBadge>}
+      {product.isBestSeller && <ProductBadge tone="best">MAIS VENDIDO</ProductBadge>}
     </div>
   );
 }
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
   const { add, lines } = useCart();
   const [added, setAdded] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -43,6 +31,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   const q = quoteProduct(product);
   const bundle = productBundleSize(product);
+  const meta = [product.categoryName, product.institutionName].filter(Boolean).join(" · ") || "Material digital";
 
   function quickAdd() {
     add({ productId: product.id, slug: product.slug, quantity: 1 });
@@ -61,7 +50,8 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="aspect-[4/3] overflow-hidden">
           <ProductCover
             product={product}
-            className="transition-transform duration-[700ms] ease-[var(--ease-out-quart)] group-hover:scale-[1.05]"
+            priority={priority}
+            className="transition-transform duration-[700ms] ease-[var(--ease-out-quart)] group-hover:scale-[1.04]"
           />
         </div>
         <Badges product={product} />
@@ -81,16 +71,14 @@ export function ProductCard({ product }: { product: Product }) {
       </Link>
 
       <div className="mt-4 flex flex-1 flex-col">
-        <p className="eyebrow text-[0.6875rem] text-muted">
-          {[product.categoryName, product.institutionName].filter(Boolean).join(" · ") || "Material"}
-        </p>
+        <p className="eyebrow text-[0.6875rem] text-muted">{meta}</p>
         <h3 className="mt-1.5 text-[1.44rem] leading-snug text-ink">
           <Link href={`/produto/${product.slug}`} className="transition-colors hover:text-pine">
             {product.name}
           </Link>
         </h3>
 
-        <div className="mt-3 flex items-end justify-between gap-3 pt-1">
+        <div className="mt-auto flex items-end justify-between gap-3 pt-3">
           <div>
             {q.promoActive && (
               <p className="text-xs text-muted tabular">

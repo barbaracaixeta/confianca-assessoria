@@ -17,9 +17,24 @@ export function SiteHeader({ categories, institutions = [] }: { categories: Cate
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [menuTop, setMenuTop] = useState(88);
   const searchId = useId();
+  const headerRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // O painel mobile é `fixed`; medimos a base real do cabeçalho para alinhá-lo
+  // logo abaixo dele — a barra de avisos acima muda a altura do topo da página.
+  useEffect(() => {
+    if (!open) return;
+    const update = () => {
+      const el = headerRef.current;
+      if (el) setMenuTop(Math.round(el.getBoundingClientRect().bottom));
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [open]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -68,6 +83,7 @@ export function SiteHeader({ categories, institutions = [] }: { categories: Cate
 
   return (
     <header
+      ref={headerRef}
       className={cn(
         "sticky top-0 z-40 transition-[border-color,box-shadow] duration-300",
         "border-b",
@@ -204,7 +220,8 @@ export function SiteHeader({ categories, institutions = [] }: { categories: Cate
         id="menu-mobile"
         ref={menuRef}
         hidden={!open}
-        className="fixed inset-x-0 top-[88px] bottom-0 z-40 overflow-y-auto bg-paper px-5 pt-6 pb-10 lg:hidden"
+        style={{ top: menuTop }}
+        className="fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-paper px-5 pt-6 pb-10 lg:hidden"
       >
         <nav aria-label="Menu">
           <ul className="border-t border-line">

@@ -27,6 +27,8 @@ export interface PricedCartLine {
     | "deliveryDays"
     | "deliveryLabel"
     | "categoryName"
+    | "imageUrl"
+    | "files"
   >;
   quote: PriceQuote;
 }
@@ -140,6 +142,8 @@ export async function priceCart(lines: CartLine[], couponCode?: string, customer
         deliveryDays: product.deliveryDays,
         deliveryLabel: product.deliveryLabel,
         categoryName: product.categoryName,
+        imageUrl: product.imageUrl,
+        files: product.files,
       },
       quote,
     });

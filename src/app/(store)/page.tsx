@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink } from "@/components/ui/button";
-import { ProductCard } from "@/components/store/product-card";
+import { ProductGrid } from "@/components/store/product-grid";
+import { SectionHeader } from "@/components/store/section-header";
+import { BenefitBar } from "@/components/store/benefit-bar";
 import { FaqList } from "@/components/store/faq-list";
 import { getActiveCategories, getActiveFaqs, getActiveInstitutions, getActiveProducts, getActiveTestimonials } from "@/lib/catalog/queries";
 import { getHomeSettings } from "@/lib/settings";
@@ -31,7 +33,7 @@ export default async function HomePage() {
   const featured = products.filter((p) => p.isFeatured);
   const bestSellers = products.filter((p) => p.isBestSeller);
   const onSale = products.filter((p) => quoteProduct(p).promoActive);
-  const showcase = (featured.length >= 4 ? featured : products).slice(0, 4);
+  const showcase = (featured.length >= 4 ? featured : products).slice(0, 8);
   const heroProducts = products.filter((p) => p.imageUrl).slice(0, 3);
 
   return (
@@ -70,30 +72,28 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Categorias — navegação editorial */}
+      {/* Garantias da loja */}
+      <BenefitBar />
+
+      {/* Categorias — navegação editorial com contagem real */}
       {categories.length > 0 && (
-        <section aria-labelledby="categorias-titulo" className="border-t border-line bg-sheet">
+        <section aria-labelledby="categorias-titulo" className="bg-sheet">
           <div className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="eyebrow text-green">Explore por categoria</p>
-                <h2 id="categorias-titulo" className="mt-3 text-[2.28rem] text-ink md:text-[2.88rem]">
-                  Encontre o material da sua etapa
-                </h2>
-              </div>
-              <Link href="/loja" className="link-underline hidden text-sm font-medium text-pine sm:block">
-                Ver tudo
-              </Link>
-            </div>
+            <SectionHeader id="categorias-titulo" eyebrow="Explore por categoria" title="Encontre o material da sua etapa" href="/loja" />
             <ul className="mt-10 grid gap-x-12 sm:grid-cols-2">
               {categories.map((c, i) => (
                 <li key={c.id} className="border-t border-line">
                   <Link href={`/categoria/${c.slug}`} className="group flex items-center justify-between gap-4 py-4">
                     <span className="flex items-baseline gap-4">
                       <span className="w-6 text-xs text-muted tabular">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="font-display font-bold text-[1.5rem] text-ink transition-colors group-hover:text-pine">{c.name}</span>
+                      <span>
+                        <span className="block font-display font-bold text-[1.5rem] text-ink transition-colors group-hover:text-pine">{c.name}</span>
+                        <span className="mt-0.5 block text-xs text-muted tabular">
+                          {c.productCount} {c.productCount === 1 ? "material" : "materiais"}
+                        </span>
+                      </span>
                     </span>
-                    <svg viewBox="0 0 20 20" className="size-5 -translate-x-1 text-green opacity-0 transition-[opacity,transform] duration-300 ease-[var(--ease-out-quart)] group-hover:translate-x-0 group-hover:opacity-100" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" className="size-5 shrink-0 -translate-x-1 text-green opacity-0 transition-[opacity,transform] duration-300 ease-[var(--ease-out-quart)] group-hover:translate-x-0 group-hover:opacity-100" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
                       <path d="M4 10h11M10.5 5.5 15 10l-4.5 4.5" />
                     </svg>
                   </Link>
@@ -107,17 +107,7 @@ export default async function HomePage() {
       {/* Instituições — filtro por instituição de ensino */}
       {institutions.length > 0 && (
         <section aria-labelledby="instituicoes-titulo" className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow text-green">Da sua instituição</p>
-              <h2 id="instituicoes-titulo" className="mt-3 text-[2.28rem] text-ink md:text-[2.88rem]">
-                Encontre materiais da sua instituição
-              </h2>
-            </div>
-            <Link href="/instituicoes" className="link-underline hidden text-sm font-medium text-pine sm:block">
-              Ver todas
-            </Link>
-          </div>
+          <SectionHeader id="instituicoes-titulo" eyebrow="Da sua instituição" title="Encontre materiais da sua instituição" href="/instituicoes" linkLabel="Ver todas" />
           <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {institutions.map((i) => (
               <li key={i.id}>
@@ -146,40 +136,18 @@ export default async function HomePage() {
       )}
 
       {/* Produtos em destaque */}
-      <section aria-labelledby="destaques-titulo" className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow text-green">Materiais em destaque</p>
-            <h2 id="destaques-titulo" className="mt-3 text-[2.28rem] text-ink md:text-[3rem]">
-              Prontos para usar a partir de agora
-            </h2>
-          </div>
-          <Link href="/loja" className="link-underline hidden text-sm font-medium text-pine sm:block">
-            Ver todos
-          </Link>
-        </div>
-        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-          {showcase.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      </section>
+      {showcase.length > 0 && (
+        <section aria-labelledby="destaques-titulo" className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
+          <SectionHeader id="destaques-titulo" eyebrow="Materiais em destaque" title="Prontos para usar a partir de agora" href="/loja" linkLabel="Ver todos" titleClassName="md:text-[3rem]" />
+          <ProductGrid products={showcase} className="mt-10" />
+        </section>
+      )}
 
       {/* Mais vendidos — ranking */}
       {bestSellers.length > 0 && (
         <section aria-labelledby="mais-vendidos-titulo" className="border-y border-line bg-sheet">
           <div className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="eyebrow text-amber-ink">Mais procurados</p>
-                <h2 id="mais-vendidos-titulo" className="mt-3 text-[2.28rem] text-ink md:text-[3rem]">
-                  Escolhidos por quem já confia
-                </h2>
-              </div>
-              <Link href="/loja?mais-vendidos=1" className="link-underline hidden text-sm font-medium text-pine sm:block">
-                Ver todos
-              </Link>
-            </div>
+            <SectionHeader id="mais-vendidos-titulo" eyebrow="Mais procurados" title="Escolhidos por quem já confia" href="/loja?mais-vendidos=1" linkLabel="Ver todos" tone="amber" titleClassName="md:text-[3rem]" />
             <ol className="mt-10 divide-y divide-line border-t border-line">
               {bestSellers.slice(0, 5).map((p, i) => (
                 <BestSellerRow key={p.id} product={p} rank={i + 1} />
@@ -189,36 +157,41 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Benefícios — composição editorial */}
-      <section aria-labelledby="beneficios-titulo" className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-20">
-          <div>
-            <p className="eyebrow text-green">Por que escolher</p>
-            <h2 id="beneficios-titulo" className="mt-3 text-[2.28rem] text-ink md:text-[2.88rem]">
-              Uma plataforma séria para a sua jornada
-            </h2>
-            {onSale.length > 0 && (
-              <Link href="/loja?ofertas=1" className="link-underline mt-6 inline-block text-sm font-medium text-pine">
-                Ver ofertas em aberto
-              </Link>
-            )}
+      {/* Ofertas em aberto */}
+      {onSale.length > 0 && (
+        <section aria-labelledby="ofertas-titulo" className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
+          <SectionHeader id="ofertas-titulo" eyebrow="Por tempo limitado" title="Ofertas em aberto" href="/loja?ofertas=1" linkLabel="Ver ofertas" tone="amber" titleClassName="md:text-[3rem]" />
+          <ProductGrid products={onSale.slice(0, 4)} className="mt-10" />
+        </section>
+      )}
+
+      {/* Por que escolher */}
+      <section aria-labelledby="beneficios-titulo" className="border-t border-line bg-sheet">
+        <div className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-20">
+            <div>
+              <p className="eyebrow text-green">Por que escolher</p>
+              <h2 id="beneficios-titulo" className="mt-3 text-[2.28rem] text-ink md:text-[2.88rem]">
+                Uma plataforma séria para a sua jornada
+              </h2>
+            </div>
+            <dl className="grid gap-x-12 gap-y-10 sm:grid-cols-2">
+              {[
+                ["01", "Materiais selecionados", "Modelos, guias e templates revisados para apoiar cada etapa do trabalho acadêmico."],
+                ["02", "Acesso imediato", "Assim que o pagamento é confirmado, o material fica liberado automaticamente na sua conta."],
+                ["03", "Arquivos organizados", "Cada produto traz seus arquivos identificados, com formato e tamanho visíveis antes da compra."],
+                ["04", "Compra segura", "Pagamento por Pix ou cartão, com liberação registrada e histórico no seu painel."],
+              ].map(([n, title, body]) => (
+                <div key={n} className="rule-top pt-5">
+                  <dt className="flex items-baseline gap-3">
+                    <span className="font-display font-bold text-sm text-amber-ink tabular">{n}</span>
+                    <span className="font-display font-bold text-xl text-ink">{title}</span>
+                  </dt>
+                  <dd className="mt-2.5 text-sm leading-relaxed text-muted">{body}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
-          <dl className="grid gap-x-12 gap-y-10 sm:grid-cols-2">
-            {[
-              ["01", "Materiais selecionados", "Modelos, guias e templates revisados para apoiar cada etapa do trabalho acadêmico."],
-              ["02", "Acesso imediato", "Assim que o pagamento é confirmado, o material fica liberado automaticamente na sua conta."],
-              ["03", "Arquivos organizados", "Cada produto traz seus arquivos identificados, com formato e tamanho visíveis antes da compra."],
-              ["04", "Compra segura", "Pagamento por Pix ou cartão, com liberação registrada e histórico no seu painel."],
-            ].map(([n, title, body]) => (
-              <div key={n} className="rule-top pt-5">
-                <dt className="flex items-baseline gap-3">
-                  <span className="font-display font-bold text-sm text-amber-ink tabular">{n}</span>
-                  <span className="font-display font-bold text-xl text-ink">{title}</span>
-                </dt>
-                <dd className="mt-2.5 text-sm leading-relaxed text-muted">{body}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </section>
 
@@ -249,32 +222,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Destaque de confiança */}
-      <section className="mx-auto max-w-[1280px] px-5 py-16 md:px-8">
-        <div className="relative overflow-hidden rounded-[var(--radius-lg)] bg-pine px-7 py-14 text-paper md:px-14 md:py-20">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(100%_120%_at_100%_0%,rgb(31_138_98/0.55)_0%,transparent_55%)]" />
-          <div className="relative max-w-[40rem]">
-            <span className="inline-block h-1 w-12 rounded-full bg-amber" aria-hidden="true" />
-            <p className="mt-6 font-display font-bold text-[1.9rem] leading-tight text-paper md:text-[2.6rem]">
-              Materiais pensados para organizar, orientar e apoiar a sua jornada acadêmica.
-            </p>
-            <p className="mt-5 max-w-[34rem] text-paper/75">
-              Recursos de apoio, modelos e guias que ajudam você a estruturar melhor seus estudos e trabalhos — sempre com a sua autoria em primeiro lugar.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <ButtonLink href="/loja" variant="accent" size="lg">
-                Explorar materiais
-              </ButtonLink>
-              <ButtonLink href="/como-funciona" variant="onDark" size="lg">
-                Como funciona
-              </ButtonLink>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Uso responsável — discreto */}
-      <section aria-labelledby="uso-responsavel-titulo" className="mx-auto max-w-[1280px] px-5 pb-20 md:px-8">
+      <section aria-labelledby="uso-responsavel-titulo" className="mx-auto max-w-[1280px] px-5 py-20 md:px-8">
         <div className="rule-top grid gap-6 pt-8 md:grid-cols-[11rem_minmax(0,1fr)] md:gap-12">
           <h2 id="uso-responsavel-titulo" className="text-[1.5rem] text-ink">Uso responsável</h2>
           <p className="max-w-[64ch] leading-relaxed text-muted">
@@ -374,20 +323,23 @@ function BestSellerRow({ product, rank }: { product: Product; rank: number }) {
   );
 }
 
-/** Composição editorial: capas reais dos produtos + folha de documento. */
+/** Composição editorial: capas reais dos produtos + folha de documento da marca. */
 function HeroVisual({ products }: { products: Product[] }) {
   return (
     <div className="relative mx-auto aspect-[5/4] w-full max-w-[30rem] lg:mr-0" aria-hidden="true">
       {/* Folha base */}
       <div className="absolute bottom-0 left-0 w-[58%] -rotate-[4deg] rounded-[var(--radius-md)] border border-line bg-sheet p-6 shadow-md">
-        <div className="flex items-center justify-between">
-          <span className="eyebrow text-[0.625rem] text-green">Kit acadêmico</span>
-          <span className="rounded-[var(--radius-xs)] bg-amber px-1.5 py-px text-[10px] font-bold text-pine-900 tabular">25% OFF</span>
+        <div className="flex items-center gap-1.5">
+          <svg viewBox="0 0 12 12" className="size-3 text-amber" fill="currentColor">
+            <path d="M6 0 7.4 4.6 12 6 7.4 7.4 6 12 4.6 7.4 0 6 4.6 4.6Z" />
+          </svg>
+          <span className="eyebrow text-[0.625rem] text-green">Confiança</span>
         </div>
         <div className="mt-4 space-y-2.5">
           <div className="h-2 w-full rounded-sm bg-ink/25" />
           <div className="h-2 w-5/6 rounded-sm bg-ink/20" />
           <div className="h-2 w-3/4 rounded-sm bg-ink/15" />
+          <div className="h-2 w-4/5 rounded-sm bg-ink/12" />
         </div>
         <div className="mt-5 flex items-center gap-2 border-t border-line pt-4">
           <svg viewBox="0 0 24 24" className="size-8 rounded-[var(--radius-xs)] bg-pine p-1.5 text-paper" fill="none" stroke="currentColor" strokeWidth="1.7">

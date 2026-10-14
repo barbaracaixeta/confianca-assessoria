@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ProductCard } from "@/components/store/product-card";
+import { ProductGrid } from "@/components/store/product-grid";
 import { getActiveCategories, getProductsByCategory } from "@/lib/catalog/queries";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -43,22 +43,19 @@ export default async function CategoryPage({ params }: PageProps<"/categoria/[sl
       </nav>
 
       <div className="mt-6 max-w-2xl">
-        <h1 className="display text-[2.75rem] text-pine md:text-[3.75rem]">{category.name}</h1>
+        <p className="eyebrow text-green">Categoria</p>
+        <h1 className="display mt-3 text-[2.75rem] text-pine md:text-[3.75rem]">{category.name}</h1>
         {category.description && <p className="mt-4 text-lg leading-relaxed text-ink-2">{category.description}</p>}
       </div>
 
       <p className="mt-10 border-y border-line py-4 text-sm text-muted">
-        {products.length} {products.length === 1 ? "produto" : "produtos"} nesta categoria
+        <span className="font-semibold text-ink">{products.length}</span> {products.length === 1 ? "produto" : "produtos"} nesta categoria
       </p>
 
       {products.length > 0 ? (
-        <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        <ProductGrid products={products} className="mt-6" />
       ) : (
-        <div className="mt-6 border-y border-line py-16 text-center">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-line bg-sheet py-16 text-center">
           <p className="text-2xl text-ink">Nenhum produto por aqui ainda</p>
           <p className="mx-auto mt-2 max-w-sm text-muted">Volte em breve ou explore as outras categorias da loja.</p>
           <Link href="/loja" className="link-underline mt-5 inline-block text-sm font-medium text-pine">

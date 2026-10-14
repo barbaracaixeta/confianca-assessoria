@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useTransition } from "react";
-import { ProductCard } from "./product-card";
+import { ProductGrid } from "./product-grid";
 import { quoteProduct } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import type { Category, Institution, Product } from "@/types/domain";
@@ -25,7 +25,7 @@ const PRICE_MAX = [
 ] as const;
 
 const SELECT_CLASS =
-  "h-10 appearance-none rounded-[var(--radius-sm)] border border-line-strong bg-sheet bg-[length:12px] bg-[right_12px_center] bg-no-repeat pl-3 pr-9 text-sm text-ink outline-none focus:border-pine";
+  "h-10 appearance-none rounded-[var(--radius-sm)] border border-line-strong bg-sheet bg-[length:12px] bg-[right_12px_center] bg-no-repeat pl-3 pr-9 text-sm text-ink outline-none transition-colors focus:border-pine";
 const SELECT_ARROW = {
   backgroundImage:
     "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%231f2933' stroke-width='1.5' fill='none'/%3E%3C/svg%3E\")",
@@ -38,12 +38,23 @@ function Toggle({ active, onClick, children }: { active: boolean; onClick: () =>
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "rounded-[var(--radius-sm)] border px-3 py-1.5 text-sm transition-colors",
+        "rounded-full border px-3.5 py-1.5 text-sm transition-colors",
         active ? "border-pine bg-pine text-paper" : "border-line-strong text-ink-2 hover:border-pine hover:text-pine",
       )}
     >
       {children}
     </button>
+  );
+}
+
+function Select({ label, value, onChange, children }: { label: string; value: string; onChange: (v: string) => void; children: React.ReactNode }) {
+  return (
+    <label className="flex items-center gap-2 text-sm text-muted">
+      <span className="hidden sm:inline">{label}</span>
+      <select value={value} onChange={(e) => onChange(e.target.value)} className={SELECT_CLASS} style={SELECT_ARROW} aria-label={label}>
+        {children}
+      </select>
+    </label>
   );
 }
 
@@ -119,14 +130,15 @@ export function StoreListing({
     return filtered.map((x) => x.p);
   }, [products, q, category, institution, sort, priceMax, offer, isNew, best]);
 
-  const activeCount = [offer, isNew, best, category, priceMax, fixedInstitutionSlug ? "" : institution].filter(Boolean).length;
+  const hasInstitutionFilter = !fixedInstitutionSlug;
+  const activeCount = [offer, isNew, best, category, priceMax, hasInstitutionFilter ? institution : ""].filter(Boolean).length;
 
   return (
     <div>
-      <div className="mt-8 grid gap-6 border-y border-line py-6 md:grid-cols-[minmax(0,1fr)_minmax(0,240px)] md:items-center">
-        <div className="flex flex-col gap-4">
+      <div className="mt-8 rounded-[var(--radius-md)] border border-line bg-sheet p-4 md:p-5">
+        <div className="flex flex-col gap-5">
           <div className="relative">
-            <svg viewBox="0 0 24 24" className="pointer-events-none absolute top-1/2 left-3 size-4.5 -translate-y-1/2 text-muted" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+            <svg viewBox="0 0 24 24" className="pointer-events-none absolute top-1/2 left-3.5 size-4.5 -translate-y-1/2 text-muted" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
               <circle cx="11" cy="11" r="7" />
               <path d="m16.5 16.5 4 4" />
             </svg>
@@ -136,10 +148,11 @@ export function StoreListing({
               onChange={(e) => patch({ q: e.target.value || null })}
               placeholder="Buscar por TCC, ABNT, artigo, template…"
               aria-label="Buscar produtos"
-              className="h-11 w-full rounded-[var(--radius-sm)] border border-line-strong bg-sheet pl-10 pr-4 text-[0.9375rem] outline-none transition-colors placeholder:text-muted focus:border-pine"
+              className="h-12 w-full rounded-[var(--radius-sm)] border border-line-strong bg-paper pl-11 pr-4 text-[0.9375rem] outline-none transition-colors placeholder:text-muted focus:border-pine focus:bg-sheet"
             />
           </div>
-          <div className="flex flex-wrap gap-2">
+
+          <div className="flex flex-wrap items-center gap-2">
             <Toggle active={category === ""} onClick={() => patch({ categoria: null })}>
               Todos
             </Toggle>
@@ -149,87 +162,69 @@ export function StoreListing({
               </Toggle>
             ))}
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Toggle active={offer} onClick={() => patch({ ofertas: offer ? null : "1" })}>
-              Em oferta
-            </Toggle>
-            <Toggle active={isNew} onClick={() => patch({ novos: isNew ? null : "1" })}>
-              Novidades
-            </Toggle>
-            <Toggle active={best} onClick={() => patch({ "mais-vendidos": best ? null : "1" })}>
-              Mais vendidos
-            </Toggle>
-          </div>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-4 md:justify-end">
-          {!fixedInstitutionSlug && institutions.length > 0 && (
-            <label className="flex items-center gap-2 text-sm text-muted">
-              Instituição
-              <select
-                value={institution}
-                onChange={(e) => patch({ instituicao: e.target.value || null })}
-                className={SELECT_CLASS}
-                style={SELECT_ARROW}
-              >
-                <option value="">Todas</option>
-                {institutions.map((i) => (
-                  <option key={i.id} value={i.slug}>
-                    {i.name}
+          <div className="flex flex-col gap-4 border-t border-line pt-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-wrap gap-2">
+              <Toggle active={offer} onClick={() => patch({ ofertas: offer ? null : "1" })}>
+                Em oferta
+              </Toggle>
+              <Toggle active={isNew} onClick={() => patch({ novos: isNew ? null : "1" })}>
+                Novidades
+              </Toggle>
+              <Toggle active={best} onClick={() => patch({ "mais-vendidos": best ? null : "1" })}>
+                Mais vendidos
+              </Toggle>
+            </div>
+            <div className="flex flex-wrap items-center gap-4">
+              {!fixedInstitutionSlug && institutions.length > 0 && (
+                <Select label="Instituição" value={institution} onChange={(v) => patch({ instituicao: v || null })}>
+                  <option value="">Todas</option>
+                  {institutions.map((i) => (
+                    <option key={i.id} value={i.slug}>
+                      {i.name}
+                    </option>
+                  ))}
+                </Select>
+              )}
+              <Select label="Preço" value={priceMax} onChange={(v) => patch({ max: v || null })}>
+                {PRICE_MAX.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
                   </option>
                 ))}
-              </select>
-            </label>
-          )}
-          <label className="flex items-center gap-2 text-sm text-muted">
-            Preço
-            <select
-              value={priceMax}
-              onChange={(e) => patch({ max: e.target.value || null })}
-              className={SELECT_CLASS}
-              style={SELECT_ARROW}
-            >
-              {PRICE_MAX.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex items-center gap-2 text-sm text-muted">
-            Ordenar
-            <select
-              value={sort}
-              onChange={(e) => patch({ sort: e.target.value })}
-              className={SELECT_CLASS}
-              style={SELECT_ARROW}
-            >
-              {SORTS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </label>
+              </Select>
+              <Select label="Ordenar" value={sort} onChange={(v) => patch({ sort: v })}>
+                {SORTS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="mt-4 flex items-baseline justify-between text-sm text-muted" aria-live="polite">
+      <div className="mt-5 flex items-baseline justify-between gap-4 text-sm text-muted" aria-live="polite">
         <p>
-          <span className="font-medium text-ink">{visible.length}</span> {visible.length === 1 ? "produto" : "produtos"}
+          <span className="font-semibold text-ink">{visible.length}</span>{" "}
+          {visible.length === 1 ? "produto" : "produtos"}
           {activeCount > 0 && " com filtros ativos"}
         </p>
-        {isPending && <p className="text-xs text-green">Atualizando…</p>}
+        <div className="flex items-center gap-4">
+          {isPending && <span className="text-xs text-green">Atualizando…</span>}
+          {activeCount > 0 && (
+            <button type="button" onClick={() => router.push(basePath)} className="link-underline font-medium text-pine">
+              Limpar filtros
+            </button>
+          )}
+        </div>
       </div>
 
       {visible.length > 0 ? (
-        <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {visible.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        <ProductGrid products={visible} className="mt-6" />
       ) : (
-        <div className="mt-6 border-y border-line py-16 text-center">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-line bg-sheet py-16 text-center">
           <p className="text-2xl text-ink">Nenhum produto encontrado</p>
           <p className="mx-auto mt-2 max-w-sm text-muted">
             Tente ajustar a busca ou limpar os filtros para ver mais resultados.

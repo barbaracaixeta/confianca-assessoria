@@ -7,13 +7,14 @@ import type { Product } from "@/types/domain";
  * "documento acadêmico" da marca quando ainda não há imagem. Nunca deixa
  * espaço vazio nem imagem quebrada — a marca é o fallback.
  */
-export function ProductCover({ product, className }: { product: Product; className?: string }) {
+export function ProductCover({ product, className, priority = false }: { product: Product; className?: string; priority?: boolean }) {
   if (product.imageUrl) {
     return (
       <Image
         src={product.imageUrl}
         alt={`Capa do produto ${product.name}`}
         fill
+        priority={priority}
         sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
         className={`bg-[var(--color-green-50)] object-contain ${className ?? ""}`}
       />

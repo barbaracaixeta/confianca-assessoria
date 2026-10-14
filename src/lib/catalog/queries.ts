@@ -3,7 +3,7 @@ import { cache } from "react";
 import { createSupabasePublicClient, publicStorageUrl } from "@/lib/supabase/public";
 import { DEMO_CATEGORIES, DEMO_FAQS, DEMO_INSTITUTIONS, DEMO_PRODUCTS } from "@/lib/demo/catalog-data";
 import { PRODUCT_SELECT, mapCategory, mapInstitution, mapProduct, type CategoryRow, type InstitutionRow, type ProductRow } from "./mappers";
-import type { Category, Institution, InstitutionSummary, Product } from "@/types/domain";
+import type { CategorySummary, Institution, InstitutionSummary, Product } from "@/types/domain";
 
 const imageUrl = (path: string | null) => publicStorageUrl("catalog", path);
 
@@ -93,18 +93,25 @@ export const searchProducts = cache(async (query: string, limit = 24): Promise<P
   return data.map((r) => mapProduct(r, imageUrl));
 });
 
-export const getActiveCategories = cache(async (): Promise<Category[]> => {
-  const supabase = createSupabasePublicClient();
-  if (!supabase) return DEMO_CATEGORIES;
+const countProductsByCategory = (categoryId: string): number =>
+  DEMO_PRODUCTS.filter((p) => p.isActive && p.categoryId === categoryId).length;
 
-  const { data, error } = await supabase
-    .from("categories")
-    .select("*")
-    .eq("is_active", true)
-    .order("sort_order")
-    .returns<CategoryRow[]>();
-  if (error) throw new Error(`Falha ao carregar categorias: ${error.message}`);
-  return data.map(mapCategory);
+export const getActiveCategories = cache(async (): Promise<CategorySummary[]> => {
+  const supabase = createSupabasePublicClient();
+  if (!supabase) {
+    return DEMO_CATEGORIES.map((c) => ({ ...c, productCount: countProductsByCategory(c.id) }));
+  }
+
+  const [listRes, linksRes] = await Promise.all([
+    supabase.from("categories").select("*").eq("is_active", true).order("sort_order").returns<CategoryRow[]>(),
+    supabase.from("products").select("category_id").eq("is_active", true).not("category_id", "is", null),
+  ]);
+  if (listRes.error) throw new Error(`Falha ao carregar categorias: ${listRes.error.message}`);
+  const counts = new Map<string, number>();
+  for (const row of (linksRes.data ?? []) as { category_id: string }[]) {
+    counts.set(row.category_id, (counts.get(row.category_id) ?? 0) + 1);
+  }
+  return listRes.data.map((r) => ({ ...mapCategory(r), productCount: counts.get(r.id) ?? 0 }));
 });
 
 const countByInstitution = (institutionId: string | null): number =>

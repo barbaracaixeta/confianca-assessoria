@@ -1,11 +1,28 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink } from "@/components/ui/button";
 import { Alert, EmptyState, Skeleton } from "@/components/ui/feedback";
 import { CouponForm, Totals, TrustList } from "@/components/store/order-summary";
 import { usePricedCart } from "@/components/store/use-priced-cart";
 import { formatDeliveryDays, formatMoney } from "@/lib/utils";
+import type { ProductFile } from "@/types/domain";
+
+function CartThumb({ product }: { product: { imageUrl: string | null; files: ProductFile[] } }) {
+  const format = product.files?.[0]?.originalName.split(".").pop()?.toUpperCase() ?? "PDF";
+  return (
+    <span className="relative hidden aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-[var(--radius-sm)] border border-line bg-green-50 sm:block">
+      {product.imageUrl ? (
+        <Image src={product.imageUrl} alt="" fill sizes="80px" className="object-contain" />
+      ) : (
+        <span aria-hidden="true" className="flex h-full w-full items-center justify-center text-[11px] font-bold tracking-wide text-green">
+          {format}
+        </span>
+      )}
+    </span>
+  );
+}
 
 export function CartView() {
   const { cart, priced, error, loading } = usePricedCart();
@@ -34,7 +51,8 @@ export function CartView() {
             const p = priced?.lines.find((l) => l.product.id === line.productId);
             const variable = p && (p.product.pricingUnit === "per_page" || (p.product.maxQuantity ?? 1) > 1);
             return (
-              <li key={line.productId} className="grid gap-4 border-b border-line py-6 sm:grid-cols-[minmax(0,1fr)_auto]">
+              <li key={line.productId} className="grid gap-4 border-b border-line py-6 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-start sm:gap-5">
+                {p ? <CartThumb product={p.product} /> : <Skeleton className="hidden aspect-[4/3] w-20 sm:block" />}
                 <div>
                   {p ? (
                     <>

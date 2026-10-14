@@ -42,6 +42,11 @@ export interface Category {
   isActive: boolean;
 }
 
+/** Categoria com a contagem de produtos ativos vinculados (para listagens). */
+export interface CategorySummary extends Category {
+  productCount: number;
+}
+
 /** Instituição de ensino. Dimensão independente e opcional das categorias. */
 export interface Institution {
   id: string;
